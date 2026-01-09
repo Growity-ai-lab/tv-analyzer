@@ -991,8 +991,8 @@
             margin-top: 4px;
         }
 
-        /* Reach Rationale */
-        .reach-rationale {
+        /* Tab Rationale (All tabs) */
+        .tab-rationale {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 12px;
@@ -1042,6 +1042,36 @@
         .rationale-content .highlight {
             color: #ef4444;
             font-weight: 600;
+        }
+
+        .rationale-content .highlight-green {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .rationale-content .highlight-blue {
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        .rationale-content .highlight-purple {
+            color: #7c3aed;
+            font-weight: 600;
+        }
+
+        .rationale-scenario {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            border-left: 3px solid var(--accent-pink);
+        }
+
+        .rationale-scenario-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-pink);
+            margin-bottom: 8px;
         }
 
         /* Scenario Explanation */
@@ -1444,12 +1474,30 @@
                         <div class="chart-title">Adstock & Carry-over Etkisi</div>
                         <canvas id="adstockChart"></canvas>
                     </div>
+                    <div class="tab-rationale">
+                        <div class="rationale-header">
+                            <span class="rationale-icon">📊</span>
+                            <span>Grafik Rasyoneli</span>
+                        </div>
+                        <div class="rationale-content" id="adstockRationale">
+                            <!-- Dinamik içerik buraya gelecek -->
+                        </div>
+                    </div>
                 </div>
 
                 <div id="saturation-tab" class="tab-content">
                     <div class="chart-container">
                         <div class="chart-title">Saturation Curve - Optimal Nokta İşaretli</div>
                         <canvas id="saturationChart"></canvas>
+                    </div>
+                    <div class="tab-rationale">
+                        <div class="rationale-header">
+                            <span class="rationale-icon">📊</span>
+                            <span>Grafik Rasyoneli</span>
+                        </div>
+                        <div class="rationale-content" id="saturationRationale">
+                            <!-- Dinamik içerik buraya gelecek -->
+                        </div>
                     </div>
                 </div>
 
@@ -1480,20 +1528,13 @@
                             </div>
                         </div>
                     </div>
-                    <div class="reach-rationale">
+                    <div class="tab-rationale">
                         <div class="rationale-header">
                             <span class="rationale-icon">📊</span>
                             <span>Grafik Rasyoneli</span>
                         </div>
-                        <div class="rationale-content">
-                            <p><strong>GRP-Reach İlişkisi:</strong> GRP arttıkça erişim de artar, ancak belirli bir noktadan sonra artış hızı yavaşlar (diminishing returns). Bu nokta, hedef kitlenin büyük bölümüne ulaşıldığı ve ek GRP'nin daha çok frekans artışına dönüştüğü yerdir.</p>
-                            <p><strong>Frekans Seçimi:</strong></p>
-                            <ul>
-                                <li><strong>1+ Reach:</strong> En az 1 kez görenler. Bilinirlik kampanyaları için uygundur.</li>
-                                <li><strong>2+ Reach:</strong> En az 2 kez görenler. Mesaj pekiştirme için ideal.</li>
-                                <li><strong>3+ Reach:</strong> En az 3 kez görenler. Aksiyon odaklı kampanyalar için önerilir.</li>
-                            </ul>
-                            <p><strong>Optimal Nokta:</strong> <span class="highlight">Kırmızı dikey çizgi</span>, erişim artış hızının belirgin şekilde düştüğü noktayı gösterir. Bu noktanın ötesinde harcanan her ek GRP, giderek daha az yeni kişiye ulaşır.</p>
+                        <div class="rationale-content" id="reachRationale">
+                            <!-- Dinamik içerik buraya gelecek -->
                         </div>
                     </div>
                 </div>
@@ -1503,12 +1544,30 @@
                         <div class="chart-title">Response Model - Baseline + TV Etkisi</div>
                         <canvas id="responseChart"></canvas>
                     </div>
+                    <div class="tab-rationale">
+                        <div class="rationale-header">
+                            <span class="rationale-icon">📊</span>
+                            <span>Grafik Rasyoneli</span>
+                        </div>
+                        <div class="rationale-content" id="responseRationale">
+                            <!-- Dinamik içerik buraya gelecek -->
+                        </div>
+                    </div>
                 </div>
 
                 <div id="roi-tab" class="tab-content">
                     <div class="chart-container">
                         <div class="chart-title">Haftalık ROI & TV Efficiency Analizi</div>
                         <canvas id="roiChart"></canvas>
+                    </div>
+                    <div class="tab-rationale">
+                        <div class="rationale-header">
+                            <span class="rationale-icon">📊</span>
+                            <span>Grafik Rasyoneli</span>
+                        </div>
+                        <div class="rationale-content" id="roiRationale">
+                            <!-- Dinamik içerik buraya gelecek -->
+                        </div>
                     </div>
                 </div>
 
@@ -1542,6 +1601,7 @@
         let analysisData = {};
         let inputMode = 'spend'; // 'spend' or 'grp'
         let currentReachFrequency = 1; // 1+, 2+, or 3+
+        let currentScenario = 'balanced'; // 'conservative', 'balanced', or 'aggressive'
 
         // Reach curve parameters for different frequencies
         const reachParams = {
@@ -1549,6 +1609,235 @@
             2: { maxReach: 58, k: 0.010, label: '2+ Reach' },  // 2+ frequency
             3: { maxReach: 45, k: 0.008, label: '3+ Reach' }   // 3+ frequency
         };
+
+        // Scenario-specific rationale content
+        const scenarioRationales = {
+            conservative: {
+                name: 'Muhafazakar',
+                icon: '🐢',
+                adstock: {
+                    main: `<p><strong>Adstock Grafiği Ne Gösteriyor?</strong> Mavi çizgi gerçek haftalık harcamayı, mor çizgi ise "birikimli etki" (adstock) değerini gösterir. Adstock, geçmiş haftaların reklam etkisinin bu haftaya taşınan kısmını hesaba katar.</p>
+                    <p><strong>Muhafazakar Senaryo (λ = 0.5):</strong> Düşük decay rate ile reklam etkisi <span class="highlight">1-2 hafta içinde hızla azalır</span>. Mor çizgi mavi çizgiye yakın seyreder, yani geçmiş haftalardan çok az etki taşınır.</p>`,
+                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
+                    <ul>
+                        <li>Her hafta neredeyse "sıfırdan" başlıyorsunuz</li>
+                        <li>Sürekli yayın yapmanız gerekiyor, aksi halde etki hızla kaybolur</li>
+                        <li>Promosyon ve taktik kampanyalar için uygundur</li>
+                        <li>FMCG ürünleri bu kategoride değerlendirilir</li>
+                    </ul>`
+                },
+                saturation: {
+                    main: `<p><strong>Saturation Grafiği Ne Gösteriyor?</strong> Harcama arttıkça elde edilen etkinin nasıl değiştiğini gösterir. <span class="highlight-green">Yeşil nokta</span> optimal harcama noktasını, <span class="highlight-green">yeşil dikey çizgi</span> ise bu noktayı işaretler.</p>
+                    <p><strong>Muhafazakar Senaryo (α = 2.0, γ = 0.6):</strong> Yüksek alpha değeri, doygunluğa ulaşmak için <span class="highlight">daha yüksek harcama gerektiği</span> anlamına gelir. Düşük gamma ise eğrinin yumuşak, neredeyse lineer olduğunu gösterir.</p>`,
+                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
+                    <ul>
+                        <li>Harcama artışı ile etki artışı neredeyse orantılıdır</li>
+                        <li>Ani doygunluk riski düşüktür</li>
+                        <li>Bütçe artışlarından iyi verim alınır</li>
+                        <li>Pazara yeni giren veya düşük farkındalıklı markalar için uygundur</li>
+                    </ul>`
+                },
+                reach: {
+                    main: `<p><strong>GRP-Reach Grafiği Ne Gösteriyor?</strong> X ekseni haftalık GRP değerini, Y ekseni ise ulaşılan kitle yüzdesini gösterir. <span class="highlight">Kırmızı dikey çizgi</span> optimal GRP noktasını işaretler.</p>`,
+                    scenario: `<p><strong>Frekans Seçimi ve Muhafazakar Yaklaşım:</strong></p>
+                    <ul>
+                        <li><strong>1+ Reach:</strong> En geniş kitleye ulaşım, bilinirlik odaklı</li>
+                        <li><strong>2+ Reach:</strong> Mesajın pekişmesi için minimum frekans</li>
+                        <li><strong>3+ Reach:</strong> Aksiyon için gereken tekrar</li>
+                    </ul>
+                    <p>Muhafazakar senaryoda, etkinin hızlı kaybolması nedeniyle <span class="highlight">yüksek frekanslı yayın</span> (2+ veya 3+) tercih edilmelidir.</p>`
+                },
+                response: {
+                    main: `<p><strong>Response Grafiği Ne Gösteriyor?</strong> Gri çubuklar TV olmadan gerçekleşecek baseline satışı, yeşil çubuklar ise TV'nin yarattığı ek satışı gösterir. İkisinin toplamı toplam tahmini satıştır.</p>
+                    <p><strong>Muhafazakar Senaryo:</strong> Düşük carry-over etkisi nedeniyle, TV yayını olmayan haftalarda yeşil çubuklar <span class="highlight">hızla küçülür</span>.</p>`,
+                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
+                    <ul>
+                        <li>Satış artışı TV yayınına doğrudan bağlıdır</li>
+                        <li>Yayın durduğunda etki hızla kaybolur</li>
+                        <li>Haftalık performans takibi kritiktir</li>
+                        <li>Burst stratejisi yerine sürekli yayın önerilir</li>
+                    </ul>`
+                },
+                roi: {
+                    main: `<p><strong>ROI Grafiği Ne Gösteriyor?</strong> Mor çubuklar haftalık ROI'yi (TV etkisi / harcama), pembe çizgi ise TV Efficiency Index'i gösterir.</p>
+                    <p><strong>Muhafazakar Senaryo:</strong> Düşük decay rate nedeniyle, yüksek harcamalı haftaları takip eden <span class="highlight">düşük harcamalı haftalarda ROI düşer</span>.</p>`,
+                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
+                    <ul>
+                        <li>ROI harcama düzenine çok bağlıdır</li>
+                        <li>Düzenli ve tutarlı harcama daha iyi ROI sağlar</li>
+                        <li>Ani bütçe kesintileri verimliliği olumsuz etkiler</li>
+                    </ul>`
+                }
+            },
+            balanced: {
+                name: 'Dengeli',
+                icon: '⚖️',
+                adstock: {
+                    main: `<p><strong>Adstock Grafiği Ne Gösteriyor?</strong> Mavi çizgi gerçek haftalık harcamayı, mor çizgi ise "birikimli etki" (adstock) değerini gösterir. Adstock, geçmiş haftaların reklam etkisinin bu haftaya taşınan kısmını hesaba katar.</p>
+                    <p><strong>Dengeli Senaryo (λ = 0.7):</strong> Orta seviye decay rate ile reklam etkisi <span class="highlight-purple">2-3 hafta boyunca sürer</span>. Mor çizgi mavi çizginin üzerinde seyreder, geçmiş haftalardan anlamlı bir etki taşınır.</p>`,
+                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
+                    <ul>
+                        <li>Geçmiş haftaların etkisi bu haftayı destekler</li>
+                        <li>Burst ve sürekli yayın stratejileri arasında denge kurulabilir</li>
+                        <li>Petrol, market zincirleri, telekom için standart yaklaşım</li>
+                        <li>2 haftalık yayın arası verilebilir</li>
+                    </ul>`
+                },
+                saturation: {
+                    main: `<p><strong>Saturation Grafiği Ne Gösteriyor?</strong> Harcama arttıkça elde edilen etkinin nasıl değiştiğini gösterir. <span class="highlight-green">Yeşil nokta</span> optimal harcama noktasını, <span class="highlight-green">yeşil dikey çizgi</span> ise bu noktayı işaretler.</p>
+                    <p><strong>Dengeli Senaryo (α = 1.5, γ = 0.8):</strong> Orta alpha değeri dengeli bir doygunluk noktası sağlar. Gamma 0.8 ile yumuşak bir S-eğrisi oluşur.</p>`,
+                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
+                    <ul>
+                        <li>Optimal noktaya kadar iyi verim alınır</li>
+                        <li>Optimal noktadan sonra verim azalmaya başlar</li>
+                        <li>Bütçe planlamasında esneklik sağlar</li>
+                        <li>Çoğu marka için uygun başlangıç noktası</li>
+                    </ul>`
+                },
+                reach: {
+                    main: `<p><strong>GRP-Reach Grafiği Ne Gösteriyor?</strong> X ekseni haftalık GRP değerini, Y ekseni ise ulaşılan kitle yüzdesini gösterir. <span class="highlight">Kırmızı dikey çizgi</span> optimal GRP noktasını işaretler.</p>`,
+                    scenario: `<p><strong>Frekans Seçimi ve Dengeli Yaklaşım:</strong></p>
+                    <ul>
+                        <li><strong>1+ Reach:</strong> Geniş bilinirlik kampanyaları için</li>
+                        <li><strong>2+ Reach:</strong> Çoğu kampanya için ideal denge noktası</li>
+                        <li><strong>3+ Reach:</strong> Önemli mesajlar ve CTA odaklı kampanyalar</li>
+                    </ul>
+                    <p>Dengeli senaryoda <span class="highlight-blue">2+ Reach</span> genellikle en iyi maliyet-etkinlik dengesini sağlar.</p>`
+                },
+                response: {
+                    main: `<p><strong>Response Grafiği Ne Gösteriyor?</strong> Gri çubuklar TV olmadan gerçekleşecek baseline satışı, yeşil çubuklar ise TV'nin yarattığı ek satışı gösterir. İkisinin toplamı toplam tahmini satıştır.</p>
+                    <p><strong>Dengeli Senaryo:</strong> Orta seviye carry-over ile yeşil çubuklar <span class="highlight-green">2-3 hafta boyunca belirgin kalır</span>.</p>`,
+                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
+                    <ul>
+                        <li>TV yayını durduğunda etki kademeli olarak azalır</li>
+                        <li>Haftalık dalgalanmalar tolere edilebilir</li>
+                        <li>Burst stratejisi uygulanabilir</li>
+                        <li>Sezonsal kampanya planlaması yapılabilir</li>
+                    </ul>`
+                },
+                roi: {
+                    main: `<p><strong>ROI Grafiği Ne Gösteriyor?</strong> Mor çubuklar haftalık ROI'yi (TV etkisi / harcama), pembe çizgi ise TV Efficiency Index'i gösterir.</p>
+                    <p><strong>Dengeli Senaryo:</strong> Carry-over etkisi sayesinde, düşük harcamalı haftalarda bile <span class="highlight-purple">ROI makul seviyelerde kalır</span>.</p>`,
+                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
+                    <ul>
+                        <li>ROI haftalık değişimlere karşı daha dayanıklıdır</li>
+                        <li>Verimlilik optimizasyonu için manevra alanı vardır</li>
+                        <li>Bütçe kaydırmaları kabul edilebilir sonuçlar verir</li>
+                    </ul>`
+                }
+            },
+            aggressive: {
+                name: 'Agresif',
+                icon: '🚀',
+                adstock: {
+                    main: `<p><strong>Adstock Grafiği Ne Gösteriyor?</strong> Mavi çizgi gerçek haftalık harcamayı, mor çizgi ise "birikimli etki" (adstock) değerini gösterir. Adstock, geçmiş haftaların reklam etkisinin bu haftaya taşınan kısmını hesaba katar.</p>
+                    <p><strong>Agresif Senaryo (λ = 0.85):</strong> Yüksek decay rate ile reklam etkisi <span class="highlight-green">4-5 hafta boyunca güçlü kalır</span>. Mor çizgi mavi çizginin çok üzerinde seyreder, güçlü bir birikim etkisi vardır.</p>`,
+                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
+                    <ul>
+                        <li>Yatırımın etkisi uzun süre devam eder</li>
+                        <li>Marka inşası kampanyaları için ideal</li>
+                        <li>Otomotiv, lüks ürünler, premium markalar</li>
+                        <li>Lansman kampanyalarında uzun vadeli etki</li>
+                    </ul>`
+                },
+                saturation: {
+                    main: `<p><strong>Saturation Grafiği Ne Gösteriyor?</strong> Harcama arttıkça elde edilen etkinin nasıl değiştiğini gösterir. <span class="highlight-green">Yeşil nokta</span> optimal harcama noktasını, <span class="highlight-green">yeşil dikey çizgi</span> ise bu noktayı işaretler.</p>
+                    <p><strong>Agresif Senaryo (α = 1.0, γ = 1.2):</strong> Düşük alpha ile <span class="highlight">daha az harcamayla doygunluk başlar</span>. Yüksek gamma keskin bir S-eğrisi oluşturur - belirli bir eşiğe kadar düşük etki, sonra hızlı artış.</p>`,
+                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
+                    <ul>
+                        <li>Minimum eşiğin altında kalmak risklidir</li>
+                        <li>Eşiği aştığınızda hızlı verim artışı</li>
+                        <li>Ya güçlü girin ya da girmeyin yaklaşımı</li>
+                        <li>Lansman kampanyaları için "big bang" stratejisi</li>
+                    </ul>`
+                },
+                reach: {
+                    main: `<p><strong>GRP-Reach Grafiği Ne Gösteriyor?</strong> X ekseni haftalık GRP değerini, Y ekseni ise ulaşılan kitle yüzdesini gösterir. <span class="highlight">Kırmızı dikey çizgi</span> optimal GRP noktasını işaretler.</p>`,
+                    scenario: `<p><strong>Frekans Seçimi ve Agresif Yaklaşım:</strong></p>
+                    <ul>
+                        <li><strong>1+ Reach:</strong> Lansman için geniş farkındalık</li>
+                        <li><strong>2+ Reach:</strong> Mesajın yerleşmesi için minimum</li>
+                        <li><strong>3+ Reach:</strong> Premium marka inşası için önerilir</li>
+                    </ul>
+                    <p>Agresif senaryoda, uzun süreli etki için <span class="highlight-green">yüksek GRP ile 3+ Reach</span> hedeflenmelidir. İlk yatırım yüksek olsa da etki uzun sürer.</p>`
+                },
+                response: {
+                    main: `<p><strong>Response Grafiği Ne Gösteriyor?</strong> Gri çubuklar TV olmadan gerçekleşecek baseline satışı, yeşil çubuklar ise TV'nin yarattığı ek satışı gösterir. İkisinin toplamı toplam tahmini satıştır.</p>
+                    <p><strong>Agresif Senaryo:</strong> Yüksek carry-over ile yeşil çubuklar <span class="highlight-green">4-5 hafta boyunca güçlü kalır</span>. TV yayını bitse bile etki devam eder.</p>`,
+                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
+                    <ul>
+                        <li>Yatırımın geri dönüşü uzun vadeye yayılır</li>
+                        <li>Flight dönemlerinde etki korunur</li>
+                        <li>Sezonluk yoğunlaştırma stratejisi uygulanabilir</li>
+                        <li>Brand equity inşası için ideal</li>
+                    </ul>`
+                },
+                roi: {
+                    main: `<p><strong>ROI Grafiği Ne Gösteriyor?</strong> Mor çubuklar haftalık ROI'yi (TV etkisi / harcama), pembe çizgi ise TV Efficiency Index'i gösterir.</p>
+                    <p><strong>Agresif Senaryo:</strong> Yüksek carry-over sayesinde, <span class="highlight-green">yayın olmayan haftalarda bile ROI pozitif kalır</span> (geçmiş yatırımın etkisiyle).</p>`,
+                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
+                    <ul>
+                        <li>Uzun vadeli ROI hesabı yapılmalıdır</li>
+                        <li>Haftalık ROI yanıltıcı olabilir, kümülatif bakılmalı</li>
+                        <li>İlk haftalarda düşük ROI normaldir, zamanla artar</li>
+                        <li>Sabırlı yatırımcılar için uygundur</li>
+                    </ul>`
+                }
+            }
+        };
+
+        // Update all rationales based on current scenario and frequency
+        function updateAllRationales() {
+            const scenario = scenarioRationales[currentScenario];
+            const freq = currentReachFrequency;
+            const freqLabel = reachParams[freq].label;
+
+            // Adstock Rationale
+            document.getElementById('adstockRationale').innerHTML = `
+                ${scenario.adstock.main}
+                <div class="rationale-scenario">
+                    <div class="rationale-scenario-title">${scenario.icon} ${scenario.name} Senaryo Etkisi</div>
+                    ${scenario.adstock.scenario}
+                </div>
+            `;
+
+            // Saturation Rationale
+            document.getElementById('saturationRationale').innerHTML = `
+                ${scenario.saturation.main}
+                <div class="rationale-scenario">
+                    <div class="rationale-scenario-title">${scenario.icon} ${scenario.name} Senaryo Etkisi</div>
+                    ${scenario.saturation.scenario}
+                </div>
+            `;
+
+            // Reach Rationale (also depends on frequency)
+            document.getElementById('reachRationale').innerHTML = `
+                ${scenario.reach.main}
+                <p><strong>Seçili Frekans: ${freqLabel}</strong></p>
+                <div class="rationale-scenario">
+                    <div class="rationale-scenario-title">${scenario.icon} ${scenario.name} Senaryo Etkisi</div>
+                    ${scenario.reach.scenario}
+                </div>
+            `;
+
+            // Response Rationale
+            document.getElementById('responseRationale').innerHTML = `
+                ${scenario.response.main}
+                <div class="rationale-scenario">
+                    <div class="rationale-scenario-title">${scenario.icon} ${scenario.name} Senaryo Etkisi</div>
+                    ${scenario.response.scenario}
+                </div>
+            `;
+
+            // ROI Rationale
+            document.getElementById('roiRationale').innerHTML = `
+                ${scenario.roi.main}
+                <div class="rationale-scenario">
+                    <div class="rationale-scenario-title">${scenario.icon} ${scenario.name} Senaryo Etkisi</div>
+                    ${scenario.roi.scenario}
+                </div>
+            `;
+        }
 
         // Set reach frequency filter
         function setReachFrequency(freq) {
@@ -1564,6 +1853,9 @@
             
             // Redraw reach chart
             updateReachChart();
+            
+            // Update rationales
+            updateAllRationales();
         }
 
         // Calculate reach based on GRP using logarithmic curve
@@ -2175,6 +2467,8 @@
 
         // Apply scenario presets
         function applyScenario(scenario) {
+            currentScenario = scenario; // Update global scenario
+            
             document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('active'));
             event.target.closest('.scenario-card').classList.add('active');
 
@@ -2222,7 +2516,7 @@
             document.getElementById('gammaParam').value = s.gamma;
             document.getElementById('gammaValue').textContent = s.gamma.toFixed(2);
 
-            // Update explanation
+            // Update explanation in sidebar
             const exp = scenarioExplanations[scenario];
             const explanationContent = document.getElementById('explanationContent');
             explanationContent.innerHTML = `
@@ -2232,6 +2526,9 @@
                 </ul>
                 <p class="explanation-usage">${exp.usage}</p>
             `;
+
+            // Update all tab rationales
+            updateAllRationales();
 
             runAnalysis();
         }
@@ -2283,6 +2580,7 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             initCharts();
+            updateAllRationales();
             runAnalysis();
         });
     </script>
