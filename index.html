@@ -121,6 +121,390 @@
             font-family: 'Space Mono', monospace;
         }
 
+        .main-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Controls Row 1 - GRP + Scenarios + Run */
+        .controls-row-1 {
+            display: flex;
+            gap: 16px;
+            align-items: stretch;
+        }
+
+        .grp-card {
+            flex: 1;
+        }
+
+        .grp-card .control-card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .cpp-inline {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .cpp-inline input {
+            width: 80px;
+            padding: 4px 8px;
+            font-size: 11px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .grp-inputs-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .grp-alt-input {
+            flex: 1;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .grp-alt-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .alt-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .alt-dot.alt1 { background: #00d4ff; }
+        .alt-dot.alt2 { background: #ff6b35; }
+        .alt-dot.alt3 { background: #10b981; }
+
+        .alt-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .grp-alt-header .alt-total {
+            margin-left: auto;
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        .grp-alt-input textarea {
+            width: 100%;
+            height: 36px;
+            font-size: 11px;
+            padding: 8px;
+            resize: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .scenarios-card {
+            width: 140px;
+            flex-shrink: 0;
+        }
+
+        .scenarios-card .control-card-header {
+            padding-bottom: 0;
+            border-bottom: none;
+            margin-bottom: 10px;
+        }
+
+        .scenario-buttons-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .scenario-btn-v {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .scenario-btn-v:hover {
+            border-color: var(--accent-pink);
+        }
+
+        .scenario-btn-v.active {
+            background: rgba(236, 72, 153, 0.15);
+            border-color: var(--accent-pink);
+        }
+
+        .scenario-icon {
+            font-size: 14px;
+        }
+
+        .scenario-name {
+            font-size: 11px;
+            color: var(--text-primary);
+        }
+
+        .run-analysis-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .run-analysis-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .run-icon {
+            font-size: 24px;
+            color: white;
+        }
+
+        .run-text {
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            white-space: nowrap;
+        }
+
+        /* Controls Row 2 - Parameters */
+        .controls-row-2 {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px 20px;
+        }
+
+        .param-group {
+            display: flex;
+            gap: 24px;
+        }
+
+        .param-item {
+            min-width: 140px;
+        }
+
+        .param-item label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .param-item label span {
+            color: var(--accent-blue);
+            font-weight: 700;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .param-item input[type="range"] {
+            width: 100%;
+            height: 4px;
+        }
+
+        .param-scale {
+            display: flex;
+            justify-content: space-between;
+            font-size: 8px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+            opacity: 0.6;
+        }
+
+        .param-divider {
+            width: 1px;
+            height: 50px;
+            background: var(--border-color);
+        }
+
+        .sales-params {
+            display: flex;
+            gap: 16px;
+        }
+
+        .param-item-inline {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .param-item-inline label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .param-item-inline input {
+            width: 90px;
+            padding: 6px 10px;
+            font-size: 11px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .param-unit {
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        /* Key Metrics - Simplified */
+        .key-metrics {
+            display: flex;
+            align-items: stretch;
+            gap: 16px;
+        }
+
+        .key-metric {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px 20px;
+            min-width: 180px;
+        }
+
+        .key-metric.highlight-metric {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 53, 0.05));
+            border-color: rgba(255, 215, 0, 0.3);
+            flex: 1;
+        }
+
+        .key-metric-icon {
+            font-size: 24px;
+        }
+
+        .key-metric-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .key-metric-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-yellow);
+        }
+
+        .key-metric-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .metric-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-left: auto;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 10px 14px;
+        }
+
+        .metric-detail-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 12px;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .metric-detail-item:last-child {
+            border-right: none;
+        }
+
+        .detail-label {
+            font-size: 8px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .detail-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Control Card base */
+        .control-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px;
+        }
+
+        .control-card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .control-card-icon {
+            font-size: 14px;
+        }
+
+        .control-card-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Charts Section */
+        .charts-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
         .main-grid {
             display: grid;
             grid-template-columns: 360px 1fr;
@@ -991,6 +1375,40 @@
             margin-top: 4px;
         }
 
+        /* Reach Stats Row - grafikten ayrı */
+        .reach-stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 16px 0;
+        }
+
+        .reach-stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 14px 24px;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .reach-stat-card .reach-stat-value {
+            display: block;
+            font-family: 'Space Mono', monospace;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-yellow);
+        }
+
+        .reach-stat-card .reach-stat-label {
+            display: block;
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
         /* Tab Rationale (All tabs) */
         .tab-rationale {
             background: var(--bg-card);
@@ -1059,6 +1477,99 @@
             font-weight: 600;
         }
 
+        .rationale-recommendation {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(0, 212, 255, 0.05));
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 12px 0;
+        }
+
+        .rationale-recommendation strong {
+            color: #10b981;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .rationale-recommendation p {
+            margin: 6px 0;
+        }
+
+        .rationale-tip {
+            background: rgba(124, 58, 237, 0.1);
+            border-left: 3px solid #7c3aed;
+            padding: 10px 12px;
+            margin: 12px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .rationale-tip strong {
+            color: #7c3aed;
+        }
+
+        .rationale-data-section {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 12px 0;
+        }
+
+        .rationale-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            font-size: 11px;
+        }
+
+        .rationale-table th,
+        .rationale-table td {
+            padding: 6px 8px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .rationale-table th {
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .rationale-table td:first-child {
+            text-align: left;
+        }
+
+        .status-good { color: #10b981; font-weight: 600; }
+        .status-warning { color: #f59e0b; font-weight: 600; }
+        .status-info { color: #00d4ff; font-weight: 600; }
+
+        .rationale-recommendation.warning {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(239, 68, 68, 0.1));
+            border-color: rgba(245, 158, 11, 0.4);
+        }
+
+        .rationale-recommendation.warning strong {
+            color: #f59e0b;
+        }
+
+        .rationale-recommendation.info {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(124, 58, 237, 0.05));
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .rationale-recommendation.info strong {
+            color: #00d4ff;
+        }
+
+        .rationale-recommendation ul {
+            margin: 8px 0;
+            padding-left: 18px;
+        }
+
+        .rationale-recommendation li {
+            margin-bottom: 4px;
+        }
+
         .rationale-scenario {
             background: var(--bg-secondary);
             border-radius: 8px;
@@ -1072,6 +1583,251 @@
             font-weight: 600;
             color: var(--accent-pink);
             margin-bottom: 8px;
+        }
+
+        /* Alternative Input Styles */
+        .alt-input-group {
+            margin-bottom: 12px;
+            padding: 10px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border-left: 3px solid var(--border-color);
+        }
+
+        .alt-input-group:nth-child(2) { border-left-color: #00d4ff; }
+        .alt-input-group:nth-child(3) { border-left-color: #ff6b35; }
+        .alt-input-group:nth-child(4) { border-left-color: #10b981; }
+
+        .alt-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .alt-badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .alt-badge.alt1 { background: #00d4ff; color: #0a0a0f; }
+        .alt-badge.alt2 { background: #ff6b35; color: white; }
+        .alt-badge.alt3 { background: #10b981; color: white; }
+
+        .alt-name {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .alt-input-group .data-input {
+            height: 50px;
+            font-size: 11px;
+        }
+
+        .alt-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .alt-summary-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 10px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+        }
+
+        .alt-summary-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .param-hint {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        /* Chart Legend for Alternatives */
+        .alt-legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 12px;
+        }
+
+        .alt-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .alt-legend-color {
+            width: 12px;
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        .alt-legend-color.alt1 { background: #00d4ff; }
+        .alt-legend-color.alt2 { background: #ff6b35; }
+        .alt-legend-color.alt3 { background: #10b981; }
+
+        /* Compact Alternative Input */
+        .alt-input-compact {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .alt-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .alt-row .alt-badge {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .alt-row textarea {
+            flex: 1;
+            height: 28px;
+            font-size: 10px;
+            padding: 4px 6px;
+            resize: none;
+        }
+
+        .alt-total {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            color: var(--text-secondary);
+            min-width: 35px;
+            text-align: right;
+        }
+
+        /* Metrics Row */
+        .metrics-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .metric-mini {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 100px;
+            flex: 1;
+        }
+
+        .metric-mini.highlight {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: rgba(255, 215, 0, 0.3);
+        }
+
+        .metric-mini-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .metric-mini-value.blue { color: #00d4ff; }
+        .metric-mini-value.purple { color: #7c3aed; }
+        .metric-mini-value.orange { color: #ff6b35; }
+        .metric-mini-value.green { color: #10b981; }
+        .metric-mini-value.pink { color: #ec4899; }
+        .metric-mini-value.yellow { color: #ffd700; }
+        .metric-mini-value.cyan { color: #00d4ff; }
+
+        .metric-mini-label {
+            font-size: 9px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-top: 2px;
+        }
+
+        /* Scenario Buttons */
+        .scenario-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .scenario-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px 10px;
+            color: var(--text-secondary);
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .scenario-btn:hover {
+            border-color: var(--accent-pink);
+            color: var(--text-primary);
+        }
+
+        .scenario-btn.active {
+            background: rgba(236, 72, 153, 0.1);
+            border-color: var(--accent-pink);
+            color: var(--accent-pink);
+        }
+
+        .scenario-info {
+            margin-top: 8px;
+            padding: 8px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            border-left: 2px solid var(--accent-pink);
+        }
+
+        .scenario-params-mini {
+            display: block;
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            color: var(--accent-pink);
+        }
+
+        .scenario-desc {
+            display: block;
+            font-size: 9px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* Compact Button */
+        .btn-compact {
+            width: 100%;
+            padding: 8px;
+            font-size: 11px;
+            margin-top: 8px;
         }
 
         /* Scenario Explanation */
@@ -1147,331 +1903,181 @@
             </div>
         </header>
 
-        <div class="main-grid">
-            <!-- Sidebar -->
-            <aside class="sidebar">
-                <!-- Data Input with Mode Selection -->
-                <div class="card">
-                    <div class="card-header" onclick="toggleCard(this)">
-                        <div class="card-icon blue">📊</div>
-                        <div class="card-header-content">
-                            <h3>Veri Girişi</h3>
-                            <p>Harcama veya GRP bazlı</p>
+        <div class="main-layout">
+            <!-- Top Controls - Row 1: GRP + Scenarios + Run Button -->
+            <div class="controls-row-1">
+                <!-- GRP Alternatives - Wider -->
+                <div class="control-card grp-card">
+                    <div class="control-card-header">
+                        <span class="control-card-icon">📊</span>
+                        <span class="control-card-title">GRP Alternatifleri</span>
+                        <div class="cpp-inline">
+                            <span>CPP:</span>
+                            <input type="number" id="cppValue" value="25000" step="1000">
+                            <span>TL</span>
                         </div>
-                        <div class="card-toggle">▼</div>
                     </div>
-                    <div class="card-body">
-                        <!-- Input Mode Selector -->
-                        <div class="mode-selector">
-                            <button class="mode-btn active" id="modeSpend" onclick="setInputMode('spend')">
-                                <span class="mode-icon">💰</span>
-                                <span class="mode-text">Harcama Bazlı</span>
-                            </button>
-                            <button class="mode-btn" id="modeGRP" onclick="setInputMode('grp')">
-                                <span class="mode-icon">📺</span>
-                                <span class="mode-text">GRP Bazlı</span>
-                            </button>
+                    <div class="grp-inputs-row">
+                        <div class="grp-alt-input">
+                            <div class="grp-alt-header">
+                                <span class="alt-dot alt1"></span>
+                                <span class="alt-label">Alt-1</span>
+                                <span class="alt-total" id="summaryAlt1">1700 GRP</span>
+                            </div>
+                            <textarea class="data-input" id="grpAlt1" placeholder="Hafta 1, Hafta 2, ...">300, 300, 200, 200, 200, 100, 200, 200</textarea>
                         </div>
-
-                        <!-- Spend Mode Input -->
-                        <div id="spendModeInputs" class="mode-content active">
-                            <div class="form-group">
-                                <label>Haftalık Harcama (TL)</label>
-                                <textarea class="data-input" id="spendData" placeholder="Virgülle ayırarak haftalık harcamaları girin...">500000, 750000, 1000000, 800000, 600000, 900000, 1200000, 1000000, 700000, 500000, 800000, 1100000</textarea>
+                        <div class="grp-alt-input">
+                            <div class="grp-alt-header">
+                                <span class="alt-dot alt2"></span>
+                                <span class="alt-label">Alt-2</span>
+                                <span class="alt-total" id="summaryAlt2">1700 GRP</span>
                             </div>
-                            <div class="info-box">
-                                <div class="info-box-icon">💡</div>
-                                <div class="info-box-content">
-                                    <h4>Harcama Bazlı Analiz</h4>
-                                    <p>Gerçekleşen veya planlanan haftalık TV harcamalarını TL cinsinden girin. Post-campaign analiz için idealdir.</p>
-                                </div>
-                            </div>
+                            <textarea class="data-input" id="grpAlt2" placeholder="Hafta 1, Hafta 2, ...">300, 250, 250, 200, 200, 200, 150, 150</textarea>
                         </div>
-
-                        <!-- GRP Mode Input -->
-                        <div id="grpModeInputs" class="mode-content">
-                            <div class="form-group">
-                                <label>Haftalık GRP</label>
-                                <textarea class="data-input" id="grpData" placeholder="Virgülle ayırarak haftalık GRP değerlerini girin...">200, 300, 400, 320, 240, 360, 480, 400, 280, 200, 320, 440</textarea>
+                        <div class="grp-alt-input">
+                            <div class="grp-alt-header">
+                                <span class="alt-dot alt3"></span>
+                                <span class="alt-label">Alt-3</span>
+                                <span class="alt-total" id="summaryAlt3">1700 GRP</span>
                             </div>
-                            <div class="form-group">
-                                <label>CPP (Cost Per Point) - TL</label>
-                                <input type="number" id="cppValue" value="25000" step="1000">
-                            </div>
-                            <div class="info-box">
-                                <div class="info-box-icon">💡</div>
-                                <div class="info-box-content">
-                                    <h4>GRP Bazlı Planlama</h4>
-                                    <p>Hedeflediğiniz GRP'leri girin, CPP ile çarpılarak bütçe hesaplanır. Planlama aşaması için idealdir.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Calculated Summary -->
-                        <div class="input-summary" id="inputSummary">
-                            <div class="summary-item">
-                                <div class="summary-value" id="summarySpend">-</div>
-                                <div class="summary-label">Toplam Harcama</div>
-                            </div>
-                            <div class="summary-item">
-                                <div class="summary-value" id="summaryGRP">-</div>
-                                <div class="summary-label">Toplam GRP</div>
-                            </div>
-                            <div class="summary-item">
-                                <div class="summary-value" id="summaryWeeks">-</div>
-                                <div class="summary-label">Hafta Sayısı</div>
-                            </div>
+                            <textarea class="data-input" id="grpAlt3" placeholder="Hafta 1, Hafta 2, ...">400, 200, 200, 200, 200, 200, 150, 150</textarea>
                         </div>
                     </div>
                 </div>
 
-                <!-- Adstock Parameters -->
-                <div class="card">
-                    <div class="card-header" onclick="toggleCard(this)">
-                        <div class="card-icon purple">📈</div>
-                        <div class="card-header-content">
-                            <h3>Adstock Parametreleri</h3>
-                            <p>Decay rate (λ) ayarı</p>
-                        </div>
-                        <div class="card-toggle">▼</div>
+                <!-- Scenarios -->
+                <div class="control-card scenarios-card">
+                    <div class="control-card-header">
+                        <span class="control-card-icon">🎯</span>
+                        <span class="control-card-title">Senaryo</span>
                     </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label>
-                                Decay Rate (λ)
-                                <span id="decayValue">0.70</span>
-                            </label>
-                            <input type="range" id="decayRate" min="0" max="0.95" step="0.05" value="0.70">
-                        </div>
-                        <div class="param-guide">
-                            <div class="guide-header">
-                                <span class="guide-icon">📊</span>
-                                <span>Parametre Rehberi</span>
-                            </div>
-                            <div class="guide-scale">
-                                <div class="scale-item low">
-                                    <span class="scale-value">0.30-0.50</span>
-                                    <span class="scale-label">Düşük</span>
-                                </div>
-                                <div class="scale-item mid">
-                                    <span class="scale-value">0.50-0.75</span>
-                                    <span class="scale-label">Orta</span>
-                                </div>
-                                <div class="scale-item high">
-                                    <span class="scale-value">0.75-0.95</span>
-                                    <span class="scale-label">Yüksek</span>
-                                </div>
-                            </div>
-                            <div class="guide-examples">
-                                <div class="example-item">
-                                    <span class="example-dot low"></span>
-                                    <span><strong>Düşük:</strong> Promosyon, FMCG. Hızlı etki.</span>
-                                </div>
-                                <div class="example-item">
-                                    <span class="example-dot mid"></span>
-                                    <span><strong>Orta:</strong> Petrol, market. Tipik TV.</span>
-                                </div>
-                                <div class="example-item">
-                                    <span class="example-dot high"></span>
-                                    <span><strong>Yüksek:</strong> Otomotiv, lüks. Uzun etki.</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="formula">A(t) = X(t) + λ × A(t-1)</div>
+                    <div class="scenario-buttons-vertical">
+                        <button class="scenario-btn-v" onclick="applyScenario('minimum')">
+                            <span class="scenario-icon">📉</span>
+                            <span class="scenario-name">Minimum</span>
+                        </button>
+                        <button class="scenario-btn-v active" onclick="applyScenario('optimum')">
+                            <span class="scenario-icon">⚖️</span>
+                            <span class="scenario-name">Optimum</span>
+                        </button>
+                        <button class="scenario-btn-v" onclick="applyScenario('maksimum')">
+                            <span class="scenario-icon">📈</span>
+                            <span class="scenario-name">Maksimum</span>
+                        </button>
                     </div>
                 </div>
 
-                <!-- Saturation Parameters -->
-                <div class="card">
-                    <div class="card-header" onclick="toggleCard(this)">
-                        <div class="card-icon orange">🎯</div>
-                        <div class="card-header-content">
-                            <h3>Saturation Parametreleri</h3>
-                            <p>Diminishing returns modeli</p>
-                        </div>
-                        <div class="card-toggle">▼</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label>
-                                Alpha (α) - Doygunluk Noktası
-                                <span id="alphaValue">1.50</span>
-                            </label>
-                            <input type="range" id="alphaParam" min="0.5" max="5" step="0.1" value="1.5">
-                        </div>
-                        <div class="form-group">
-                            <label>
-                                Gamma (γ) - Eğri Şekli
-                                <span id="gammaValue">0.80</span>
-                            </label>
-                            <input type="range" id="gammaParam" min="0.3" max="2" step="0.05" value="0.80">
-                        </div>
-                        <div class="param-guide">
-                            <div class="guide-header">
-                                <span class="guide-icon">🎯</span>
-                                <span>Alpha & Gamma Rehberi</span>
-                            </div>
-                            <div class="guide-examples">
-                                <div class="example-item">
-                                    <span class="example-dot low"></span>
-                                    <span><strong>Düşük α:</strong> Hızlı doygunluk, küçük pazarlar</span>
-                                </div>
-                                <div class="example-item">
-                                    <span class="example-dot high"></span>
-                                    <span><strong>Yüksek α:</strong> Geç doygunluk, büyük bütçeler</span>
-                                </div>
-                                <div class="example-item">
-                                    <span class="example-dot mid"></span>
-                                    <span><strong>γ < 1:</strong> Yumuşak eğri, bilinirlik kampanyaları</span>
-                                </div>
-                                <div class="example-item">
-                                    <span class="example-dot high"></span>
-                                    <span><strong>γ > 1:</strong> Keskin S-eğrisi, lansman</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="formula">S(x) = x^γ / (α^γ + x^γ)</div>
-                    </div>
-                </div>
-
-                <!-- Response Parameters -->
-                <div class="card">
-                    <div class="card-header" onclick="toggleCard(this)">
-                        <div class="card-icon green">💰</div>
-                        <div class="card-header-content">
-                            <h3>Response Parametreleri</h3>
-                            <p>Satış dönüşüm modeli</p>
-                        </div>
-                        <div class="card-toggle">▼</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="input-row">
-                            <div class="form-group">
-                                <label>Baseline Satış (TL)</label>
-                                <input type="number" id="baseline" value="5000000" step="100000">
-                            </div>
-                            <div class="form-group">
-                                <label>Max Lift (%)</label>
-                                <input type="number" id="maxLift" value="30" step="1">
-                            </div>
-                        </div>
-                        <div class="param-guide">
-                            <div class="guide-examples">
-                                <div class="example-item">
-                                    <span class="example-dot mid"></span>
-                                    <span><strong>Baseline:</strong> TV olmadan haftalık satış</span>
-                                </div>
-                                <div class="example-item">
-                                    <span class="example-dot high"></span>
-                                    <span><strong>Max Lift:</strong> TV'nin max katkı potansiyeli</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Scenario Comparison -->
-                <div class="card">
-                    <div class="card-header" onclick="toggleCard(this)">
-                        <div class="card-icon pink">🔄</div>
-                        <div class="card-header-content">
-                            <h3>Senaryo Karşılaştırma</h3>
-                            <p>Hızlı parametre setleri</p>
-                        </div>
-                        <div class="card-toggle">▼</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="scenario-grid">
-                            <div class="scenario-card" onclick="applyScenario('conservative')">
-                                <h5>🐢 Muhafazakar</h5>
-                                <div class="scenario-params">λ:0.5 α:2.0 γ:0.6</div>
-                            </div>
-                            <div class="scenario-card active" onclick="applyScenario('balanced')">
-                                <h5>⚖️ Dengeli</h5>
-                                <div class="scenario-params">λ:0.7 α:1.5 γ:0.8</div>
-                            </div>
-                            <div class="scenario-card" onclick="applyScenario('aggressive')">
-                                <h5>🚀 Agresif</h5>
-                                <div class="scenario-params">λ:0.85 α:1.0 γ:1.2</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Senaryo Açıklamaları -->
-                        <div class="scenario-explanation" id="scenarioExplanation">
-                            <div class="explanation-header">
-                                <span>📋 Senaryo Detayları</span>
-                            </div>
-                            <div class="explanation-content" id="explanationContent">
-                                <p class="explanation-title">⚖️ Dengeli Senaryo</p>
-                                <ul>
-                                    <li><strong>Decay (0.7):</strong> Reklam etkisi 2-3 hafta sürer</li>
-                                    <li><strong>Alpha (1.5):</strong> Orta seviye bütçelerde doygunluk</li>
-                                    <li><strong>Gamma (0.8):</strong> Yumuşak S-eğrisi, dengeli artış</li>
-                                </ul>
-                                <p class="explanation-usage"><strong>Ne zaman kullanılır:</strong> Petrol, market zincirleri, telekom gibi düzenli TV yatırımı yapan markalar için standart başlangıç noktası.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="btn btn-primary" onclick="runAnalysis()">
-                    <span>⚡</span> Analizi Çalıştır
+                <!-- Run Button - Prominent -->
+                <button class="run-analysis-btn" onclick="runAnalysis()">
+                    <span class="run-icon">▶</span>
+                    <span class="run-text">Analizi Çalıştır</span>
                 </button>
-            </aside>
+            </div>
 
-            <!-- Content Area -->
-            <main class="content">
-                <!-- Metrics Row 1 -->
-                <div class="metrics-grid">
-                    <div class="metric-card">
-                        <div class="metric-value blue" id="totalSpend">-</div>
-                        <div class="metric-label">Toplam Harcama</div>
+            <!-- Top Controls - Row 2: Parameters -->
+            <div class="controls-row-2">
+                <!-- Model Parameters -->
+                <div class="param-group">
+                    <div class="param-item">
+                        <label>📅 Etki Süresi <span id="decayValue">0.70</span></label>
+                        <input type="range" id="decayRate" min="0" max="0.95" step="0.05" value="0.70">
+                        <div class="param-scale">
+                            <span>Kısa</span>
+                            <span>Uzun</span>
+                        </div>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-value purple" id="avgAdstock">-</div>
-                        <div class="metric-label">Ort. Adstock</div>
+                    <div class="param-item">
+                        <label>📊 Doygunluk <span id="alphaValue">1.50</span></label>
+                        <input type="range" id="alphaParam" min="0.5" max="5" step="0.1" value="1.5">
+                        <div class="param-scale">
+                            <span>Erken</span>
+                            <span>Geç</span>
+                        </div>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-value orange" id="peakEffect">-</div>
-                        <div class="metric-label">Peak Saturation</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value green" id="totalResponse">-</div>
-                        <div class="metric-label">Toplam Satış</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value pink" id="tvEfficiency">-</div>
-                        <div class="metric-label">TV Efficiency</div>
+                    <div class="param-item">
+                        <label>⚡ Etki Hızı <span id="gammaValue">0.80</span></label>
+                        <input type="range" id="gammaParam" min="0.3" max="2" step="0.05" value="0.80">
+                        <div class="param-scale">
+                            <span>Yavaş</span>
+                            <span>Hızlı</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- ROI & Optimal Summary -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                    <div class="roi-highlight">
-                        <div class="roi-value" id="overallROI">-</div>
-                        <div class="roi-label">TV Kaynaklı Satış Artışı</div>
+                <div class="param-divider"></div>
+
+                <!-- Sales Parameters -->
+                <div class="param-group sales-params">
+                    <div class="param-item-inline">
+                        <label>🏪 Baz Satış</label>
+                        <input type="number" id="baseline" value="5000000" step="100000">
+                        <span class="param-unit">TL/hafta</span>
                     </div>
-                    <div class="optimal-indicator">
-                        <h4>🎯 Optimal Haftalık Bütçe</h4>
-                        <div class="optimal-value" id="optimalBudget">-</div>
-                        <div class="optimal-desc">Diminishing returns başlamadan önceki en verimli nokta</div>
+                    <div class="param-item-inline">
+                        <label>📈 Max TV Etkisi</label>
+                        <input type="number" id="maxLift" value="30" step="1">
+                        <span class="param-unit">%</span>
                     </div>
                 </div>
+            </div>
 
+            <!-- Key Metrics - Simplified to 3 main + details -->
+            <div class="key-metrics">
+                <div class="key-metric">
+                    <div class="key-metric-icon">💰</div>
+                    <div class="key-metric-content">
+                        <span class="key-metric-value" id="totalSpend">-</span>
+                        <span class="key-metric-label">Toplam Harcama</span>
+                    </div>
+                </div>
+                <div class="key-metric highlight-metric">
+                    <div class="key-metric-icon">📈</div>
+                    <div class="key-metric-content">
+                        <span class="key-metric-value" id="overallROI">-</span>
+                        <span class="key-metric-label">TV Kaynaklı Satış Artışı</span>
+                    </div>
+                </div>
+                <div class="key-metric">
+                    <div class="key-metric-icon">⚡</div>
+                    <div class="key-metric-content">
+                        <span class="key-metric-value" id="tvEfficiency">-</span>
+                        <span class="key-metric-label">Verimlilik Index</span>
+                    </div>
+                </div>
+                <div class="metric-details">
+                    <div class="metric-detail-item">
+                        <span class="detail-label">Ort. Adstock</span>
+                        <span class="detail-value" id="avgAdstock">-</span>
+                    </div>
+                    <div class="metric-detail-item">
+                        <span class="detail-label">Peak Saturation</span>
+                        <span class="detail-value" id="peakEffect">-</span>
+                    </div>
+                    <div class="metric-detail-item">
+                        <span class="detail-label">Optimal Bütçe</span>
+                        <span class="detail-value" id="optimalBudget">-</span>
+                    </div>
+                    <div class="metric-detail-item">
+                        <span class="detail-label">Toplam Satış</span>
+                        <span class="detail-value" id="totalResponse">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section">
                 <!-- Tabs -->
                 <div class="tabs">
                     <button class="tab active" onclick="switchTab('adstock')">Adstock</button>
+                    <button class="tab" onclick="switchTab('carryover')">Carryover</button>
                     <button class="tab" onclick="switchTab('saturation')">Saturation</button>
                     <button class="tab" onclick="switchTab('reach')">GRP & Reach</button>
-                    <button class="tab" onclick="switchTab('response')">Response</button>
-                    <button class="tab" onclick="switchTab('roi')">ROI Analizi</button>
-                    <button class="tab" onclick="switchTab('data')">Veri Tablosu</button>
                 </div>
 
                 <!-- Chart Containers -->
                 <div id="adstock-tab" class="tab-content active">
                     <div class="chart-container">
-                        <div class="chart-title">Adstock & Carry-over Etkisi</div>
+                        <div class="chart-title">Haftalık GRP ve Adstock Birikimi</div>
                         <canvas id="adstockChart"></canvas>
                     </div>
                     <div class="tab-rationale">
@@ -1480,6 +2086,22 @@
                             <span>Grafik Rasyoneli</span>
                         </div>
                         <div class="rationale-content" id="adstockRationale">
+                            <!-- Dinamik içerik buraya gelecek -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="carryover-tab" class="tab-content">
+                    <div class="chart-container">
+                        <div class="chart-title">Carryover Etkisi - Geçmişten Taşınan Reklam Değeri</div>
+                        <canvas id="carryoverChart"></canvas>
+                    </div>
+                    <div class="tab-rationale">
+                        <div class="rationale-header">
+                            <span class="rationale-icon">📊</span>
+                            <span>Grafik Rasyoneli</span>
+                        </div>
+                        <div class="rationale-content" id="carryoverRationale">
                             <!-- Dinamik içerik buraya gelecek -->
                         </div>
                     </div>
@@ -1503,29 +2125,33 @@
 
                 <!-- GRP & Reach Tab -->
                 <div id="reach-tab" class="tab-content">
-                    <div class="chart-container" style="height: 450px;">
+                    <div class="chart-container">
                         <div class="chart-header-row">
                             <div class="chart-title">Haftalık GRP & Erişim Seviyesi</div>
                             <div class="reach-filters">
+                                <button class="reach-btn" onclick="setReachFrequency('all')">Hepsi</button>
                                 <button class="reach-btn active" onclick="setReachFrequency(1)">1+ Reach</button>
                                 <button class="reach-btn" onclick="setReachFrequency(2)">2+ Reach</button>
                                 <button class="reach-btn" onclick="setReachFrequency(3)">3+ Reach</button>
                             </div>
                         </div>
-                        <canvas id="reachChart"></canvas>
-                        <div class="reach-summary">
-                            <div class="reach-stat">
-                                <span class="reach-stat-value" id="reachMaxGRP">250</span>
-                                <span class="reach-stat-label">GRP Max</span>
-                            </div>
-                            <div class="reach-stat">
-                                <span class="reach-stat-value" id="reachMaxPercent">-</span>
-                                <span class="reach-stat-label" id="reachFreqLabel">1+ Reach</span>
-                            </div>
-                            <div class="reach-stat">
-                                <span class="reach-stat-value" id="reachOptimalGRP">-</span>
-                                <span class="reach-stat-label">Optimal GRP</span>
-                            </div>
+                        <div style="height: 350px;">
+                            <canvas id="reachChart"></canvas>
+                        </div>
+                    </div>
+                    <!-- Summary kutuları grafikten AYRI -->
+                    <div class="reach-stats-row">
+                        <div class="reach-stat-card">
+                            <span class="reach-stat-value" id="reachMaxGRP">-</span>
+                            <span class="reach-stat-label">Toplam GRP</span>
+                        </div>
+                        <div class="reach-stat-card">
+                            <span class="reach-stat-value" id="reachMaxPercent">-</span>
+                            <span class="reach-stat-label" id="reachFreqLabel">1+ Reach</span>
+                        </div>
+                        <div class="reach-stat-card">
+                            <span class="reach-stat-value" id="reachOptimalGRP">-</span>
+                            <span class="reach-stat-label">Optimal GRP</span>
                         </div>
                     </div>
                     <div class="tab-rationale">
@@ -1538,70 +2164,17 @@
                         </div>
                     </div>
                 </div>
-
-                <div id="response-tab" class="tab-content">
-                    <div class="chart-container">
-                        <div class="chart-title">Response Model - Baseline + TV Etkisi</div>
-                        <canvas id="responseChart"></canvas>
-                    </div>
-                    <div class="tab-rationale">
-                        <div class="rationale-header">
-                            <span class="rationale-icon">📊</span>
-                            <span>Grafik Rasyoneli</span>
-                        </div>
-                        <div class="rationale-content" id="responseRationale">
-                            <!-- Dinamik içerik buraya gelecek -->
-                        </div>
-                    </div>
-                </div>
-
-                <div id="roi-tab" class="tab-content">
-                    <div class="chart-container">
-                        <div class="chart-title">Haftalık ROI & TV Efficiency Analizi</div>
-                        <canvas id="roiChart"></canvas>
-                    </div>
-                    <div class="tab-rationale">
-                        <div class="rationale-header">
-                            <span class="rationale-icon">📊</span>
-                            <span>Grafik Rasyoneli</span>
-                        </div>
-                        <div class="rationale-content" id="roiRationale">
-                            <!-- Dinamik içerik buraya gelecek -->
-                        </div>
-                    </div>
-                </div>
-
-                <div id="data-tab" class="tab-content">
-                    <div class="card" style="max-height: 380px; overflow-y: auto;">
-                        <table class="data-table" id="dataTable">
-                            <thead>
-                                <tr>
-                                    <th>Hafta</th>
-                                    <th>Harcama</th>
-                                    <th>GRP</th>
-                                    <th>Adstock</th>
-                                    <th>Saturation</th>
-                                    <th>TV Etkisi</th>
-                                    <th>Toplam Satış</th>
-                                    <th>TV Eff.</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </main>
+            </div>
         </div>
     </div>
 
     <script>
         // Global variables
-        let adstockChart, saturationChart, responseChart, roiChart, reachChart;
+        let adstockChart, saturationChart, carryoverChart, reachChart;
         let analysisData = {};
         let inputMode = 'spend'; // 'spend' or 'grp'
         let currentReachFrequency = 1; // 1+, 2+, or 3+
-        let currentScenario = 'balanced'; // 'conservative', 'balanced', or 'aggressive'
+        let currentScenario = 'optimum'; // 'minimum', 'optimum', or 'maksimum'
 
         // Reach curve parameters for different frequencies
         const reachParams = {
@@ -1612,308 +2185,451 @@
 
         // Scenario-specific rationale content
         const scenarioRationales = {
-            conservative: {
-                name: 'Muhafazakar',
-                icon: '🐢',
+            minimum: {
+                name: 'Minimum',
+                icon: '📉',
                 adstock: {
-                    main: `<p><strong>Adstock Grafiği Ne Gösteriyor?</strong> Mavi çizgi gerçek haftalık harcamayı, mor çizgi ise "birikimli etki" (adstock) değerini gösterir. Adstock, geçmiş haftaların reklam etkisinin bu haftaya taşınan kısmını hesaba katar.</p>
-                    <p><strong>Muhafazakar Senaryo (λ = 0.5):</strong> Düşük decay rate ile reklam etkisi <span class="highlight">1-2 hafta içinde hızla azalır</span>. Mor çizgi mavi çizgiye yakın seyreder, yani geçmiş haftalardan çok az etki taşınır.</p>`,
-                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
+                    main: `<p><strong>📊 Grafik Ne Gösteriyor?</strong></p>
                     <ul>
+                        <li><strong>Barlar (solda):</strong> Haftalık GRP değerleri - her hafta ne kadar TV yatırımı yapıldığını gösterir</li>
+                        <li><strong>Düz çizgi:</strong> Toplam Adstock - o haftadaki birikimli reklam etkisi (bu hafta + geçmişten taşınan)</li>
+                        <li><strong>Kesikli çizgi + alan:</strong> Carryover - sadece geçmiş haftalardan taşınan etki miktarı</li>
+                    </ul>
+                    <p><strong>Minimum Senaryo (λ = 0.45):</strong> Düşük decay ile reklam etkisi <span class="highlight">1-2 hafta içinde %80+ kaybolur</span>.</p>`,
+                    scenario: `<p><strong>📉 Grafikte Ne Görmelisiniz?</strong></p>
+                    <ul>
+                        <li>Kesikli alan (carryover) çok dar - geçmişten az etki taşınıyor</li>
+                        <li>Düz çizgi barlara yakın seyreder - etki çoğunlukla o haftanın yatırımından</li>
+                        <li>GRP olmayan haftalarda adstock hızla düşer</li>
+                    </ul>
+                    <div class="rationale-recommendation warning">
+                        <strong>⚠️ Dikkat Edilmesi Gerekenler:</strong>
+                        <p>Carryover alanı çok darsa, her hafta yeniden "sıfırdan" başlıyorsunuz demektir. Bu durumda:</p>
+                        <ul>
+                            <li>Sürekli yayın yapmalısınız, 1 hafta bile boşluk etkiyi sıfırlar</li>
+                            <li>Burst stratejisi bu senaryoda verimsizdir</li>
+                        </ul>
+                    </div>
+                    <div class="rationale-recommendation">
+                        <strong>💡 Aksiyon Önerileri:</strong>
+                        <ul>
+                            <li>Haftalık minimum 150-200 GRP ile sürekli yayın planlayın</li>
+                            <li>Promosyon dönemlerinde yoğunlaştırın ama hiç bırakmayın</li>
+                            <li>Flight (ara verme) stratejisi kullanmayın</li>
+                        </ul>
+                    </div>
+                    <div class="rationale-tip">
+                        <strong>📊 Benchmark:</strong> FMCG sektöründe tipik decay 0.4-0.5 arasındadır.
+                    </div>`
+                },
+                carryover: {
+                    main: `<p><strong>📊 Grafik Ne Gösteriyor?</strong> Carryover = geçmiş haftalardan taşınan reklam etkisi. Her haftanın çubuğu, o haftaya önceki yayınlardan kalan "miras" etkiyi gösterir.</p>
+                    <p><strong>Minimum Senaryo:</strong> <span class="highlight">Carryover çok düşük</span> - geçmiş yatırımlar hızla değer kaybeder.</p>`,
+                    scenario: `<p><strong>📉 Grafikte Ne Görmelisiniz?</strong></p>
+                    <ul>
+                        <li>Barlar çok kısa - geçmişten az etki taşınıyor</li>
+                        <li>Yayın olmayan haftalarda carryover hızla sıfırlanır</li>
                         <li>Her hafta neredeyse "sıfırdan" başlıyorsunuz</li>
-                        <li>Sürekli yayın yapmanız gerekiyor, aksi halde etki hızla kaybolur</li>
-                        <li>Promosyon ve taktik kampanyalar için uygundur</li>
-                        <li>FMCG ürünleri bu kategoride değerlendirilir</li>
-                    </ul>`
+                    </ul>
+                    <div class="rationale-recommendation warning">
+                        <strong>⚠️ Uyarı:</strong> Carryover düşükse her hafta yeniden yatırım gerekir. Sürekli yayın şarttır!
+                    </div>`
                 },
                 saturation: {
-                    main: `<p><strong>Saturation Grafiği Ne Gösteriyor?</strong> Harcama arttıkça elde edilen etkinin nasıl değiştiğini gösterir. <span class="highlight-green">Yeşil nokta</span> optimal harcama noktasını, <span class="highlight-green">yeşil dikey çizgi</span> ise bu noktayı işaretler.</p>
-                    <p><strong>Muhafazakar Senaryo (α = 2.0, γ = 0.6):</strong> Yüksek alpha değeri, doygunluğa ulaşmak için <span class="highlight">daha yüksek harcama gerektiği</span> anlamına gelir. Düşük gamma ise eğrinin yumuşak, neredeyse lineer olduğunu gösterir.</p>`,
-                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
+                    main: `<p><strong>Saturation Grafiği Ne Gösteriyor?</strong> Harcama arttıkça elde edilen etkinin nasıl değiştiğini gösterir.</p>
+                    <p><strong>Minimum Senaryo (α = 1.0, γ = 1.3):</strong> Düşük alpha = <span class="highlight">erken doygunluk</span>. Yüksek gamma = keskin S-eğrisi.</p>`,
+                    scenario: `<p><strong>📉 Minimum Saturation Özellikleri:</strong></p>
                     <ul>
-                        <li>Harcama artışı ile etki artışı neredeyse orantılıdır</li>
-                        <li>Ani doygunluk riski düşüktür</li>
-                        <li>Bütçe artışlarından iyi verim alınır</li>
-                        <li>Pazara yeni giren veya düşük farkındalıklı markalar için uygundur</li>
+                        <li>Belirli bir eşiğe kadar düşük etki</li>
+                        <li>Eşik aşıldığında hızlı verim artışı</li>
+                        <li>Optimal noktayı aşmak israftır</li>
                     </ul>`
                 },
                 reach: {
-                    main: `<p><strong>GRP-Reach Grafiği Ne Gösteriyor?</strong> X ekseni haftalık GRP değerini, Y ekseni ise ulaşılan kitle yüzdesini gösterir. <span class="highlight">Kırmızı dikey çizgi</span> optimal GRP noktasını işaretler.</p>`,
-                    scenario: `<p><strong>Frekans Seçimi ve Muhafazakar Yaklaşım:</strong></p>
+                    main: `<p><strong>GRP-Reach Grafiği Ne Gösteriyor?</strong> Kümülatif GRP'nin ne kadar kitleye ulaştığını gösterir.</p>`,
+                    scenario: `<p><strong>📌 Minimum Senaryo için Reach Stratejisi:</strong></p>
                     <ul>
-                        <li><strong>1+ Reach:</strong> En geniş kitleye ulaşım, bilinirlik odaklı</li>
-                        <li><strong>2+ Reach:</strong> Mesajın pekişmesi için minimum frekans</li>
-                        <li><strong>3+ Reach:</strong> Aksiyon için gereken tekrar</li>
+                        <li><strong>3+ Reach:</strong> ⭐ Önerilen - yüksek frekans ile anlık etki</li>
                     </ul>
-                    <p>Muhafazakar senaryoda, etkinin hızlı kaybolması nedeniyle <span class="highlight">yüksek frekanslı yayın</span> (2+ veya 3+) tercih edilmelidir.</p>`
-                },
-                response: {
-                    main: `<p><strong>Response Grafiği Ne Gösteriyor?</strong> Gri çubuklar TV olmadan gerçekleşecek baseline satışı, yeşil çubuklar ise TV'nin yarattığı ek satışı gösterir. İkisinin toplamı toplam tahmini satıştır.</p>
-                    <p><strong>Muhafazakar Senaryo:</strong> Düşük carry-over etkisi nedeniyle, TV yayını olmayan haftalarda yeşil çubuklar <span class="highlight">hızla küçülür</span>.</p>`,
-                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
-                    <ul>
-                        <li>Satış artışı TV yayınına doğrudan bağlıdır</li>
-                        <li>Yayın durduğunda etki hızla kaybolur</li>
-                        <li>Haftalık performans takibi kritiktir</li>
-                        <li>Burst stratejisi yerine sürekli yayın önerilir</li>
-                    </ul>`
-                },
-                roi: {
-                    main: `<p><strong>ROI Grafiği Ne Gösteriyor?</strong> Mor çubuklar haftalık ROI'yi (TV etkisi / harcama), pembe çizgi ise TV Efficiency Index'i gösterir.</p>
-                    <p><strong>Muhafazakar Senaryo:</strong> Düşük decay rate nedeniyle, yüksek harcamalı haftaları takip eden <span class="highlight">düşük harcamalı haftalarda ROI düşer</span>.</p>`,
-                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
-                    <ul>
-                        <li>ROI harcama düzenine çok bağlıdır</li>
-                        <li>Düzenli ve tutarlı harcama daha iyi ROI sağlar</li>
-                        <li>Ani bütçe kesintileri verimliliği olumsuz etkiler</li>
-                    </ul>`
+                    <div class="rationale-recommendation">
+                        <strong>💡 Aksiyon:</strong> Haftalık 250-350 GRP ile 3+ reach %30-40 hedefleyin.
+                    </div>`
                 }
             },
-            balanced: {
-                name: 'Dengeli',
+            optimum: {
+                name: 'Optimum',
                 icon: '⚖️',
                 adstock: {
-                    main: `<p><strong>Adstock Grafiği Ne Gösteriyor?</strong> Mavi çizgi gerçek haftalık harcamayı, mor çizgi ise "birikimli etki" (adstock) değerini gösterir. Adstock, geçmiş haftaların reklam etkisinin bu haftaya taşınan kısmını hesaba katar.</p>
-                    <p><strong>Dengeli Senaryo (λ = 0.7):</strong> Orta seviye decay rate ile reklam etkisi <span class="highlight-purple">2-3 hafta boyunca sürer</span>. Mor çizgi mavi çizginin üzerinde seyreder, geçmiş haftalardan anlamlı bir etki taşınır.</p>`,
-                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
+                    main: `<p><strong>📊 Grafik Ne Gösteriyor?</strong></p>
                     <ul>
-                        <li>Geçmiş haftaların etkisi bu haftayı destekler</li>
-                        <li>Burst ve sürekli yayın stratejileri arasında denge kurulabilir</li>
-                        <li>Petrol, market zincirleri, telekom için standart yaklaşım</li>
-                        <li>2 haftalık yayın arası verilebilir</li>
-                    </ul>`
+                        <li><strong>Barlar (solda):</strong> Haftalık GRP değerleri - her hafta ne kadar TV yatırımı yapıldığını gösterir</li>
+                        <li><strong>Düz çizgi:</strong> Toplam Adstock - o haftadaki birikimli reklam etkisi (bu hafta + geçmişten taşınan)</li>
+                        <li><strong>Kesikli çizgi + alan:</strong> Carryover - sadece geçmiş haftalardan taşınan etki miktarı</li>
+                    </ul>
+                    <p><strong>Optimum Senaryo (λ = 0.70):</strong> Dengeli decay ile reklam etkisi <span class="highlight-purple">2-3 hafta boyunca %50+ korunur</span>.</p>`,
+                    scenario: `<p><strong>⚖️ Grafikte Ne Görmelisiniz?</strong></p>
+                    <ul>
+                        <li>Kesikli alan (carryover) orta genişlikte - geçmişten makul etki taşınıyor</li>
+                        <li>Düz çizgi barların üzerinde seyreder - birikim etkisi var</li>
+                        <li>GRP olmayan haftalarda adstock kademeli düşer ama sıfırlanmaz</li>
+                    </ul>
+                    <div class="rationale-recommendation">
+                        <strong>💡 Grafiği Nasıl Yorumlamalısınız?</strong>
+                        <ul>
+                            <li><strong>Carryover alanı genişse:</strong> Geçmiş yatırımlarınız hâlâ çalışıyor, burst stratejisi kullanabilirsiniz</li>
+                            <li><strong>Düz çizgi barlardan çok yüksekse:</strong> Güçlü birikim var, yoğunlaştırma etkili</li>
+                            <li><strong>Alternatifler arasında fark varsa:</strong> Daha yüksek carryover'lı alternatif uzun vadede verimli</li>
+                        </ul>
+                    </div>
+                    <div class="rationale-recommendation">
+                        <strong>🎯 Aksiyon Önerileri:</strong>
+                        <ul>
+                            <li>2-3 haftalık burst dönemleri planlayabilirsiniz</li>
+                            <li>1-2 hafta yayın arası (flight) verilebilir</li>
+                            <li>Sezonsal yoğunlaştırma stratejisi uygundur</li>
+                            <li>Haftalık 200-300 GRP ile istikrarlı birikim sağlayın</li>
+                        </ul>
+                    </div>
+                    <div class="rationale-tip">
+                        <strong>📊 Benchmark:</strong> Petrol, telekom, market sektörlerinde tipik decay 0.65-0.75 arasındadır.
+                    </div>`
+                },
+                carryover: {
+                    main: `<p><strong>📊 Grafik Ne Gösteriyor?</strong> Carryover = geçmiş haftalardan taşınan reklam etkisi. Decay oranına göre her hafta azalarak devam eder.</p>
+                    <p><strong>Optimum Senaryo:</strong> <span class="highlight-purple">Makul carryover</span> - yatırımlar 2-3 hafta boyunca değer üretmeye devam eder.</p>`,
+                    scenario: `<p><strong>⚖️ Grafikte Ne Görmelisiniz?</strong></p>
+                    <ul>
+                        <li>Barlar orta yükseklikte - dengeli taşıma etkisi</li>
+                        <li>GRP olmayan haftalarda bile carryover sıfırlanmaz</li>
+                        <li>2-3 haftalık flight dönemleri kabul edilebilir</li>
+                    </ul>
+                    <div class="rationale-recommendation">
+                        <strong>💡 Aksiyon:</strong> Burst stratejisi uygulayabilirsiniz - yoğun yayın sonrası carryover çalışır.
+                    </div>`
                 },
                 saturation: {
-                    main: `<p><strong>Saturation Grafiği Ne Gösteriyor?</strong> Harcama arttıkça elde edilen etkinin nasıl değiştiğini gösterir. <span class="highlight-green">Yeşil nokta</span> optimal harcama noktasını, <span class="highlight-green">yeşil dikey çizgi</span> ise bu noktayı işaretler.</p>
-                    <p><strong>Dengeli Senaryo (α = 1.5, γ = 0.8):</strong> Orta alpha değeri dengeli bir doygunluk noktası sağlar. Gamma 0.8 ile yumuşak bir S-eğrisi oluşur.</p>`,
-                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
+                    main: `<p><strong>Saturation Grafiği Ne Gösteriyor?</strong> Harcama arttıkça elde edilen etkinin nasıl değiştiğini gösterir.</p>
+                    <p><strong>Optimum Senaryo (α = 1.5, γ = 0.8):</strong> Orta alpha = <span class="highlight-purple">dengeli doygunluk noktası</span>.</p>`,
+                    scenario: `<p><strong>⚖️ Optimum Saturation Özellikleri:</strong></p>
                     <ul>
-                        <li>Optimal noktaya kadar iyi verim alınır</li>
-                        <li>Optimal noktadan sonra verim azalmaya başlar</li>
-                        <li>Bütçe planlamasında esneklik sağlar</li>
-                        <li>Çoğu marka için uygun başlangıç noktası</li>
+                        <li>Optimal noktaya kadar iyi verim</li>
+                        <li>Optimal sonrası kademeli azalan getiri</li>
+                        <li>Bütçe planlamasında esneklik</li>
                     </ul>`
                 },
                 reach: {
-                    main: `<p><strong>GRP-Reach Grafiği Ne Gösteriyor?</strong> X ekseni haftalık GRP değerini, Y ekseni ise ulaşılan kitle yüzdesini gösterir. <span class="highlight">Kırmızı dikey çizgi</span> optimal GRP noktasını işaretler.</p>`,
-                    scenario: `<p><strong>Frekans Seçimi ve Dengeli Yaklaşım:</strong></p>
+                    main: `<p><strong>GRP-Reach Grafiği Ne Gösteriyor?</strong> Kümülatif GRP'nin ne kadar kitleye ulaştığını gösterir.</p>`,
+                    scenario: `<p><strong>📌 Optimum Senaryo için Reach Stratejisi:</strong></p>
                     <ul>
-                        <li><strong>1+ Reach:</strong> Geniş bilinirlik kampanyaları için</li>
-                        <li><strong>2+ Reach:</strong> Çoğu kampanya için ideal denge noktası</li>
-                        <li><strong>3+ Reach:</strong> Önemli mesajlar ve CTA odaklı kampanyalar</li>
+                        <li><strong>2+ Reach:</strong> ⭐ Önerilen - maliyet-etkinlik dengesi</li>
                     </ul>
-                    <p>Dengeli senaryoda <span class="highlight-blue">2+ Reach</span> genellikle en iyi maliyet-etkinlik dengesini sağlar.</p>`
-                },
-                response: {
-                    main: `<p><strong>Response Grafiği Ne Gösteriyor?</strong> Gri çubuklar TV olmadan gerçekleşecek baseline satışı, yeşil çubuklar ise TV'nin yarattığı ek satışı gösterir. İkisinin toplamı toplam tahmini satıştır.</p>
-                    <p><strong>Dengeli Senaryo:</strong> Orta seviye carry-over ile yeşil çubuklar <span class="highlight-green">2-3 hafta boyunca belirgin kalır</span>.</p>`,
-                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
-                    <ul>
-                        <li>TV yayını durduğunda etki kademeli olarak azalır</li>
-                        <li>Haftalık dalgalanmalar tolere edilebilir</li>
-                        <li>Burst stratejisi uygulanabilir</li>
-                        <li>Sezonsal kampanya planlaması yapılabilir</li>
-                    </ul>`
-                },
-                roi: {
-                    main: `<p><strong>ROI Grafiği Ne Gösteriyor?</strong> Mor çubuklar haftalık ROI'yi (TV etkisi / harcama), pembe çizgi ise TV Efficiency Index'i gösterir.</p>
-                    <p><strong>Dengeli Senaryo:</strong> Carry-over etkisi sayesinde, düşük harcamalı haftalarda bile <span class="highlight-purple">ROI makul seviyelerde kalır</span>.</p>`,
-                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
-                    <ul>
-                        <li>ROI haftalık değişimlere karşı daha dayanıklıdır</li>
-                        <li>Verimlilik optimizasyonu için manevra alanı vardır</li>
-                        <li>Bütçe kaydırmaları kabul edilebilir sonuçlar verir</li>
-                    </ul>`
+                    <div class="rationale-recommendation">
+                        <strong>💡 Aksiyon:</strong> 2+ reach %45-55 hedefleyin.
+                    </div>`
                 }
             },
-            aggressive: {
-                name: 'Agresif',
-                icon: '🚀',
+            maksimum: {
+                name: 'Maksimum',
+                icon: '📈',
                 adstock: {
-                    main: `<p><strong>Adstock Grafiği Ne Gösteriyor?</strong> Mavi çizgi gerçek haftalık harcamayı, mor çizgi ise "birikimli etki" (adstock) değerini gösterir. Adstock, geçmiş haftaların reklam etkisinin bu haftaya taşınan kısmını hesaba katar.</p>
-                    <p><strong>Agresif Senaryo (λ = 0.85):</strong> Yüksek decay rate ile reklam etkisi <span class="highlight-green">4-5 hafta boyunca güçlü kalır</span>. Mor çizgi mavi çizginin çok üzerinde seyreder, güçlü bir birikim etkisi vardır.</p>`,
-                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
+                    main: `<p><strong>📊 Grafik Ne Gösteriyor?</strong></p>
                     <ul>
-                        <li>Yatırımın etkisi uzun süre devam eder</li>
-                        <li>Marka inşası kampanyaları için ideal</li>
-                        <li>Otomotiv, lüks ürünler, premium markalar</li>
-                        <li>Lansman kampanyalarında uzun vadeli etki</li>
-                    </ul>`
+                        <li><strong>Barlar (solda):</strong> Haftalık GRP değerleri - her hafta ne kadar TV yatırımı yapıldığını gösterir</li>
+                        <li><strong>Düz çizgi:</strong> Toplam Adstock - o haftadaki birikimli reklam etkisi (bu hafta + geçmişten taşınan)</li>
+                        <li><strong>Kesikli çizgi + alan:</strong> Carryover - sadece geçmiş haftalardan taşınan etki miktarı</li>
+                    </ul>
+                    <p><strong>Maksimum Senaryo (λ = 0.85):</strong> Yüksek decay ile reklam etkisi <span class="highlight-green">4-5 hafta boyunca %60+ korunur</span>.</p>`,
+                    scenario: `<p><strong>📈 Grafikte Ne Görmelisiniz?</strong></p>
+                    <ul>
+                        <li>Adstock çizgisi GRP barlarının çok üzerinde</li>
+                        <li>GRP olmayan haftalarda bile adstock yüksek kalır</li>
+                        <li>Peak noktaları birkaç hafta gecikmeyle oluşabilir</li>
+                    </ul>
+                    <div class="rationale-recommendation">
+                        <strong>🎯 Aksiyon:</strong> İlk 2-3 haftada yoğun GRP (300+), sonra düşük seviyede sürdürün.
+                    </div>`
+                },
+                carryover: {
+                    main: `<p><strong>📊 Grafik Ne Gösteriyor?</strong> Carryover = geçmiş haftalardan taşınan reklam etkisi. Maksimum senaryoda bu etki çok güçlü ve uzun sürelidir.</p>
+                    <p><strong>Maksimum Senaryo:</strong> <span class="highlight-green">Çok yüksek carryover</span> - yatırımlar 4-5 hafta boyunca değer üretmeye devam eder.</p>`,
+                    scenario: `<p><strong>📈 Grafikte Ne Görmelisiniz?</strong></p>
+                    <ul>
+                        <li>Barlar çok yüksek - geçmişten güçlü etki taşınıyor</li>
+                        <li>Yayın bitiminden haftalarca sonra bile carryover sıfırlanmaz</li>
+                        <li>Flight stratejisi bu senaryoda çok etkili</li>
+                    </ul>
+                    <div class="rationale-recommendation">
+                        <strong>💡 Aksiyon:</strong> Burst + maintenance stratejisi uygulayın. Yoğun yayın sonrası 3-4 hafta ara verilebilir.
+                    </div>
+                    <div class="rationale-tip">
+                        <strong>🏪 Premium Market:</strong> Lansmanda yoğun yatırım yapın, carryover etkiyle sürdürün.
+                    </div>`
                 },
                 saturation: {
-                    main: `<p><strong>Saturation Grafiği Ne Gösteriyor?</strong> Harcama arttıkça elde edilen etkinin nasıl değiştiğini gösterir. <span class="highlight-green">Yeşil nokta</span> optimal harcama noktasını, <span class="highlight-green">yeşil dikey çizgi</span> ise bu noktayı işaretler.</p>
-                    <p><strong>Agresif Senaryo (α = 1.0, γ = 1.2):</strong> Düşük alpha ile <span class="highlight">daha az harcamayla doygunluk başlar</span>. Yüksek gamma keskin bir S-eğrisi oluşturur - belirli bir eşiğe kadar düşük etki, sonra hızlı artış.</p>`,
-                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
+                    main: `<p><strong>Saturation Grafiği Ne Gösteriyor?</strong> Harcama arttıkça elde edilen etkinin nasıl değiştiğini gösterir.</p>
+                    <p><strong>Maksimum Senaryo (α = 2.5, γ = 0.6):</strong> Yüksek alpha = <span class="highlight-green">doygunluğa ulaşmak zor</span>.</p>`,
+                    scenario: `<p><strong>📈 Maksimum Saturation Özellikleri:</strong></p>
                     <ul>
-                        <li>Minimum eşiğin altında kalmak risklidir</li>
-                        <li>Eşiği aştığınızda hızlı verim artışı</li>
-                        <li>Ya güçlü girin ya da girmeyin yaklaşımı</li>
-                        <li>Lansman kampanyaları için "big bang" stratejisi</li>
+                        <li>Çok yüksek GRP'lerde bile doygunluk zor</li>
+                        <li>Her ek GRP marjinal katkı sağlar</li>
+                        <li>Uzun vadeli marka inşası için ideal</li>
                     </ul>`
                 },
                 reach: {
-                    main: `<p><strong>GRP-Reach Grafiği Ne Gösteriyor?</strong> X ekseni haftalık GRP değerini, Y ekseni ise ulaşılan kitle yüzdesini gösterir. <span class="highlight">Kırmızı dikey çizgi</span> optimal GRP noktasını işaretler.</p>`,
-                    scenario: `<p><strong>Frekans Seçimi ve Agresif Yaklaşım:</strong></p>
+                    main: `<p><strong>GRP-Reach Grafiği Ne Gösteriyor?</strong> Kümülatif GRP'nin ne kadar kitleye ulaştığını gösterir.</p>`,
+                    scenario: `<p><strong>📌 Maksimum Senaryo için Reach Stratejisi:</strong></p>
                     <ul>
-                        <li><strong>1+ Reach:</strong> Lansman için geniş farkındalık</li>
-                        <li><strong>2+ Reach:</strong> Mesajın yerleşmesi için minimum</li>
-                        <li><strong>3+ Reach:</strong> Premium marka inşası için önerilir</li>
+                        <li><strong>1+ Reach:</strong> ⭐ Önerilen - maksimum kitleye ulaşım</li>
                     </ul>
-                    <p>Agresif senaryoda, uzun süreli etki için <span class="highlight-green">yüksek GRP ile 3+ Reach</span> hedeflenmelidir. İlk yatırım yüksek olsa da etki uzun sürer.</p>`
-                },
-                response: {
-                    main: `<p><strong>Response Grafiği Ne Gösteriyor?</strong> Gri çubuklar TV olmadan gerçekleşecek baseline satışı, yeşil çubuklar ise TV'nin yarattığı ek satışı gösterir. İkisinin toplamı toplam tahmini satıştır.</p>
-                    <p><strong>Agresif Senaryo:</strong> Yüksek carry-over ile yeşil çubuklar <span class="highlight-green">4-5 hafta boyunca güçlü kalır</span>. TV yayını bitse bile etki devam eder.</p>`,
-                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
-                    <ul>
-                        <li>Yatırımın geri dönüşü uzun vadeye yayılır</li>
-                        <li>Flight dönemlerinde etki korunur</li>
-                        <li>Sezonluk yoğunlaştırma stratejisi uygulanabilir</li>
-                        <li>Brand equity inşası için ideal</li>
-                    </ul>`
-                },
-                roi: {
-                    main: `<p><strong>ROI Grafiği Ne Gösteriyor?</strong> Mor çubuklar haftalık ROI'yi (TV etkisi / harcama), pembe çizgi ise TV Efficiency Index'i gösterir.</p>
-                    <p><strong>Agresif Senaryo:</strong> Yüksek carry-over sayesinde, <span class="highlight-green">yayın olmayan haftalarda bile ROI pozitif kalır</span> (geçmiş yatırımın etkisiyle).</p>`,
-                    scenario: `<p><strong>Bu Ne Anlama Geliyor?</strong></p>
-                    <ul>
-                        <li>Uzun vadeli ROI hesabı yapılmalıdır</li>
-                        <li>Haftalık ROI yanıltıcı olabilir, kümülatif bakılmalı</li>
-                        <li>İlk haftalarda düşük ROI normaldir, zamanla artar</li>
-                        <li>Sabırlı yatırımcılar için uygundur</li>
-                    </ul>`
+                    <div class="rationale-recommendation">
+                        <strong>💡 Aksiyon:</strong> 1+ Reach %60+ hedefleyin. İlk 2-3 haftada yoğun GRP.
+                    </div>`
                 }
             }
         };
 
-        // Update all rationales based on current scenario and frequency
-        function updateAllRationales() {
-            const scenario = scenarioRationales[currentScenario];
-            const freq = currentReachFrequency;
-            const freqLabel = reachParams[freq].label;
+        // Generate dynamic Saturation Rationale based on analysis data
+        function generateSaturationRationale(scenario) {
+            const alpha = parseFloat(document.getElementById('alphaParam').value);
+            const gamma = parseFloat(document.getElementById('gammaParam').value);
+            
+            // Check if we have analysis data
+            if (!analysisData || !analysisData.adstock || analysisData.adstock.length === 0) {
+                // No data yet - show basic explanation
+                return `
+                    ${scenario.saturation.main}
+                    <div class="rationale-scenario">
+                        <div class="rationale-scenario-title">${scenario.icon} ${scenario.name} Senaryo Etkisi</div>
+                        ${scenario.saturation.scenario}
+                    </div>
+                    <div class="rationale-tip">
+                        <strong>📊 Analiz Bekleniyor:</strong> Analizi çalıştırdığınızda alternatiflerinizin saturation performansı burada detaylı görünecek.
+                    </div>
+                `;
+            }
 
-            // Adstock Rationale
-            document.getElementById('adstockRationale').innerHTML = `
-                ${scenario.adstock.main}
-                <div class="rationale-scenario">
-                    <div class="rationale-scenario-title">${scenario.icon} ${scenario.name} Senaryo Etkisi</div>
-                    ${scenario.adstock.scenario}
-                </div>
-            `;
+            // Get alternatives data from stored analysis
+            const grpAlt1 = document.getElementById('grpAlt1').value.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+            const grpAlt2 = document.getElementById('grpAlt2').value.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+            const grpAlt3 = document.getElementById('grpAlt3').value.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+            const cpp = parseFloat(document.getElementById('cppValue').value) || 25000;
+            const decayRate = parseFloat(document.getElementById('decayRate').value);
 
-            // Saturation Rationale
-            document.getElementById('saturationRationale').innerHTML = `
-                ${scenario.saturation.main}
+            // Calculate adstock and saturation for each alternative
+            const calcAltMetrics = (grpArr) => {
+                if (grpArr.length === 0) return null;
+                const spend = grpArr.map(g => g * cpp);
+                const adstock = calculateAdstock(spend, decayRate);
+                const saturation = adstock.map(a => calculateSaturation(a, alpha, gamma));
+                const avgAdstock = adstock.reduce((a, b) => a + b, 0) / adstock.length;
+                const avgSaturation = saturation.reduce((a, b) => a + b, 0) / saturation.length;
+                const maxSaturation = Math.max(...saturation);
+                const minSaturation = Math.min(...saturation);
+                return { avgAdstock, avgSaturation, maxSaturation, minSaturation, adstock, saturation };
+            };
+
+            const alt1 = calcAltMetrics(grpAlt1);
+            const alt2 = calcAltMetrics(grpAlt2);
+            const alt3 = calcAltMetrics(grpAlt3);
+
+            // Calculate optimal point
+            const allAdstock = [...(alt1?.adstock || []), ...(alt2?.adstock || []), ...(alt3?.adstock || [])];
+            const optimalBudget = findOptimalBudget(alpha, gamma, allAdstock);
+            const optimalSaturation = calculateSaturation(optimalBudget, alpha, gamma);
+
+            // Build comparison analysis
+            let altComparison = '<div class="rationale-data-section"><strong>📈 Alternatif Karşılaştırması:</strong><table class="rationale-table"><thead><tr><th></th><th>Ort. Saturation</th><th>Max</th><th>Durum</th></tr></thead><tbody>';
+            
+            const evalStatus = (avgSat) => {
+                if (avgSat >= 0.85) return { text: '⚠️ Doygunluk', class: 'status-warning' };
+                if (avgSat >= 0.6) return { text: '✅ Verimli', class: 'status-good' };
+                return { text: '📈 Potansiyel Var', class: 'status-info' };
+            };
+
+            if (alt1) {
+                const status = evalStatus(alt1.avgSaturation);
+                altComparison += `<tr><td><span class="alt-badge alt1">1</span></td><td>%${(alt1.avgSaturation * 100).toFixed(1)}</td><td>%${(alt1.maxSaturation * 100).toFixed(1)}</td><td class="${status.class}">${status.text}</td></tr>`;
+            }
+            if (alt2) {
+                const status = evalStatus(alt2.avgSaturation);
+                altComparison += `<tr><td><span class="alt-badge alt2">2</span></td><td>%${(alt2.avgSaturation * 100).toFixed(1)}</td><td>%${(alt2.maxSaturation * 100).toFixed(1)}</td><td class="${status.class}">${status.text}</td></tr>`;
+            }
+            if (alt3) {
+                const status = evalStatus(alt3.avgSaturation);
+                altComparison += `<tr><td><span class="alt-badge alt3">3</span></td><td>%${(alt3.avgSaturation * 100).toFixed(1)}</td><td>%${(alt3.maxSaturation * 100).toFixed(1)}</td><td class="${status.class}">${status.text}</td></tr>`;
+            }
+            altComparison += '</tbody></table></div>';
+
+            // Find best alternative
+            const alts = [
+                { name: 'Alt-1', data: alt1, color: '#00d4ff' },
+                { name: 'Alt-2', data: alt2, color: '#ff6b35' },
+                { name: 'Alt-3', data: alt3, color: '#10b981' }
+            ].filter(a => a.data);
+
+            let bestAlt = alts[0];
+            let recommendation = '';
+
+            // Determine best based on efficiency (not too high saturation, not too low)
+            alts.forEach(a => {
+                // Ideal is around 60-80% saturation
+                const distanceFromIdeal = Math.abs(a.data.avgSaturation - 0.7);
+                const bestDistance = Math.abs(bestAlt.data.avgSaturation - 0.7);
+                if (distanceFromIdeal < bestDistance) {
+                    bestAlt = a;
+                }
+            });
+
+            // Generate recommendation based on situation
+            const avgSatAll = alts.reduce((sum, a) => sum + a.data.avgSaturation, 0) / alts.length;
+            
+            if (avgSatAll > 0.85) {
+                recommendation = `
+                    <div class="rationale-recommendation warning">
+                        <strong>⚠️ Dikkat: Yüksek Doygunluk Bölgesi</strong>
+                        <p>Tüm alternatifler %85+ saturation seviyesinde. Bu demek ki:</p>
+                        <ul>
+                            <li>Her ek TL harcama için <span class="highlight">azalan getiri</span> alıyorsunuz</li>
+                            <li>Optimal nokta (${(optimalBudget/1000000).toFixed(1)}M TL) aşılmış durumda</li>
+                            <li>Bütçeyi artırmak yerine <strong>frekans veya timing optimizasyonu</strong> düşünün</li>
+                        </ul>
+                        <p><strong>Öneri:</strong> Haftalık harcamayı ${(optimalBudget/1000000).toFixed(1)}M TL civarına çekerek verimliliği artırabilirsiniz.</p>
+                    </div>`;
+            } else if (avgSatAll > 0.6) {
+                recommendation = `
+                    <div class="rationale-recommendation">
+                        <strong>✅ Verimli Bölge</strong>
+                        <p>Alternatifleriniz %60-85 saturation bandında - bu iyi bir verimlilik seviyesi.</p>
+                        <p><strong>${bestAlt.name}</strong> en dengeli performansı gösteriyor (Ort: %${(bestAlt.data.avgSaturation * 100).toFixed(1)}).</p>
+                        <p><strong>Öneri:</strong> Mevcut stratejiyle devam edebilir veya ${bestAlt.name} dağılımını baz alabilirsiniz.</p>
+                    </div>`;
+            } else {
+                recommendation = `
+                    <div class="rationale-recommendation info">
+                        <strong>📈 Büyüme Potansiyeli Var</strong>
+                        <p>Saturation seviyeleri %60'ın altında - bütçe artışından verim alabilirsiniz.</p>
+                        <p>Optimal noktaya (${(optimalBudget/1000000).toFixed(1)}M TL) kadar harcama artışı düşünülebilir.</p>
+                        <p><strong>Öneri:</strong> Haftalık GRP'yi artırarak daha yüksek saturation ve etki elde edebilirsiniz.</p>
+                    </div>`;
+            }
+
+            // Build final HTML
+            return `
+                <p><strong>Saturation Grafiği Ne Gösteriyor?</strong> Her alternatifin haftalık adstock değerlerinin saturation eğrisi üzerindeki konumunu gösterir. Kırmızı çizgi optimal harcama noktasını (${(optimalBudget/1000000).toFixed(1)}M TL, %${(optimalSaturation * 100).toFixed(0)} saturation) işaretler.</p>
+                
+                ${altComparison}
+                
+                ${recommendation}
+                
                 <div class="rationale-scenario">
                     <div class="rationale-scenario-title">${scenario.icon} ${scenario.name} Senaryo Etkisi</div>
                     ${scenario.saturation.scenario}
                 </div>
             `;
+        }
 
-            // Reach Rationale (also depends on frequency)
-            document.getElementById('reachRationale').innerHTML = `
-                ${scenario.reach.main}
-                <p><strong>Seçili Frekans: ${freqLabel}</strong></p>
-                <div class="rationale-scenario">
-                    <div class="rationale-scenario-title">${scenario.icon} ${scenario.name} Senaryo Etkisi</div>
-                    ${scenario.reach.scenario}
-                </div>
-            `;
+        // Update all rationales based on current scenario and frequency
+        function updateAllRationales() {
+            try {
+                const scenario = scenarioRationales[currentScenario];
+                const freq = currentReachFrequency;
+                const freqLabel = freq === 'all' ? 'Tüm Frekanslar (1+, 2+, 3+)' : reachParams[freq].label;
 
-            // Response Rationale
-            document.getElementById('responseRationale').innerHTML = `
-                ${scenario.response.main}
-                <div class="rationale-scenario">
-                    <div class="rationale-scenario-title">${scenario.icon} ${scenario.name} Senaryo Etkisi</div>
-                    ${scenario.response.scenario}
-                </div>
-            `;
+                // Adstock Rationale
+                document.getElementById('adstockRationale').innerHTML = `
+                    ${scenario.adstock.main}
+                    <div class="rationale-scenario">
+                        <div class="rationale-scenario-title">${scenario.icon} ${scenario.name} Senaryo Etkisi</div>
+                        ${scenario.adstock.scenario}
+                    </div>
+                `;
 
-            // ROI Rationale
-            document.getElementById('roiRationale').innerHTML = `
-                ${scenario.roi.main}
-                <div class="rationale-scenario">
-                    <div class="rationale-scenario-title">${scenario.icon} ${scenario.name} Senaryo Etkisi</div>
-                    ${scenario.roi.scenario}
-                </div>
-            `;
+                // Saturation Rationale - DYNAMIC based on analysis data
+                const saturationDynamic = generateSaturationRationale(scenario);
+                document.getElementById('saturationRationale').innerHTML = saturationDynamic;
+
+                // Reach Rationale (also depends on frequency)
+                const freqExplanation = freq === 'all' ? 
+                    `<p><strong>Görüntüleme:</strong> Tüm frekans eğrileri karşılaştırmalı olarak gösteriliyor.</p>
+                    <ul>
+                        <li><span style="color: #00d4ff;">●</span> <strong>Mavi (1+):</strong> En az 1 kez ulaşılan kitle</li>
+                        <li><span style="color: #ff6b35;">●</span> <strong>Turuncu (2+):</strong> En az 2 kez ulaşılan kitle</li>
+                        <li><span style="color: #8888a0;">●</span> <strong>Gri (3+):</strong> En az 3 kez ulaşılan kitle</li>
+                    </ul>` :
+                    `<p><strong>Seçili Frekans: ${freqLabel}</strong></p>`;
+
+                document.getElementById('reachRationale').innerHTML = `
+                    ${scenario.reach.main}
+                    ${freqExplanation}
+                    <div class="rationale-scenario">
+                        <div class="rationale-scenario-title">${scenario.icon} ${scenario.name} Senaryo Etkisi</div>
+                        ${scenario.reach.scenario}
+                    </div>
+                `;
+
+                // Carryover Rationale
+                document.getElementById('carryoverRationale').innerHTML = `
+                    ${scenario.carryover.main}
+                    <div class="rationale-scenario">
+                        <div class="rationale-scenario-title">${scenario.icon} ${scenario.name} Senaryo Etkisi</div>
+                        ${scenario.carryover.scenario}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Update rationales error:', error);
+            }
         }
 
         // Set reach frequency filter
         function setReachFrequency(freq) {
-            currentReachFrequency = freq;
-            
-            // Update buttons
-            document.querySelectorAll('.reach-btn').forEach((btn, i) => {
-                btn.classList.toggle('active', i + 1 === freq);
-            });
-            
-            // Update label
-            document.getElementById('reachFreqLabel').textContent = reachParams[freq].label;
-            
-            // Redraw reach chart
-            updateReachChart();
-            
-            // Update rationales
-            updateAllRationales();
+            try {
+                currentReachFrequency = freq;
+                
+                // Update buttons
+                document.querySelectorAll('.reach-btn').forEach((btn) => {
+                    const btnFreq = btn.textContent.includes('Hepsi') ? 'all' : 
+                                   btn.textContent.includes('1+') ? 1 :
+                                   btn.textContent.includes('2+') ? 2 : 3;
+                    btn.classList.toggle('active', btnFreq === freq);
+                });
+                
+                // Update label
+                if (freq === 'all') {
+                    document.getElementById('reachFreqLabel').textContent = '1+/2+/3+ Reach';
+                } else {
+                    document.getElementById('reachFreqLabel').textContent = reachParams[freq].label;
+                }
+                
+                // Redraw reach chart
+                updateReachChart();
+                
+                // Update rationales
+                updateAllRationales();
+            } catch (error) {
+                console.error('Set reach frequency error:', error);
+            }
         }
 
         // Calculate reach based on GRP using logarithmic curve
         function calculateReach(grp, freq) {
-            const params = reachParams[freq];
+            // Handle 'all' case by defaulting to freq 1
+            const actualFreq = freq === 'all' ? 1 : freq;
+            const params = reachParams[actualFreq];
             // Logarithmic reach curve: Reach = maxReach * (1 - e^(-k * GRP))
             return params.maxReach * (1 - Math.exp(-params.k * grp));
         }
 
         // Find optimal GRP (where marginal reach gain drops below threshold)
         function findOptimalGRP(freq) {
-            const params = reachParams[freq];
+            // Handle 'all' case by defaulting to freq 1
+            const actualFreq = freq === 'all' ? 1 : freq;
+            const params = reachParams[actualFreq];
             // Optimal is around where the curve starts to flatten significantly
             // This is approximately where we've reached ~60-70% of max reach
             return Math.log(0.35) / (-params.k); // ~60% of max reach
         }
 
         // Set input mode
-        function setInputMode(mode) {
-            inputMode = mode;
-            
-            // Update buttons
-            document.getElementById('modeSpend').classList.toggle('active', mode === 'spend');
-            document.getElementById('modeGRP').classList.toggle('active', mode === 'grp');
-            
-            // Update content visibility
-            document.getElementById('spendModeInputs').classList.toggle('active', mode === 'spend');
-            document.getElementById('grpModeInputs').classList.toggle('active', mode === 'grp');
-            
-            // Update summary
-            updateInputSummary();
-        }
-
-        // Update input summary
-        function updateInputSummary() {
-            const cpp = parseFloat(document.getElementById('cppValue').value) || 25000;
-            let spend, grp, weeks;
-
-            if (inputMode === 'spend') {
-                const spendInput = document.getElementById('spendData').value;
-                spend = spendInput.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
-                grp = spend.map(s => s / cpp);
-                weeks = spend.length;
-            } else {
-                const grpInput = document.getElementById('grpData').value;
-                grp = grpInput.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
-                spend = grp.map(g => g * cpp);
-                weeks = grp.length;
-            }
-
-            const totalSpend = spend.reduce((a, b) => a + b, 0);
-            const totalGRP = grp.reduce((a, b) => a + b, 0);
-
-            document.getElementById('summarySpend').textContent = formatNumber(totalSpend) + ' TL';
-            document.getElementById('summaryGRP').textContent = totalGRP.toFixed(0) + ' GRP';
-            document.getElementById('summaryWeeks').textContent = weeks + ' Hafta';
-        }
-
         // Initialize charts
         function initCharts() {
             const chartOptions = {
@@ -1939,31 +2655,33 @@
                 }
             };
 
-            // Adstock Chart
+            // Adstock Chart - Dual axis for GRP and Adstock
             adstockChart = new Chart(document.getElementById('adstockChart'), {
                 type: 'line',
                 data: {
                     labels: [],
-                    datasets: [
-                        {
-                            label: 'Orijinal Harcama',
-                            data: [],
-                            borderColor: '#00d4ff',
-                            backgroundColor: 'rgba(0, 212, 255, 0.1)',
-                            fill: true,
-                            tension: 0.4
-                        },
-                        {
-                            label: 'Adstock Değeri',
-                            data: [],
-                            borderColor: '#7c3aed',
-                            backgroundColor: 'rgba(124, 58, 237, 0.1)',
-                            fill: true,
-                            tension: 0.4
-                        }
-                    ]
+                    datasets: []
                 },
-                options: chartOptions
+                options: {
+                    ...chartOptions,
+                    scales: {
+                        x: chartOptions.scales.x,
+                        yGRP: {
+                            type: 'linear',
+                            position: 'left',
+                            title: { display: true, text: 'GRP', color: '#8888a0' },
+                            grid: { color: 'rgba(136, 136, 160, 0.1)' },
+                            ticks: { color: '#8888a0' }
+                        },
+                        yAdstock: {
+                            type: 'linear',
+                            position: 'right',
+                            title: { display: true, text: 'Adstock (M TL)', color: '#8888a0' },
+                            grid: { drawOnChartArea: false },
+                            ticks: { color: '#8888a0' }
+                        }
+                    }
+                }
             });
 
             // Saturation Chart with annotation
@@ -2015,29 +2733,12 @@
                 }
             });
 
-            // Response Chart
-            responseChart = new Chart(document.getElementById('responseChart'), {
+            // Carryover Chart - Weekly carryover effect
+            carryoverChart = new Chart(document.getElementById('carryoverChart'), {
                 type: 'bar',
                 data: {
                     labels: [],
-                    datasets: [
-                        {
-                            label: 'Baseline Satış',
-                            data: [],
-                            backgroundColor: 'rgba(136, 136, 160, 0.5)',
-                            borderColor: '#8888a0',
-                            borderWidth: 1,
-                            stack: 'stack1'
-                        },
-                        {
-                            label: 'TV Etkisi',
-                            data: [],
-                            backgroundColor: 'rgba(16, 185, 129, 0.7)',
-                            borderColor: '#10b981',
-                            borderWidth: 1,
-                            stack: 'stack1'
-                        }
-                    ]
+                    datasets: []
                 },
                 options: {
                     ...chartOptions,
@@ -2045,62 +2746,18 @@
                         ...chartOptions.plugins,
                         tooltip: {
                             callbacks: {
-                                afterBody: function(context) {
-                                    const idx = context[0].dataIndex;
-                                    const base = responseChart.data.datasets[0].data[idx];
-                                    const tv = responseChart.data.datasets[1].data[idx];
-                                    return '\nToplam: ' + formatNumber(base + tv) + ' TL';
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${formatNumber(context.raw)} TL`;
                                 }
                             }
                         }
                     },
                     scales: {
-                        x: { ...chartOptions.scales.x, stacked: true },
-                        y: { ...chartOptions.scales.y, stacked: true, beginAtZero: true }
-                    }
-                }
-            });
-
-            // ROI Chart
-            roiChart = new Chart(document.getElementById('roiChart'), {
-                type: 'bar',
-                data: {
-                    labels: [],
-                    datasets: [
-                        {
-                            label: 'Haftalık ROI (%)',
-                            data: [],
-                            backgroundColor: 'rgba(124, 58, 237, 0.6)',
-                            borderColor: '#7c3aed',
-                            borderWidth: 1,
-                            yAxisID: 'y'
-                        },
-                        {
-                            label: 'TV Efficiency Index',
-                            data: [],
-                            type: 'line',
-                            borderColor: '#ec4899',
-                            backgroundColor: 'transparent',
-                            tension: 0.4,
-                            yAxisID: 'y1',
-                            pointRadius: 4
-                        }
-                    ]
-                },
-                options: {
-                    ...chartOptions,
-                    scales: {
                         x: chartOptions.scales.x,
                         y: {
                             ...chartOptions.scales.y,
-                            position: 'left',
-                            title: { display: true, text: 'ROI (%)', color: '#8888a0' }
-                        },
-                        y1: {
-                            ...chartOptions.scales.y,
-                            position: 'right',
-                            grid: { drawOnChartArea: false },
-                            title: { display: true, text: 'TV Efficiency Index', color: '#8888a0' }
+                            title: { display: true, text: 'Carryover (TL)', color: '#8888a0' },
+                            beginAtZero: true
                         }
                     }
                 }
@@ -2162,87 +2819,146 @@
 
         // Update Reach Chart
         function updateReachChart() {
-            const freq = currentReachFrequency;
-            const params = reachParams[freq];
-            
-            // Generate curve data
-            const curveData = [];
-            const dataPoints = [];
-            
-            for (let grp = 0; grp <= 400; grp += 10) {
-                const reach = calculateReach(grp, freq);
-                curveData.push({ x: grp, y: reach });
-            }
-            
-            // Add data points from analysis if available
-            if (analysisData.grp && analysisData.grp.length > 0) {
-                let cumulativeGRP = 0;
-                analysisData.grp.forEach((g, i) => {
-                    cumulativeGRP += g;
-                    const reach = calculateReach(cumulativeGRP, freq);
-                    dataPoints.push({ x: cumulativeGRP, y: reach });
-                });
-            }
-            
-            // Find optimal GRP
-            const optimalGRP = findOptimalGRP(freq);
-            const optimalReach = calculateReach(optimalGRP, freq);
-            
-            // Max reach at 250 GRP (typical reference point)
-            const maxGRPRef = 250;
-            const reachAt250 = calculateReach(maxGRPRef, freq);
-            
-            // Update chart data
-            reachChart.data.datasets = [
-                {
-                    label: params.label,
-                    data: curveData,
-                    borderColor: '#00d4ff',
-                    backgroundColor: 'rgba(0, 212, 255, 0.1)',
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 0
-                }
-            ];
-            
-            // Add data points if available
-            if (dataPoints.length > 0) {
-                reachChart.data.datasets.push({
-                    label: 'Kampanya Verileri',
-                    data: dataPoints,
-                    borderColor: '#10b981',
-                    backgroundColor: '#10b981',
-                    pointRadius: 6,
-                    pointStyle: 'circle',
-                    showLine: false
-                });
-            }
-            
-            // Add optimal line annotation
-            reachChart.options.plugins.annotation.annotations = {
-                optimalLine: {
-                    type: 'line',
-                    xMin: optimalGRP,
-                    xMax: optimalGRP,
-                    borderColor: '#ef4444',
-                    borderWidth: 2,
-                    label: {
-                        display: true,
-                        content: `Optimal: ${Math.round(optimalGRP)} GRP`,
-                        position: 'start',
-                        backgroundColor: '#ef4444',
-                        color: 'white',
-                        font: { size: 10 }
+            try {
+                const freq = currentReachFrequency;
+                const maxGRPRange = 2000;
+                
+                // Colors for each frequency
+                const freqColors = {
+                    1: { border: '#00d4ff', bg: 'rgba(0, 212, 255, 0.1)', point: '#00d4ff' },
+                    2: { border: '#ff6b35', bg: 'rgba(255, 107, 53, 0.1)', point: '#ff6b35' },
+                    3: { border: '#8888a0', bg: 'rgba(136, 136, 160, 0.1)', point: '#8888a0' }
+                };
+                
+                let datasets = [];
+                
+                if (freq === 'all') {
+                    // Show all three curves
+                    [1, 2, 3].forEach(f => {
+                        const curveData = [];
+                        for (let grp = 0; grp <= maxGRPRange; grp += 50) {
+                            const reach = calculateReach(grp, f);
+                            curveData.push({ x: grp, y: reach });
+                        }
+                        datasets.push({
+                            label: reachParams[f].label,
+                            data: curveData,
+                            borderColor: freqColors[f].border,
+                            backgroundColor: 'transparent',
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            borderWidth: 2
+                        });
+                    });
+                    
+                    // Add data points for ALL frequencies if analysis data exists
+                    if (analysisData.grp && analysisData.grp.length > 0) {
+                        [1, 2, 3].forEach(f => {
+                            const dataPoints = [];
+                            let cumulativeGRP = 0;
+                            
+                            analysisData.grp.forEach((g, i) => {
+                                cumulativeGRP += g;
+                                const reach = calculateReach(cumulativeGRP, f);
+                                dataPoints.push({ x: cumulativeGRP, y: reach });
+                            });
+                            
+                            datasets.push({
+                                label: `Alt-1 (${f}+)`,
+                                data: dataPoints,
+                                borderColor: freqColors[f].point,
+                                backgroundColor: freqColors[f].point,
+                                pointRadius: 5,
+                                pointStyle: 'circle',
+                                showLine: false
+                            });
+                        });
                     }
+                    
+                    reachChart.options.plugins.annotation.annotations = {};
+                    
+                    const reach1at250 = calculateReach(250, 1);
+                    document.getElementById('reachMaxGRP').textContent = maxGRPRange;
+                    document.getElementById('reachMaxPercent').textContent = `%${reach1at250.toFixed(1)} (1+)`;
+                    document.getElementById('reachOptimalGRP').textContent = '-';
+                    
+                } else {
+                    // Single frequency mode
+                    const params = reachParams[freq];
+                    const curveData = [];
+                    
+                    for (let grp = 0; grp <= maxGRPRange; grp += 50) {
+                        const reach = calculateReach(grp, freq);
+                        curveData.push({ x: grp, y: reach });
+                    }
+                    
+                    datasets.push({
+                        label: params.label,
+                        data: curveData,
+                        borderColor: freqColors[freq].border,
+                        backgroundColor: freqColors[freq].bg,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        borderWidth: 2
+                    });
+                    
+                    const optimalGRP = findOptimalGRP(freq);
+                    
+                    reachChart.options.plugins.annotation.annotations = {
+                        optimalLine: {
+                            type: 'line',
+                            xMin: optimalGRP,
+                            xMax: optimalGRP,
+                            borderColor: '#ef4444',
+                            borderWidth: 2,
+                            label: {
+                                display: true,
+                                content: `Optimal: ${Math.round(optimalGRP)} GRP`,
+                                position: 'start',
+                                backgroundColor: '#ef4444',
+                                color: 'white',
+                                font: { size: 10 }
+                            }
+                        }
+                    };
+                    
+                    // Add data points for THIS frequency
+                    if (analysisData.grp && analysisData.grp.length > 0) {
+                        const dataPoints = [];
+                        let cumulativeGRP = 0;
+                        
+                        analysisData.grp.forEach((g, i) => {
+                            cumulativeGRP += g;
+                            const reach = calculateReach(cumulativeGRP, freq);
+                            dataPoints.push({ x: cumulativeGRP, y: reach });
+                        });
+                        
+                        datasets.push({
+                            label: 'Kampanya Verileri',
+                            data: dataPoints,
+                            borderColor: '#10b981',
+                            backgroundColor: '#10b981',
+                            pointRadius: 6,
+                            pointStyle: 'circle',
+                            showLine: false
+                        });
+                    }
+                    
+                    const maxGRPRef = 250;
+                    const reachAt250 = calculateReach(maxGRPRef, freq);
+                    document.getElementById('reachMaxGRP').textContent = maxGRPRef;
+                    document.getElementById('reachMaxPercent').textContent = `%${reachAt250.toFixed(1)}`;
+                    document.getElementById('reachOptimalGRP').textContent = Math.round(optimalGRP);
                 }
-            };
-            
-            reachChart.update();
-            
-            // Update summary stats
-            document.getElementById('reachMaxGRP').textContent = maxGRPRef;
-            document.getElementById('reachMaxPercent').textContent = `%${reachAt250.toFixed(1)}`;
-            document.getElementById('reachOptimalGRP').textContent = Math.round(optimalGRP);
+                
+                reachChart.data.datasets = datasets;
+                reachChart.options.scales.x.max = maxGRPRange;
+                reachChart.update();
+            } catch (error) {
+                console.error('Reach chart update error:', error);
+            }
         }
 
         // Calculate Adstock
@@ -2267,10 +2983,29 @@
         }
 
         // Find optimal budget point (where marginal return drops significantly)
-        function findOptimalBudget(alpha, gamma) {
-            // Optimal is around alpha (half-saturation point)
-            // But we want the point where efficiency is still high
-            // This is typically around 0.5-0.7 of alpha
+        // Find optimal budget - now takes actual adstock values into account
+        function findOptimalBudget(alpha, gamma, adstockValues) {
+            // If we have actual adstock values, find the point of diminishing returns
+            // based on the marginal efficiency curve
+            if (adstockValues && adstockValues.length > 0) {
+                const maxAdstock = Math.max(...adstockValues);
+                const avgAdstock = adstockValues.reduce((a, b) => a + b, 0) / adstockValues.length;
+                
+                // Optimal is where marginal saturation starts declining significantly
+                // For Hill function: inflection point is around alpha
+                // Scale alpha to the actual data range
+                const scaleFactor = avgAdstock / (alpha * 1000000);
+                
+                // Optimal is typically at 50-70% of saturation
+                // Find the adstock value that gives ~50% saturation
+                const targetSaturation = 0.5;
+                // Inverse Hill function: x = alpha * (S / (1-S))^(1/gamma)
+                const optimalAdstock = alpha * 1000000 * Math.pow(targetSaturation / (1 - targetSaturation), 1 / gamma);
+                
+                return optimalAdstock;
+            }
+            
+            // Fallback: theoretical optimal based on alpha
             return alpha * 0.6 * 1000000;
         }
 
@@ -2283,96 +3018,204 @@
             const maxLift = parseFloat(document.getElementById('maxLift').value) / 100;
             const cpp = parseFloat(document.getElementById('cppValue').value) || 25000;
 
-            let spend, grp;
+            // Get 3 alternatives
+            const grpAlt1 = document.getElementById('grpAlt1').value.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+            const grpAlt2 = document.getElementById('grpAlt2').value.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+            const grpAlt3 = document.getElementById('grpAlt3').value.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
 
-            // Get data based on input mode
-            if (inputMode === 'spend') {
-                const spendInput = document.getElementById('spendData').value;
-                spend = spendInput.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
-                grp = spend.map(s => s / cpp);
-            } else {
-                const grpInput = document.getElementById('grpData').value;
-                grp = grpInput.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
-                spend = grp.map(g => g * cpp);
-            }
-
-            if (spend.length === 0) {
-                alert('Lütfen geçerli veri girin!');
+            if (grpAlt1.length === 0) {
+                alert('Lütfen en az Alt-1 için GRP verisi girin!');
                 return;
             }
 
-            const totalGRP = grp.reduce((a, b) => a + b, 0);
+            // Calculate spend from GRP
+            const spendAlt1 = grpAlt1.map(g => g * cpp);
+            const spendAlt2 = grpAlt2.map(g => g * cpp);
+            const spendAlt3 = grpAlt3.map(g => g * cpp);
 
-            // Calculate Adstock
-            const adstock = calculateAdstock(spend, decayRate);
-
-            // Calculate Saturation
-            const saturation = adstock.map(a => calculateSaturation(a, alpha, gamma));
-
-            // Calculate Response
-            const tvEffect = saturation.map(s => baseline * maxLift * s);
-            const response = saturation.map((s, i) => baseline + tvEffect[i]);
-
-            // Calculate ROI per week (incremental ROI)
-            const weeklyROI = spend.map((s, i) => s > 0 ? ((tvEffect[i] / s) * 100) : 0);
+            // Update summary
+            const totalGRP1 = grpAlt1.reduce((a, b) => a + b, 0);
+            const totalGRP2 = grpAlt2.length > 0 ? grpAlt2.reduce((a, b) => a + b, 0) : 0;
+            const totalGRP3 = grpAlt3.length > 0 ? grpAlt3.reduce((a, b) => a + b, 0) : 0;
             
-            // Calculate TV Efficiency Index per week
-            // TV Efficiency = (TV Effect / Spend) * 100, normalized to make it more readable
-            const weeklyEfficiency = spend.map((s, i) => s > 0 ? (tvEffect[i] / s) : 0);
+            document.getElementById('summaryAlt1').textContent = `${totalGRP1} GRP`;
+            document.getElementById('summaryAlt2').textContent = grpAlt2.length > 0 ? `${totalGRP2} GRP` : '- GRP';
+            document.getElementById('summaryAlt3').textContent = grpAlt3.length > 0 ? `${totalGRP3} GRP` : '- GRP';
 
-            // Store data for export
-            analysisData = { spend, grp, adstock, saturation, tvEffect, response, weeklyROI, weeklyEfficiency };
+            // Calculate for each alternative
+            const calcAlternative = (spend, grp) => {
+                if (spend.length === 0) return null;
+                const adstock = calculateAdstock(spend, decayRate);
+                const saturation = adstock.map(a => calculateSaturation(a, alpha, gamma));
+                const tvEffect = saturation.map(s => baseline * maxLift * s);
+                const response = saturation.map((s, i) => baseline + tvEffect[i]);
+                const weeklyEfficiency = spend.map((s, i) => s > 0 ? (tvEffect[i] / s) : 0);
+                const totalSpend = spend.reduce((a, b) => a + b, 0);
+                const totalTVEffect = tvEffect.reduce((a, b) => a + b, 0);
+                const totalResponse = response.reduce((a, b) => a + b, 0);
+                return { spend, grp, adstock, saturation, tvEffect, response, weeklyEfficiency, totalSpend, totalTVEffect, totalResponse };
+            };
 
-            // Calculate summary metrics
-            const totalSpend = spend.reduce((a, b) => a + b, 0);
-            const avgAdstock = adstock.reduce((a, b) => a + b, 0) / adstock.length;
-            const peakEffect = Math.max(...saturation) * 100;
-            const totalResponse = response.reduce((a, b) => a + b, 0);
-            const totalTVEffect = tvEffect.reduce((a, b) => a + b, 0);
-            const optimalBudget = findOptimalBudget(alpha, gamma);
+            const alt1 = calcAlternative(spendAlt1, grpAlt1);
+            const alt2 = calcAlternative(spendAlt2, grpAlt2);
+            const alt3 = calcAlternative(spendAlt3, grpAlt3);
 
-            // TV Efficiency Index: (Total TV Effect / Total Spend) * 100
-            // Represents TL return per 1 TL spent, shown as index
-            const tvEfficiencyIndex = totalSpend > 0 ? (totalTVEffect / totalSpend) * 100 : 0;
+            // Store primary data for export (Alt-1)
+            analysisData = { 
+                spend: alt1.spend, 
+                grp: grpAlt1, 
+                adstock: alt1.adstock, 
+                saturation: alt1.saturation, 
+                tvEffect: alt1.tvEffect, 
+                response: alt1.response, 
+                weeklyROI: alt1.spend.map((s, i) => s > 0 ? ((alt1.tvEffect[i] / s) * 100) : 0),
+                weeklyEfficiency: alt1.weeklyEfficiency 
+            };
 
-            // Update metrics
-            document.getElementById('totalSpend').textContent = formatNumber(totalSpend) + ' TL';
-            document.getElementById('avgAdstock').textContent = formatNumber(avgAdstock);
+            // Calculate summary metrics (using Alt-1 as primary)
+            // Combine all adstock values for optimal calculation
+            const allAdstockValues = [...alt1.adstock];
+            if (alt2) allAdstockValues.push(...alt2.adstock);
+            if (alt3) allAdstockValues.push(...alt3.adstock);
+            
+            const optimalBudget = findOptimalBudget(alpha, gamma, allAdstockValues);
+            const peakEffect = Math.max(...alt1.saturation) * 100;
+            const tvEfficiencyIndex = alt1.totalSpend > 0 ? (alt1.totalTVEffect / alt1.totalSpend) * 100 : 0;
+
+            // Update metrics cards
+            document.getElementById('totalSpend').textContent = formatNumber(alt1.totalSpend) + ' TL';
+            document.getElementById('avgAdstock').textContent = formatNumber(alt1.adstock.reduce((a, b) => a + b, 0) / alt1.adstock.length);
             document.getElementById('peakEffect').textContent = peakEffect.toFixed(1) + '%';
-            document.getElementById('totalResponse').textContent = formatNumber(totalResponse) + ' TL';
+            document.getElementById('totalResponse').textContent = formatNumber(alt1.totalResponse) + ' TL';
             document.getElementById('tvEfficiency').textContent = tvEfficiencyIndex.toFixed(1);
-            document.getElementById('overallROI').textContent = formatNumber(totalTVEffect) + ' TL';
+            document.getElementById('overallROI').textContent = formatNumber(alt1.totalTVEffect) + ' TL';
             document.getElementById('optimalBudget').textContent = formatNumber(optimalBudget) + ' TL/hafta';
 
-            // Update input summary
-            document.getElementById('summarySpend').textContent = formatNumber(totalSpend) + ' TL';
-            document.getElementById('summaryGRP').textContent = totalGRP.toFixed(0) + ' GRP';
-            document.getElementById('summaryWeeks').textContent = spend.length + ' Hafta';
+            // Determine max weeks for labels
+            const maxWeeks = Math.max(grpAlt1.length, grpAlt2.length || 0, grpAlt3.length || 0);
+            const labels = Array.from({length: maxWeeks}, (_, i) => `H${i + 1}`);
 
-            // Update charts
-            const labels = spend.map((_, i) => `H${i + 1}`);
-
-            // Adstock Chart
+            // Adstock Chart - GRP bars (gray) + TV Adstock dotted lines (colored)
             adstockChart.data.labels = labels;
-            adstockChart.data.datasets[0].data = spend;
-            adstockChart.data.datasets[1].data = adstock;
+            adstockChart.data.datasets = [
+                // GRP Bars - Combined (gray like in the image)
+                {
+                    label: 'GRP',
+                    data: grpAlt1,
+                    type: 'bar',
+                    backgroundColor: 'rgba(136, 136, 160, 0.5)',
+                    borderColor: 'rgba(136, 136, 160, 0.7)',
+                    borderWidth: 1,
+                    yAxisID: 'yGRP',
+                    order: 2
+                },
+                // TV Adstock Line - Alt-1 (dotted like in image)
+                {
+                    label: 'Alt-1 TV Adstock',
+                    data: alt1.adstock.map(a => a / 1000000),
+                    borderColor: '#00d4ff',
+                    backgroundColor: 'transparent',
+                    fill: false,
+                    tension: 0.3,
+                    borderWidth: 2.5,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#00d4ff',
+                    pointBorderColor: '#00d4ff',
+                    yAxisID: 'yAdstock',
+                    order: 1
+                }
+            ];
+
+            // Alt-2 adstock line
+            if (alt2) {
+                // Update GRP bar to show Alt-2 if different
+                adstockChart.data.datasets.push({
+                    label: 'Alt-2 TV Adstock',
+                    data: alt2.adstock.map(a => a / 1000000),
+                    borderColor: '#ff6b35',
+                    backgroundColor: 'transparent',
+                    fill: false,
+                    tension: 0.3,
+                    borderWidth: 2.5,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#ff6b35',
+                    pointBorderColor: '#ff6b35',
+                    yAxisID: 'yAdstock',
+                    order: 1
+                });
+            }
+
+            // Alt-3 adstock line
+            if (alt3) {
+                adstockChart.data.datasets.push({
+                    label: 'Alt-3 TV Adstock',
+                    data: alt3.adstock.map(a => a / 1000000),
+                    borderColor: '#10b981',
+                    backgroundColor: 'transparent',
+                    fill: false,
+                    tension: 0.3,
+                    borderWidth: 2.5,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#10b981',
+                    pointBorderColor: '#10b981',
+                    yAxisID: 'yAdstock',
+                    order: 1
+                });
+            }
             adstockChart.update();
 
-            // Saturation Chart with curve and data points
+            // Saturation Chart with curve and data points for all alternatives
+            const allAdstock = [...alt1.adstock, ...(alt2?.adstock || []), ...(alt3?.adstock || [])];
+            const maxSpend = Math.max(...allAdstock) * 1.5;
             const curveData = [];
-            const maxSpend = Math.max(...adstock) * 1.5;
             for (let i = 0; i <= 50; i++) {
                 const x = (maxSpend / 50) * i;
                 curveData.push({ x: x / 1000000, y: calculateSaturation(x, alpha, gamma) });
             }
             
-            const dataPoints = adstock.map((a, i) => ({
-                x: a / 1000000,
-                y: saturation[i]
-            }));
-
-            saturationChart.data.datasets[0].data = curveData;
-            saturationChart.data.datasets[1].data = dataPoints;
+            saturationChart.data.datasets = [
+                {
+                    label: 'Saturation Eğrisi',
+                    data: curveData,
+                    borderColor: '#8888a0',
+                    backgroundColor: 'rgba(136, 136, 160, 0.05)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    borderWidth: 1
+                },
+                {
+                    label: 'Alt-1',
+                    data: alt1.adstock.map((a, i) => ({ x: a / 1000000, y: alt1.saturation[i] })),
+                    borderColor: '#00d4ff',
+                    backgroundColor: '#00d4ff',
+                    pointRadius: 6,
+                    pointStyle: 'circle',
+                    showLine: false
+                }
+            ];
+            if (alt2) {
+                saturationChart.data.datasets.push({
+                    label: 'Alt-2',
+                    data: alt2.adstock.map((a, i) => ({ x: a / 1000000, y: alt2.saturation[i] })),
+                    borderColor: '#ff6b35',
+                    backgroundColor: '#ff6b35',
+                    pointRadius: 6,
+                    pointStyle: 'triangle',
+                    showLine: false
+                });
+            }
+            if (alt3) {
+                saturationChart.data.datasets.push({
+                    label: 'Alt-3',
+                    data: alt3.adstock.map((a, i) => ({ x: a / 1000000, y: alt3.saturation[i] })),
+                    borderColor: '#10b981',
+                    backgroundColor: '#10b981',
+                    pointRadius: 6,
+                    pointStyle: 'rect',
+                    showLine: false
+                });
+            }
             
             // Add optimal point annotation
             const optimalX = optimalBudget / 1000000;
@@ -2383,62 +3226,65 @@
                     type: 'line',
                     xMin: optimalX,
                     xMax: optimalX,
-                    borderColor: '#10b981',
+                    borderColor: '#ef4444',
                     borderWidth: 2,
                     borderDash: [5, 5],
                     label: {
                         display: true,
-                        content: 'Optimal',
+                        content: `Optimal: ${optimalX.toFixed(1)}M`,
                         position: 'start',
-                        backgroundColor: '#10b981',
+                        backgroundColor: '#ef4444',
                         color: 'white',
                         font: { size: 10 }
                     }
-                },
-                optimalPoint: {
-                    type: 'point',
-                    xValue: optimalX,
-                    yValue: optimalY,
-                    backgroundColor: '#10b981',
-                    radius: 8,
-                    borderColor: 'white',
-                    borderWidth: 2
                 }
             };
             saturationChart.update();
 
-            // Response Chart
-            responseChart.data.labels = labels;
-            responseChart.data.datasets[0].data = spend.map(() => baseline);
-            responseChart.data.datasets[1].data = tvEffect;
-            responseChart.update();
+            // Carryover Chart - Haftalık carryover (geçmişten taşınan etki)
+            // Carryover = Adstock - Bu haftanın harcaması
+            const calcCarryover = (adstock, spend) => {
+                return adstock.map((a, i) => Math.max(0, a - spend[i]));
+            };
+            
+            const carryover1 = calcCarryover(alt1.adstock, spendAlt1);
+            const carryover2 = alt2 ? calcCarryover(alt2.adstock, spendAlt2) : null;
+            const carryover3 = alt3 ? calcCarryover(alt3.adstock, spendAlt3) : null;
 
-            // ROI Chart - now shows ROI and TV Efficiency
-            roiChart.data.labels = labels;
-            roiChart.data.datasets[0].data = weeklyROI;
-            roiChart.data.datasets[1].data = weeklyEfficiency.map(e => e * 100); // Convert to percentage for display
-            roiChart.update();
+            carryoverChart.data.labels = labels;
+            carryoverChart.data.datasets = [
+                {
+                    label: 'Alt-1 Carryover',
+                    data: carryover1,
+                    backgroundColor: 'rgba(0, 212, 255, 0.7)',
+                    borderColor: '#00d4ff',
+                    borderWidth: 1
+                }
+            ];
+
+            if (alt2) {
+                carryoverChart.data.datasets.push({
+                    label: 'Alt-2 Carryover',
+                    data: carryover2,
+                    backgroundColor: 'rgba(255, 107, 53, 0.7)',
+                    borderColor: '#ff6b35',
+                    borderWidth: 1
+                });
+            }
+
+            if (alt3) {
+                carryoverChart.data.datasets.push({
+                    label: 'Alt-3 Carryover',
+                    data: carryover3,
+                    backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                    borderColor: '#10b981',
+                    borderWidth: 1
+                });
+            }
+            carryoverChart.update();
 
             // Update Reach Chart
             updateReachChart();
-
-            // Update Data Table
-            const tableBody = document.getElementById('tableBody');
-            tableBody.innerHTML = '';
-            for (let i = 0; i < spend.length; i++) {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>Hafta ${i + 1}</td>
-                    <td>${formatNumber(spend[i])}</td>
-                    <td>${grp[i].toFixed(0)}</td>
-                    <td>${formatNumber(adstock[i])}</td>
-                    <td>${(saturation[i] * 100).toFixed(1)}%</td>
-                    <td>${formatNumber(tvEffect[i])}</td>
-                    <td>${formatNumber(response[i])}</td>
-                    <td>${(weeklyEfficiency[i] * 100).toFixed(1)}</td>
-                `;
-                tableBody.appendChild(row);
-            }
         }
 
         // Format number
@@ -2465,47 +3311,22 @@
             header.closest('.card').classList.toggle('collapsed');
         }
 
-        // Apply scenario presets
+        // Apply scenario presets - Min/Opt/Max
         function applyScenario(scenario) {
             currentScenario = scenario; // Update global scenario
             
-            document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('active'));
-            event.target.closest('.scenario-card').classList.add('active');
+            // Update buttons - support both old and new class names
+            document.querySelectorAll('.scenario-btn, .scenario-btn-v').forEach(btn => btn.classList.remove('active'));
+            if (event && event.target) {
+                const btn = event.target.closest('.scenario-btn-v') || event.target.closest('.scenario-btn') || event.target;
+                btn.classList.add('active');
+            }
 
+            // Scenario parameters
             const scenarios = {
-                conservative: { decay: 0.5, alpha: 2.0, gamma: 0.6 },
-                balanced: { decay: 0.7, alpha: 1.5, gamma: 0.8 },
-                aggressive: { decay: 0.85, alpha: 1.0, gamma: 1.2 }
-            };
-
-            const scenarioExplanations = {
-                conservative: {
-                    title: '🐢 Muhafazakar Senaryo',
-                    items: [
-                        '<strong>Decay (0.5):</strong> Reklam etkisi 1-2 hafta içinde hızla azalır',
-                        '<strong>Alpha (2.0):</strong> Doygunluğa ulaşmak için yüksek harcama gerekir',
-                        '<strong>Gamma (0.6):</strong> Yumuşak, neredeyse lineer artış eğrisi'
-                    ],
-                    usage: '<strong>Ne zaman kullanılır:</strong> Promosyon kampanyaları, FMCG ürünleri, kısa vadeli taktik kampanyalar. Etkinin hızlı başlayıp hızlı bitmesi beklenen durumlar için.'
-                },
-                balanced: {
-                    title: '⚖️ Dengeli Senaryo',
-                    items: [
-                        '<strong>Decay (0.7):</strong> Reklam etkisi 2-3 hafta sürer',
-                        '<strong>Alpha (1.5):</strong> Orta seviye bütçelerde doygunluk',
-                        '<strong>Gamma (0.8):</strong> Yumuşak S-eğrisi, dengeli artış'
-                    ],
-                    usage: '<strong>Ne zaman kullanılır:</strong> Petrol, market zincirleri, telekom gibi düzenli TV yatırımı yapan markalar için standart başlangıç noktası.'
-                },
-                aggressive: {
-                    title: '🚀 Agresif Senaryo',
-                    items: [
-                        '<strong>Decay (0.85):</strong> Reklam etkisi 4-5 hafta boyunca sürer',
-                        '<strong>Alpha (1.0):</strong> Düşük harcamalarda bile doygunluk başlar',
-                        '<strong>Gamma (1.2):</strong> Keskin S-eğrisi, belirli bir eşikten sonra hızlı artış'
-                    ],
-                    usage: '<strong>Ne zaman kullanılır:</strong> Marka lansmanları, premium ürün kampanyaları, otomotiv ve lüks segmentler. Uzun süreli marka inşası hedeflendiğinde.'
-                }
+                minimum: { decay: 0.45, alpha: 1.0, gamma: 1.3 },      // Kısa etki, erken doygunluk, hızlı başlangıç
+                optimum: { decay: 0.70, alpha: 1.5, gamma: 0.8 },      // Orta etki, normal doygunluk, dengeli
+                maksimum: { decay: 0.85, alpha: 2.5, gamma: 0.6 }      // Uzun etki, geç doygunluk, yavaş başlangıç
             };
 
             const s = scenarios[scenario];
@@ -2515,17 +3336,6 @@
             document.getElementById('alphaValue').textContent = s.alpha.toFixed(2);
             document.getElementById('gammaParam').value = s.gamma;
             document.getElementById('gammaValue').textContent = s.gamma.toFixed(2);
-
-            // Update explanation in sidebar
-            const exp = scenarioExplanations[scenario];
-            const explanationContent = document.getElementById('explanationContent');
-            explanationContent.innerHTML = `
-                <p class="explanation-title">${exp.title}</p>
-                <ul>
-                    ${exp.items.map(item => `<li>${item}</li>`).join('')}
-                </ul>
-                <p class="explanation-usage">${exp.usage}</p>
-            `;
 
             // Update all tab rationales
             updateAllRationales();
