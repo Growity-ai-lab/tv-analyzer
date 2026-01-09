@@ -917,6 +917,184 @@
             letter-spacing: 1px;
             margin-top: 4px;
         }
+
+        /* GRP & Reach Styles */
+        .chart-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .reach-filters {
+            display: flex;
+            gap: 6px;
+        }
+
+        .reach-btn {
+            padding: 8px 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-family: 'Sora', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .reach-btn:hover {
+            border-color: var(--accent-blue);
+            color: var(--text-primary);
+        }
+
+        .reach-btn.active {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: white;
+        }
+
+        .reach-summary {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .reach-stat {
+            text-align: center;
+            padding: 12px 20px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            min-width: 100px;
+        }
+
+        .reach-stat-value {
+            display: block;
+            font-family: 'Space Mono', monospace;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent-yellow);
+        }
+
+        .reach-stat-label {
+            display: block;
+            font-size: 9px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        /* Reach Rationale */
+        .reach-rationale {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 16px;
+        }
+
+        .rationale-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .rationale-icon {
+            font-size: 18px;
+        }
+
+        .rationale-content {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .rationale-content p {
+            margin-bottom: 12px;
+        }
+
+        .rationale-content ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .rationale-content li {
+            margin-bottom: 6px;
+        }
+
+        .rationale-content strong {
+            color: var(--text-primary);
+        }
+
+        .rationale-content .highlight {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        /* Scenario Explanation */
+        .scenario-explanation {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 16px;
+            border-left: 3px solid var(--accent-pink);
+        }
+
+        .explanation-header {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .explanation-content {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .explanation-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-pink);
+            margin-bottom: 8px;
+        }
+
+        .explanation-content ul {
+            margin: 8px 0;
+            padding-left: 16px;
+        }
+
+        .explanation-content li {
+            margin-bottom: 4px;
+        }
+
+        .explanation-content strong {
+            color: var(--text-primary);
+        }
+
+        .explanation-usage {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-color);
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -1187,6 +1365,22 @@
                                 <div class="scenario-params">λ:0.85 α:1.0 γ:1.2</div>
                             </div>
                         </div>
+                        
+                        <!-- Senaryo Açıklamaları -->
+                        <div class="scenario-explanation" id="scenarioExplanation">
+                            <div class="explanation-header">
+                                <span>📋 Senaryo Detayları</span>
+                            </div>
+                            <div class="explanation-content" id="explanationContent">
+                                <p class="explanation-title">⚖️ Dengeli Senaryo</p>
+                                <ul>
+                                    <li><strong>Decay (0.7):</strong> Reklam etkisi 2-3 hafta sürer</li>
+                                    <li><strong>Alpha (1.5):</strong> Orta seviye bütçelerde doygunluk</li>
+                                    <li><strong>Gamma (0.8):</strong> Yumuşak S-eğrisi, dengeli artış</li>
+                                </ul>
+                                <p class="explanation-usage"><strong>Ne zaman kullanılır:</strong> Petrol, market zincirleri, telekom gibi düzenli TV yatırımı yapan markalar için standart başlangıç noktası.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1238,6 +1432,7 @@
                 <div class="tabs">
                     <button class="tab active" onclick="switchTab('adstock')">Adstock</button>
                     <button class="tab" onclick="switchTab('saturation')">Saturation</button>
+                    <button class="tab" onclick="switchTab('reach')">GRP & Reach</button>
                     <button class="tab" onclick="switchTab('response')">Response</button>
                     <button class="tab" onclick="switchTab('roi')">ROI Analizi</button>
                     <button class="tab" onclick="switchTab('data')">Veri Tablosu</button>
@@ -1255,6 +1450,51 @@
                     <div class="chart-container">
                         <div class="chart-title">Saturation Curve - Optimal Nokta İşaretli</div>
                         <canvas id="saturationChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- GRP & Reach Tab -->
+                <div id="reach-tab" class="tab-content">
+                    <div class="chart-container" style="height: 450px;">
+                        <div class="chart-header-row">
+                            <div class="chart-title">Haftalık GRP & Erişim Seviyesi</div>
+                            <div class="reach-filters">
+                                <button class="reach-btn active" onclick="setReachFrequency(1)">1+ Reach</button>
+                                <button class="reach-btn" onclick="setReachFrequency(2)">2+ Reach</button>
+                                <button class="reach-btn" onclick="setReachFrequency(3)">3+ Reach</button>
+                            </div>
+                        </div>
+                        <canvas id="reachChart"></canvas>
+                        <div class="reach-summary">
+                            <div class="reach-stat">
+                                <span class="reach-stat-value" id="reachMaxGRP">250</span>
+                                <span class="reach-stat-label">GRP Max</span>
+                            </div>
+                            <div class="reach-stat">
+                                <span class="reach-stat-value" id="reachMaxPercent">-</span>
+                                <span class="reach-stat-label" id="reachFreqLabel">1+ Reach</span>
+                            </div>
+                            <div class="reach-stat">
+                                <span class="reach-stat-value" id="reachOptimalGRP">-</span>
+                                <span class="reach-stat-label">Optimal GRP</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="reach-rationale">
+                        <div class="rationale-header">
+                            <span class="rationale-icon">📊</span>
+                            <span>Grafik Rasyoneli</span>
+                        </div>
+                        <div class="rationale-content">
+                            <p><strong>GRP-Reach İlişkisi:</strong> GRP arttıkça erişim de artar, ancak belirli bir noktadan sonra artış hızı yavaşlar (diminishing returns). Bu nokta, hedef kitlenin büyük bölümüne ulaşıldığı ve ek GRP'nin daha çok frekans artışına dönüştüğü yerdir.</p>
+                            <p><strong>Frekans Seçimi:</strong></p>
+                            <ul>
+                                <li><strong>1+ Reach:</strong> En az 1 kez görenler. Bilinirlik kampanyaları için uygundur.</li>
+                                <li><strong>2+ Reach:</strong> En az 2 kez görenler. Mesaj pekiştirme için ideal.</li>
+                                <li><strong>3+ Reach:</strong> En az 3 kez görenler. Aksiyon odaklı kampanyalar için önerilir.</li>
+                            </ul>
+                            <p><strong>Optimal Nokta:</strong> <span class="highlight">Kırmızı dikey çizgi</span>, erişim artış hızının belirgin şekilde düştüğü noktayı gösterir. Bu noktanın ötesinde harcanan her ek GRP, giderek daha az yeni kişiye ulaşır.</p>
+                        </div>
                     </div>
                 </div>
 
@@ -1298,9 +1538,48 @@
 
     <script>
         // Global variables
-        let adstockChart, saturationChart, responseChart, roiChart;
+        let adstockChart, saturationChart, responseChart, roiChart, reachChart;
         let analysisData = {};
         let inputMode = 'spend'; // 'spend' or 'grp'
+        let currentReachFrequency = 1; // 1+, 2+, or 3+
+
+        // Reach curve parameters for different frequencies
+        const reachParams = {
+            1: { maxReach: 72, k: 0.012, label: '1+ Reach' },  // 1+ frequency
+            2: { maxReach: 58, k: 0.010, label: '2+ Reach' },  // 2+ frequency
+            3: { maxReach: 45, k: 0.008, label: '3+ Reach' }   // 3+ frequency
+        };
+
+        // Set reach frequency filter
+        function setReachFrequency(freq) {
+            currentReachFrequency = freq;
+            
+            // Update buttons
+            document.querySelectorAll('.reach-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i + 1 === freq);
+            });
+            
+            // Update label
+            document.getElementById('reachFreqLabel').textContent = reachParams[freq].label;
+            
+            // Redraw reach chart
+            updateReachChart();
+        }
+
+        // Calculate reach based on GRP using logarithmic curve
+        function calculateReach(grp, freq) {
+            const params = reachParams[freq];
+            // Logarithmic reach curve: Reach = maxReach * (1 - e^(-k * GRP))
+            return params.maxReach * (1 - Math.exp(-params.k * grp));
+        }
+
+        // Find optimal GRP (where marginal reach gain drops below threshold)
+        function findOptimalGRP(freq) {
+            const params = reachParams[freq];
+            // Optimal is around where the curve starts to flatten significantly
+            // This is approximately where we've reached ~60-70% of max reach
+            return Math.log(0.35) / (-params.k); // ~60% of max reach
+        }
 
         // Set input mode
         function setInputMode(mode) {
@@ -1534,6 +1813,144 @@
                     }
                 }
             });
+
+            // Reach Chart
+            reachChart = new Chart(document.getElementById('reachChart'), {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: '1+ Reach',
+                            data: [],
+                            borderColor: '#00d4ff',
+                            backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    ...chartOptions,
+                    plugins: {
+                        ...chartOptions.plugins,
+                        annotation: {
+                            annotations: {}
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Reach: %${context.parsed.y.toFixed(1)}`;
+                                },
+                                title: function(context) {
+                                    return `GRP: ${context[0].label}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ...chartOptions.scales.x,
+                            type: 'linear',
+                            title: { display: true, text: 'GRP', color: '#8888a0' },
+                            min: 0,
+                            max: 400
+                        },
+                        y: {
+                            ...chartOptions.scales.y,
+                            title: { display: true, text: 'Erişim Seviyesi (%)', color: '#8888a0' },
+                            min: 0,
+                            max: 80
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update Reach Chart
+        function updateReachChart() {
+            const freq = currentReachFrequency;
+            const params = reachParams[freq];
+            
+            // Generate curve data
+            const curveData = [];
+            const dataPoints = [];
+            
+            for (let grp = 0; grp <= 400; grp += 10) {
+                const reach = calculateReach(grp, freq);
+                curveData.push({ x: grp, y: reach });
+            }
+            
+            // Add data points from analysis if available
+            if (analysisData.grp && analysisData.grp.length > 0) {
+                let cumulativeGRP = 0;
+                analysisData.grp.forEach((g, i) => {
+                    cumulativeGRP += g;
+                    const reach = calculateReach(cumulativeGRP, freq);
+                    dataPoints.push({ x: cumulativeGRP, y: reach });
+                });
+            }
+            
+            // Find optimal GRP
+            const optimalGRP = findOptimalGRP(freq);
+            const optimalReach = calculateReach(optimalGRP, freq);
+            
+            // Max reach at 250 GRP (typical reference point)
+            const maxGRPRef = 250;
+            const reachAt250 = calculateReach(maxGRPRef, freq);
+            
+            // Update chart data
+            reachChart.data.datasets = [
+                {
+                    label: params.label,
+                    data: curveData,
+                    borderColor: '#00d4ff',
+                    backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0
+                }
+            ];
+            
+            // Add data points if available
+            if (dataPoints.length > 0) {
+                reachChart.data.datasets.push({
+                    label: 'Kampanya Verileri',
+                    data: dataPoints,
+                    borderColor: '#10b981',
+                    backgroundColor: '#10b981',
+                    pointRadius: 6,
+                    pointStyle: 'circle',
+                    showLine: false
+                });
+            }
+            
+            // Add optimal line annotation
+            reachChart.options.plugins.annotation.annotations = {
+                optimalLine: {
+                    type: 'line',
+                    xMin: optimalGRP,
+                    xMax: optimalGRP,
+                    borderColor: '#ef4444',
+                    borderWidth: 2,
+                    label: {
+                        display: true,
+                        content: `Optimal: ${Math.round(optimalGRP)} GRP`,
+                        position: 'start',
+                        backgroundColor: '#ef4444',
+                        color: 'white',
+                        font: { size: 10 }
+                    }
+                }
+            };
+            
+            reachChart.update();
+            
+            // Update summary stats
+            document.getElementById('reachMaxGRP').textContent = maxGRPRef;
+            document.getElementById('reachMaxPercent').textContent = `%${reachAt250.toFixed(1)}`;
+            document.getElementById('reachOptimalGRP').textContent = Math.round(optimalGRP);
         }
 
         // Calculate Adstock
@@ -1710,6 +2127,9 @@
             roiChart.data.datasets[1].data = weeklyEfficiency.map(e => e * 100); // Convert to percentage for display
             roiChart.update();
 
+            // Update Reach Chart
+            updateReachChart();
+
             // Update Data Table
             const tableBody = document.getElementById('tableBody');
             tableBody.innerHTML = '';
@@ -1764,6 +2184,36 @@
                 aggressive: { decay: 0.85, alpha: 1.0, gamma: 1.2 }
             };
 
+            const scenarioExplanations = {
+                conservative: {
+                    title: '🐢 Muhafazakar Senaryo',
+                    items: [
+                        '<strong>Decay (0.5):</strong> Reklam etkisi 1-2 hafta içinde hızla azalır',
+                        '<strong>Alpha (2.0):</strong> Doygunluğa ulaşmak için yüksek harcama gerekir',
+                        '<strong>Gamma (0.6):</strong> Yumuşak, neredeyse lineer artış eğrisi'
+                    ],
+                    usage: '<strong>Ne zaman kullanılır:</strong> Promosyon kampanyaları, FMCG ürünleri, kısa vadeli taktik kampanyalar. Etkinin hızlı başlayıp hızlı bitmesi beklenen durumlar için.'
+                },
+                balanced: {
+                    title: '⚖️ Dengeli Senaryo',
+                    items: [
+                        '<strong>Decay (0.7):</strong> Reklam etkisi 2-3 hafta sürer',
+                        '<strong>Alpha (1.5):</strong> Orta seviye bütçelerde doygunluk',
+                        '<strong>Gamma (0.8):</strong> Yumuşak S-eğrisi, dengeli artış'
+                    ],
+                    usage: '<strong>Ne zaman kullanılır:</strong> Petrol, market zincirleri, telekom gibi düzenli TV yatırımı yapan markalar için standart başlangıç noktası.'
+                },
+                aggressive: {
+                    title: '🚀 Agresif Senaryo',
+                    items: [
+                        '<strong>Decay (0.85):</strong> Reklam etkisi 4-5 hafta boyunca sürer',
+                        '<strong>Alpha (1.0):</strong> Düşük harcamalarda bile doygunluk başlar',
+                        '<strong>Gamma (1.2):</strong> Keskin S-eğrisi, belirli bir eşikten sonra hızlı artış'
+                    ],
+                    usage: '<strong>Ne zaman kullanılır:</strong> Marka lansmanları, premium ürün kampanyaları, otomotiv ve lüks segmentler. Uzun süreli marka inşası hedeflendiğinde.'
+                }
+            };
+
             const s = scenarios[scenario];
             document.getElementById('decayRate').value = s.decay;
             document.getElementById('decayValue').textContent = s.decay.toFixed(2);
@@ -1771,6 +2221,17 @@
             document.getElementById('alphaValue').textContent = s.alpha.toFixed(2);
             document.getElementById('gammaParam').value = s.gamma;
             document.getElementById('gammaValue').textContent = s.gamma.toFixed(2);
+
+            // Update explanation
+            const exp = scenarioExplanations[scenario];
+            const explanationContent = document.getElementById('explanationContent');
+            explanationContent.innerHTML = `
+                <p class="explanation-title">${exp.title}</p>
+                <ul>
+                    ${exp.items.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+                <p class="explanation-usage">${exp.usage}</p>
+            `;
 
             runAnalysis();
         }
