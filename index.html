@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV Analyzer by Time</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.0.0"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --accent-blue: #00d4ff;
+            --accent-purple: #7c3aed;
+            --accent-orange: #ff6b35;
+            --accent-green: #10b981;
+            --accent-yellow: #f59e0b;
+            --accent-pink: #ec4899;
+            --text-primary: #f0f0f5;
+            --text-secondary: #8888a0;
+            --border-color: #2a2a3a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 48px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 20px;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: 600;
+            background: linear-gradient(90deg, var(--text-primary), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text span {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-family: 'Space Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .badge {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--accent-blue);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 32px;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(0, 212, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.05);
+        }
+
+        .card.collapsed .card-body {
+            display: none;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .card-header-content {
+            flex: 1;
+        }
+
+        .card-toggle {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: transform 0.3s;
+        }
+
+        .card.collapsed .card-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .card-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .card-icon.blue { background: rgba(0, 212, 255, 0.15); }
+        .card-icon.purple { background: rgba(124, 58, 237, 0.15); }
+        .card-icon.orange { background: rgba(255, 107, 53, 0.15); }
+        .card-icon.green { background: rgba(16, 185, 129, 0.15); }
+        .card-icon.yellow { background: rgba(245, 158, 11, 0.15); }
+        .card-icon.pink { background: rgba(236, 72, 153, 0.15); }
+
+        .card h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card p {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .card-body {
+            margin-top: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .form-group label span {
+            color: var(--accent-blue);
+            font-weight: 700;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--bg-secondary);
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+            transition: transform 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: var(--text-primary);
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="number"]:focus, input[type="text"]:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .input-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .data-input {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--text-primary);
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            resize: vertical;
+            min-height: 80px;
+            outline: none;
+        }
+
+        .data-input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Sora', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .btn-sm {
+            padding: 8px 14px;
+            font-size: 11px;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 14px;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-blue);
+        }
+
+        .metric-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .metric-value.blue { color: var(--accent-blue); }
+        .metric-value.purple { color: var(--accent-purple); }
+        .metric-value.orange { color: var(--accent-orange); }
+        .metric-value.green { color: var(--accent-green); }
+        .metric-value.yellow { color: var(--accent-yellow); }
+        .metric-value.pink { color: var(--accent-pink); }
+
+        .metric-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 6px;
+            background: var(--bg-card);
+            padding: 5px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 100px;
+            padding: 10px 16px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-family: 'Sora', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: var(--bg-secondary);
+            color: var(--accent-blue);
+        }
+
+        .tab:hover:not(.active) {
+            color: var(--text-primary);
+        }
+
+        .chart-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            height: 380px;
+            position: relative;
+        }
+
+        .chart-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-title::before {
+            content: '';
+            width: 4px;
+            height: 18px;
+            background: linear-gradient(180deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 2px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .data-table th {
+            background: var(--bg-secondary);
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: sticky;
+            top: 0;
+        }
+
+        .data-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-color);
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+        }
+
+        .data-table tr:hover td {
+            background: rgba(0, 212, 255, 0.02);
+        }
+
+        .info-box {
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .info-box-icon {
+            font-size: 16px;
+            color: var(--accent-blue);
+        }
+
+        .info-box-content h4 {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .info-box-content p {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .formula {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: var(--accent-blue);
+            margin-top: 10px;
+        }
+
+        .param-guide {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            border-left: 3px solid var(--accent-purple);
+        }
+
+        .guide-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .guide-icon {
+            font-size: 14px;
+        }
+
+        .guide-description {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .guide-scale {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .scale-item {
+            flex: 1;
+            text-align: center;
+            padding: 6px 4px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.03);
+        }
+
+        .scale-item.low { border-bottom: 2px solid #f59e0b; }
+        .scale-item.mid { border-bottom: 2px solid var(--accent-blue); }
+        .scale-item.high { border-bottom: 2px solid var(--accent-green); }
+
+        .scale-value {
+            display: block;
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .scale-label {
+            font-size: 9px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .guide-examples {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .example-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 10px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .example-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .example-dot.low { background: #f59e0b; }
+        .example-dot.mid { background: var(--accent-blue); }
+        .example-dot.high { background: var(--accent-green); }
+
+        .guide-effect {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-color);
+            font-size: 10px;
+            color: var(--accent-orange);
+            line-height: 1.5;
+        }
+
+        .effect-icon {
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        /* Optimal Point Indicator */
+        .optimal-indicator {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(0, 212, 255, 0.1));
+            border: 1px solid var(--accent-green);
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 16px;
+        }
+
+        .optimal-indicator h4 {
+            font-size: 12px;
+            color: var(--accent-green);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .optimal-indicator .optimal-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .optimal-indicator .optimal-desc {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Scenario Comparison */
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .scenario-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .scenario-card:hover, .scenario-card.active {
+            border-color: var(--accent-blue);
+        }
+
+        .scenario-card.active {
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .scenario-card h5 {
+            font-size: 11px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .scenario-card .scenario-params {
+            font-size: 9px;
+            color: var(--text-secondary);
+            font-family: 'Space Mono', monospace;
+        }
+
+        /* GRP Calculator */
+        .grp-result {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .grp-item {
+            text-align: center;
+        }
+
+        .grp-item .value {
+            font-family: 'Space Mono', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent-yellow);
+        }
+
+        .grp-item .label {
+            font-size: 9px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        /* Mode Selector */
+        .mode-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .mode-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 14px 10px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mode-btn:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .mode-btn.active {
+            border-color: var(--accent-blue);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .mode-icon {
+            font-size: 20px;
+        }
+
+        .mode-text {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .mode-btn.active .mode-text {
+            color: var(--accent-blue);
+        }
+
+        .mode-content {
+            display: none;
+        }
+
+        .mode-content.active {
+            display: block;
+        }
+
+        /* Input Summary */
+        .input-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .summary-item {
+            text-align: center;
+            padding: 10px 6px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .summary-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .summary-label {
+            font-size: 8px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        /* Export Buttons */
+        .export-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        /* Toggle Switch */
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+        }
+
+        .toggle-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .toggle {
+            position: relative;
+            width: 40px;
+            height: 22px;
+            background: var(--bg-secondary);
+            border-radius: 11px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle.active {
+            background: var(--accent-blue);
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle.active::after {
+            transform: translateX(18px);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            .metrics-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .scenario-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ROI Highlight */
+        .roi-highlight {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(236, 72, 153, 0.1));
+            border: 1px solid var(--accent-purple);
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+        }
+
+        .roi-highlight .roi-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .roi-highlight .roi-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">TV</div>
+                <div class="logo-text">
+                    <h1>TV Analyzer</h1>
+                    <span>by Time & Growity</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary btn-sm" onclick="exportCSV()">
+                    📥 CSV Export
+                </button>
+                <div class="badge">v2.1</div>
+            </div>
+        </header>
+
+        <div class="main-grid">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <!-- Data Input with Mode Selection -->
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard(this)">
+                        <div class="card-icon blue">📊</div>
+                        <div class="card-header-content">
+                            <h3>Veri Girişi</h3>
+                            <p>Harcama veya GRP bazlı</p>
+                        </div>
+                        <div class="card-toggle">▼</div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Input Mode Selector -->
+                        <div class="mode-selector">
+                            <button class="mode-btn active" id="modeSpend" onclick="setInputMode('spend')">
+                                <span class="mode-icon">💰</span>
+                                <span class="mode-text">Harcama Bazlı</span>
+                            </button>
+                            <button class="mode-btn" id="modeGRP" onclick="setInputMode('grp')">
+                                <span class="mode-icon">📺</span>
+                                <span class="mode-text">GRP Bazlı</span>
+                            </button>
+                        </div>
+
+                        <!-- Spend Mode Input -->
+                        <div id="spendModeInputs" class="mode-content active">
+                            <div class="form-group">
+                                <label>Haftalık Harcama (TL)</label>
+                                <textarea class="data-input" id="spendData" placeholder="Virgülle ayırarak haftalık harcamaları girin...">500000, 750000, 1000000, 800000, 600000, 900000, 1200000, 1000000, 700000, 500000, 800000, 1100000</textarea>
+                            </div>
+                            <div class="info-box">
+                                <div class="info-box-icon">💡</div>
+                                <div class="info-box-content">
+                                    <h4>Harcama Bazlı Analiz</h4>
+                                    <p>Gerçekleşen veya planlanan haftalık TV harcamalarını TL cinsinden girin. Post-campaign analiz için idealdir.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GRP Mode Input -->
+                        <div id="grpModeInputs" class="mode-content">
+                            <div class="form-group">
+                                <label>Haftalık GRP</label>
+                                <textarea class="data-input" id="grpData" placeholder="Virgülle ayırarak haftalık GRP değerlerini girin...">200, 300, 400, 320, 240, 360, 480, 400, 280, 200, 320, 440</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>CPP (Cost Per Point) - TL</label>
+                                <input type="number" id="cppValue" value="25000" step="1000">
+                            </div>
+                            <div class="info-box">
+                                <div class="info-box-icon">💡</div>
+                                <div class="info-box-content">
+                                    <h4>GRP Bazlı Planlama</h4>
+                                    <p>Hedeflediğiniz GRP'leri girin, CPP ile çarpılarak bütçe hesaplanır. Planlama aşaması için idealdir.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Calculated Summary -->
+                        <div class="input-summary" id="inputSummary">
+                            <div class="summary-item">
+                                <div class="summary-value" id="summarySpend">-</div>
+                                <div class="summary-label">Toplam Harcama</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-value" id="summaryGRP">-</div>
+                                <div class="summary-label">Toplam GRP</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-value" id="summaryWeeks">-</div>
+                                <div class="summary-label">Hafta Sayısı</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adstock Parameters -->
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard(this)">
+                        <div class="card-icon purple">📈</div>
+                        <div class="card-header-content">
+                            <h3>Adstock Parametreleri</h3>
+                            <p>Decay rate (λ) ayarı</p>
+                        </div>
+                        <div class="card-toggle">▼</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>
+                                Decay Rate (λ)
+                                <span id="decayValue">0.70</span>
+                            </label>
+                            <input type="range" id="decayRate" min="0" max="0.95" step="0.05" value="0.70">
+                        </div>
+                        <div class="param-guide">
+                            <div class="guide-header">
+                                <span class="guide-icon">📊</span>
+                                <span>Parametre Rehberi</span>
+                            </div>
+                            <div class="guide-scale">
+                                <div class="scale-item low">
+                                    <span class="scale-value">0.30-0.50</span>
+                                    <span class="scale-label">Düşük</span>
+                                </div>
+                                <div class="scale-item mid">
+                                    <span class="scale-value">0.50-0.75</span>
+                                    <span class="scale-label">Orta</span>
+                                </div>
+                                <div class="scale-item high">
+                                    <span class="scale-value">0.75-0.95</span>
+                                    <span class="scale-label">Yüksek</span>
+                                </div>
+                            </div>
+                            <div class="guide-examples">
+                                <div class="example-item">
+                                    <span class="example-dot low"></span>
+                                    <span><strong>Düşük:</strong> Promosyon, FMCG. Hızlı etki.</span>
+                                </div>
+                                <div class="example-item">
+                                    <span class="example-dot mid"></span>
+                                    <span><strong>Orta:</strong> Petrol, market. Tipik TV.</span>
+                                </div>
+                                <div class="example-item">
+                                    <span class="example-dot high"></span>
+                                    <span><strong>Yüksek:</strong> Otomotiv, lüks. Uzun etki.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="formula">A(t) = X(t) + λ × A(t-1)</div>
+                    </div>
+                </div>
+
+                <!-- Saturation Parameters -->
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard(this)">
+                        <div class="card-icon orange">🎯</div>
+                        <div class="card-header-content">
+                            <h3>Saturation Parametreleri</h3>
+                            <p>Diminishing returns modeli</p>
+                        </div>
+                        <div class="card-toggle">▼</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>
+                                Alpha (α) - Doygunluk Noktası
+                                <span id="alphaValue">1.50</span>
+                            </label>
+                            <input type="range" id="alphaParam" min="0.5" max="5" step="0.1" value="1.5">
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                Gamma (γ) - Eğri Şekli
+                                <span id="gammaValue">0.80</span>
+                            </label>
+                            <input type="range" id="gammaParam" min="0.3" max="2" step="0.05" value="0.80">
+                        </div>
+                        <div class="param-guide">
+                            <div class="guide-header">
+                                <span class="guide-icon">🎯</span>
+                                <span>Alpha & Gamma Rehberi</span>
+                            </div>
+                            <div class="guide-examples">
+                                <div class="example-item">
+                                    <span class="example-dot low"></span>
+                                    <span><strong>Düşük α:</strong> Hızlı doygunluk, küçük pazarlar</span>
+                                </div>
+                                <div class="example-item">
+                                    <span class="example-dot high"></span>
+                                    <span><strong>Yüksek α:</strong> Geç doygunluk, büyük bütçeler</span>
+                                </div>
+                                <div class="example-item">
+                                    <span class="example-dot mid"></span>
+                                    <span><strong>γ < 1:</strong> Yumuşak eğri, bilinirlik kampanyaları</span>
+                                </div>
+                                <div class="example-item">
+                                    <span class="example-dot high"></span>
+                                    <span><strong>γ > 1:</strong> Keskin S-eğrisi, lansman</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="formula">S(x) = x^γ / (α^γ + x^γ)</div>
+                    </div>
+                </div>
+
+                <!-- Response Parameters -->
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard(this)">
+                        <div class="card-icon green">💰</div>
+                        <div class="card-header-content">
+                            <h3>Response Parametreleri</h3>
+                            <p>Satış dönüşüm modeli</p>
+                        </div>
+                        <div class="card-toggle">▼</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="input-row">
+                            <div class="form-group">
+                                <label>Baseline Satış (TL)</label>
+                                <input type="number" id="baseline" value="5000000" step="100000">
+                            </div>
+                            <div class="form-group">
+                                <label>Max Lift (%)</label>
+                                <input type="number" id="maxLift" value="30" step="1">
+                            </div>
+                        </div>
+                        <div class="param-guide">
+                            <div class="guide-examples">
+                                <div class="example-item">
+                                    <span class="example-dot mid"></span>
+                                    <span><strong>Baseline:</strong> TV olmadan haftalık satış</span>
+                                </div>
+                                <div class="example-item">
+                                    <span class="example-dot high"></span>
+                                    <span><strong>Max Lift:</strong> TV'nin max katkı potansiyeli</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scenario Comparison -->
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard(this)">
+                        <div class="card-icon pink">🔄</div>
+                        <div class="card-header-content">
+                            <h3>Senaryo Karşılaştırma</h3>
+                            <p>Hızlı parametre setleri</p>
+                        </div>
+                        <div class="card-toggle">▼</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="scenario-grid">
+                            <div class="scenario-card" onclick="applyScenario('conservative')">
+                                <h5>🐢 Muhafazakar</h5>
+                                <div class="scenario-params">λ:0.5 α:2.0 γ:0.6</div>
+                            </div>
+                            <div class="scenario-card active" onclick="applyScenario('balanced')">
+                                <h5>⚖️ Dengeli</h5>
+                                <div class="scenario-params">λ:0.7 α:1.5 γ:0.8</div>
+                            </div>
+                            <div class="scenario-card" onclick="applyScenario('aggressive')">
+                                <h5>🚀 Agresif</h5>
+                                <div class="scenario-params">λ:0.85 α:1.0 γ:1.2</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="runAnalysis()">
+                    <span>⚡</span> Analizi Çalıştır
+                </button>
+            </aside>
+
+            <!-- Content Area -->
+            <main class="content">
+                <!-- Metrics Row 1 -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value blue" id="totalSpend">-</div>
+                        <div class="metric-label">Toplam Harcama</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value purple" id="avgAdstock">-</div>
+                        <div class="metric-label">Ort. Adstock</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value orange" id="peakEffect">-</div>
+                        <div class="metric-label">Peak Saturation</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value green" id="totalResponse">-</div>
+                        <div class="metric-label">Toplam Satış</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value pink" id="tvEfficiency">-</div>
+                        <div class="metric-label">TV Efficiency</div>
+                    </div>
+                </div>
+
+                <!-- ROI & Optimal Summary -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="roi-highlight">
+                        <div class="roi-value" id="overallROI">-</div>
+                        <div class="roi-label">TV Kaynaklı Satış Artışı</div>
+                    </div>
+                    <div class="optimal-indicator">
+                        <h4>🎯 Optimal Haftalık Bütçe</h4>
+                        <div class="optimal-value" id="optimalBudget">-</div>
+                        <div class="optimal-desc">Diminishing returns başlamadan önceki en verimli nokta</div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('adstock')">Adstock</button>
+                    <button class="tab" onclick="switchTab('saturation')">Saturation</button>
+                    <button class="tab" onclick="switchTab('response')">Response</button>
+                    <button class="tab" onclick="switchTab('roi')">ROI Analizi</button>
+                    <button class="tab" onclick="switchTab('data')">Veri Tablosu</button>
+                </div>
+
+                <!-- Chart Containers -->
+                <div id="adstock-tab" class="tab-content active">
+                    <div class="chart-container">
+                        <div class="chart-title">Adstock & Carry-over Etkisi</div>
+                        <canvas id="adstockChart"></canvas>
+                    </div>
+                </div>
+
+                <div id="saturation-tab" class="tab-content">
+                    <div class="chart-container">
+                        <div class="chart-title">Saturation Curve - Optimal Nokta İşaretli</div>
+                        <canvas id="saturationChart"></canvas>
+                    </div>
+                </div>
+
+                <div id="response-tab" class="tab-content">
+                    <div class="chart-container">
+                        <div class="chart-title">Response Model - Baseline + TV Etkisi</div>
+                        <canvas id="responseChart"></canvas>
+                    </div>
+                </div>
+
+                <div id="roi-tab" class="tab-content">
+                    <div class="chart-container">
+                        <div class="chart-title">Haftalık ROI & TV Efficiency Analizi</div>
+                        <canvas id="roiChart"></canvas>
+                    </div>
+                </div>
+
+                <div id="data-tab" class="tab-content">
+                    <div class="card" style="max-height: 380px; overflow-y: auto;">
+                        <table class="data-table" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Hafta</th>
+                                    <th>Harcama</th>
+                                    <th>GRP</th>
+                                    <th>Adstock</th>
+                                    <th>Saturation</th>
+                                    <th>TV Etkisi</th>
+                                    <th>Toplam Satış</th>
+                                    <th>TV Eff.</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let adstockChart, saturationChart, responseChart, roiChart;
+        let analysisData = {};
+        let inputMode = 'spend'; // 'spend' or 'grp'
+
+        // Set input mode
+        function setInputMode(mode) {
+            inputMode = mode;
+            
+            // Update buttons
+            document.getElementById('modeSpend').classList.toggle('active', mode === 'spend');
+            document.getElementById('modeGRP').classList.toggle('active', mode === 'grp');
+            
+            // Update content visibility
+            document.getElementById('spendModeInputs').classList.toggle('active', mode === 'spend');
+            document.getElementById('grpModeInputs').classList.toggle('active', mode === 'grp');
+            
+            // Update summary
+            updateInputSummary();
+        }
+
+        // Update input summary
+        function updateInputSummary() {
+            const cpp = parseFloat(document.getElementById('cppValue').value) || 25000;
+            let spend, grp, weeks;
+
+            if (inputMode === 'spend') {
+                const spendInput = document.getElementById('spendData').value;
+                spend = spendInput.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+                grp = spend.map(s => s / cpp);
+                weeks = spend.length;
+            } else {
+                const grpInput = document.getElementById('grpData').value;
+                grp = grpInput.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+                spend = grp.map(g => g * cpp);
+                weeks = grp.length;
+            }
+
+            const totalSpend = spend.reduce((a, b) => a + b, 0);
+            const totalGRP = grp.reduce((a, b) => a + b, 0);
+
+            document.getElementById('summarySpend').textContent = formatNumber(totalSpend) + ' TL';
+            document.getElementById('summaryGRP').textContent = totalGRP.toFixed(0) + ' GRP';
+            document.getElementById('summaryWeeks').textContent = weeks + ' Hafta';
+        }
+
+        // Initialize charts
+        function initCharts() {
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#8888a0',
+                            font: { family: 'Sora', size: 11 }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: '#8888a0', font: { size: 10 } }
+                    },
+                    y: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: '#8888a0', font: { size: 10 } }
+                    }
+                }
+            };
+
+            // Adstock Chart
+            adstockChart = new Chart(document.getElementById('adstockChart'), {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Orijinal Harcama',
+                            data: [],
+                            borderColor: '#00d4ff',
+                            backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Adstock Değeri',
+                            data: [],
+                            borderColor: '#7c3aed',
+                            backgroundColor: 'rgba(124, 58, 237, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: chartOptions
+            });
+
+            // Saturation Chart with annotation
+            saturationChart = new Chart(document.getElementById('saturationChart'), {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Saturation Curve',
+                            data: [],
+                            borderColor: '#ff6b35',
+                            backgroundColor: 'rgba(255, 107, 53, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 2
+                        },
+                        {
+                            label: 'Veri Noktaları',
+                            data: [],
+                            borderColor: '#10b981',
+                            backgroundColor: '#10b981',
+                            pointRadius: 8,
+                            pointStyle: 'circle',
+                            showLine: false
+                        }
+                    ]
+                },
+                options: {
+                    ...chartOptions,
+                    plugins: {
+                        ...chartOptions.plugins,
+                        annotation: {
+                            annotations: {}
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ...chartOptions.scales.x,
+                            type: 'linear',
+                            title: { display: true, text: 'Harcama (Milyon TL)', color: '#8888a0' }
+                        },
+                        y: {
+                            ...chartOptions.scales.y,
+                            title: { display: true, text: 'Saturation (%)', color: '#8888a0' },
+                            max: 1
+                        }
+                    }
+                }
+            });
+
+            // Response Chart
+            responseChart = new Chart(document.getElementById('responseChart'), {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Baseline Satış',
+                            data: [],
+                            backgroundColor: 'rgba(136, 136, 160, 0.5)',
+                            borderColor: '#8888a0',
+                            borderWidth: 1,
+                            stack: 'stack1'
+                        },
+                        {
+                            label: 'TV Etkisi',
+                            data: [],
+                            backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                            borderColor: '#10b981',
+                            borderWidth: 1,
+                            stack: 'stack1'
+                        }
+                    ]
+                },
+                options: {
+                    ...chartOptions,
+                    plugins: {
+                        ...chartOptions.plugins,
+                        tooltip: {
+                            callbacks: {
+                                afterBody: function(context) {
+                                    const idx = context[0].dataIndex;
+                                    const base = responseChart.data.datasets[0].data[idx];
+                                    const tv = responseChart.data.datasets[1].data[idx];
+                                    return '\nToplam: ' + formatNumber(base + tv) + ' TL';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { ...chartOptions.scales.x, stacked: true },
+                        y: { ...chartOptions.scales.y, stacked: true, beginAtZero: true }
+                    }
+                }
+            });
+
+            // ROI Chart
+            roiChart = new Chart(document.getElementById('roiChart'), {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Haftalık ROI (%)',
+                            data: [],
+                            backgroundColor: 'rgba(124, 58, 237, 0.6)',
+                            borderColor: '#7c3aed',
+                            borderWidth: 1,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'TV Efficiency Index',
+                            data: [],
+                            type: 'line',
+                            borderColor: '#ec4899',
+                            backgroundColor: 'transparent',
+                            tension: 0.4,
+                            yAxisID: 'y1',
+                            pointRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    ...chartOptions,
+                    scales: {
+                        x: chartOptions.scales.x,
+                        y: {
+                            ...chartOptions.scales.y,
+                            position: 'left',
+                            title: { display: true, text: 'ROI (%)', color: '#8888a0' }
+                        },
+                        y1: {
+                            ...chartOptions.scales.y,
+                            position: 'right',
+                            grid: { drawOnChartArea: false },
+                            title: { display: true, text: 'TV Efficiency Index', color: '#8888a0' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Calculate Adstock
+        function calculateAdstock(spend, decay) {
+            const adstock = [];
+            for (let i = 0; i < spend.length; i++) {
+                if (i === 0) {
+                    adstock.push(spend[i]);
+                } else {
+                    adstock.push(spend[i] + decay * adstock[i - 1]);
+                }
+            }
+            return adstock;
+        }
+
+        // Calculate Saturation (Hill function)
+        function calculateSaturation(value, alpha, gamma) {
+            const scaledValue = value / 1000000; // Scale to millions
+            const alphaGamma = Math.pow(alpha, gamma);
+            const valueGamma = Math.pow(scaledValue, gamma);
+            return valueGamma / (alphaGamma + valueGamma);
+        }
+
+        // Find optimal budget point (where marginal return drops significantly)
+        function findOptimalBudget(alpha, gamma) {
+            // Optimal is around alpha (half-saturation point)
+            // But we want the point where efficiency is still high
+            // This is typically around 0.5-0.7 of alpha
+            return alpha * 0.6 * 1000000;
+        }
+
+        // Run Analysis
+        function runAnalysis() {
+            const decayRate = parseFloat(document.getElementById('decayRate').value);
+            const alpha = parseFloat(document.getElementById('alphaParam').value);
+            const gamma = parseFloat(document.getElementById('gammaParam').value);
+            const baseline = parseFloat(document.getElementById('baseline').value);
+            const maxLift = parseFloat(document.getElementById('maxLift').value) / 100;
+            const cpp = parseFloat(document.getElementById('cppValue').value) || 25000;
+
+            let spend, grp;
+
+            // Get data based on input mode
+            if (inputMode === 'spend') {
+                const spendInput = document.getElementById('spendData').value;
+                spend = spendInput.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+                grp = spend.map(s => s / cpp);
+            } else {
+                const grpInput = document.getElementById('grpData').value;
+                grp = grpInput.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+                spend = grp.map(g => g * cpp);
+            }
+
+            if (spend.length === 0) {
+                alert('Lütfen geçerli veri girin!');
+                return;
+            }
+
+            const totalGRP = grp.reduce((a, b) => a + b, 0);
+
+            // Calculate Adstock
+            const adstock = calculateAdstock(spend, decayRate);
+
+            // Calculate Saturation
+            const saturation = adstock.map(a => calculateSaturation(a, alpha, gamma));
+
+            // Calculate Response
+            const tvEffect = saturation.map(s => baseline * maxLift * s);
+            const response = saturation.map((s, i) => baseline + tvEffect[i]);
+
+            // Calculate ROI per week (incremental ROI)
+            const weeklyROI = spend.map((s, i) => s > 0 ? ((tvEffect[i] / s) * 100) : 0);
+            
+            // Calculate TV Efficiency Index per week
+            // TV Efficiency = (TV Effect / Spend) * 100, normalized to make it more readable
+            const weeklyEfficiency = spend.map((s, i) => s > 0 ? (tvEffect[i] / s) : 0);
+
+            // Store data for export
+            analysisData = { spend, grp, adstock, saturation, tvEffect, response, weeklyROI, weeklyEfficiency };
+
+            // Calculate summary metrics
+            const totalSpend = spend.reduce((a, b) => a + b, 0);
+            const avgAdstock = adstock.reduce((a, b) => a + b, 0) / adstock.length;
+            const peakEffect = Math.max(...saturation) * 100;
+            const totalResponse = response.reduce((a, b) => a + b, 0);
+            const totalTVEffect = tvEffect.reduce((a, b) => a + b, 0);
+            const optimalBudget = findOptimalBudget(alpha, gamma);
+
+            // TV Efficiency Index: (Total TV Effect / Total Spend) * 100
+            // Represents TL return per 1 TL spent, shown as index
+            const tvEfficiencyIndex = totalSpend > 0 ? (totalTVEffect / totalSpend) * 100 : 0;
+
+            // Update metrics
+            document.getElementById('totalSpend').textContent = formatNumber(totalSpend) + ' TL';
+            document.getElementById('avgAdstock').textContent = formatNumber(avgAdstock);
+            document.getElementById('peakEffect').textContent = peakEffect.toFixed(1) + '%';
+            document.getElementById('totalResponse').textContent = formatNumber(totalResponse) + ' TL';
+            document.getElementById('tvEfficiency').textContent = tvEfficiencyIndex.toFixed(1);
+            document.getElementById('overallROI').textContent = formatNumber(totalTVEffect) + ' TL';
+            document.getElementById('optimalBudget').textContent = formatNumber(optimalBudget) + ' TL/hafta';
+
+            // Update input summary
+            document.getElementById('summarySpend').textContent = formatNumber(totalSpend) + ' TL';
+            document.getElementById('summaryGRP').textContent = totalGRP.toFixed(0) + ' GRP';
+            document.getElementById('summaryWeeks').textContent = spend.length + ' Hafta';
+
+            // Update charts
+            const labels = spend.map((_, i) => `H${i + 1}`);
+
+            // Adstock Chart
+            adstockChart.data.labels = labels;
+            adstockChart.data.datasets[0].data = spend;
+            adstockChart.data.datasets[1].data = adstock;
+            adstockChart.update();
+
+            // Saturation Chart with curve and data points
+            const curveData = [];
+            const maxSpend = Math.max(...adstock) * 1.5;
+            for (let i = 0; i <= 50; i++) {
+                const x = (maxSpend / 50) * i;
+                curveData.push({ x: x / 1000000, y: calculateSaturation(x, alpha, gamma) });
+            }
+            
+            const dataPoints = adstock.map((a, i) => ({
+                x: a / 1000000,
+                y: saturation[i]
+            }));
+
+            saturationChart.data.datasets[0].data = curveData;
+            saturationChart.data.datasets[1].data = dataPoints;
+            
+            // Add optimal point annotation
+            const optimalX = optimalBudget / 1000000;
+            const optimalY = calculateSaturation(optimalBudget, alpha, gamma);
+            
+            saturationChart.options.plugins.annotation.annotations = {
+                optimalLine: {
+                    type: 'line',
+                    xMin: optimalX,
+                    xMax: optimalX,
+                    borderColor: '#10b981',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    label: {
+                        display: true,
+                        content: 'Optimal',
+                        position: 'start',
+                        backgroundColor: '#10b981',
+                        color: 'white',
+                        font: { size: 10 }
+                    }
+                },
+                optimalPoint: {
+                    type: 'point',
+                    xValue: optimalX,
+                    yValue: optimalY,
+                    backgroundColor: '#10b981',
+                    radius: 8,
+                    borderColor: 'white',
+                    borderWidth: 2
+                }
+            };
+            saturationChart.update();
+
+            // Response Chart
+            responseChart.data.labels = labels;
+            responseChart.data.datasets[0].data = spend.map(() => baseline);
+            responseChart.data.datasets[1].data = tvEffect;
+            responseChart.update();
+
+            // ROI Chart - now shows ROI and TV Efficiency
+            roiChart.data.labels = labels;
+            roiChart.data.datasets[0].data = weeklyROI;
+            roiChart.data.datasets[1].data = weeklyEfficiency.map(e => e * 100); // Convert to percentage for display
+            roiChart.update();
+
+            // Update Data Table
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+            for (let i = 0; i < spend.length; i++) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>Hafta ${i + 1}</td>
+                    <td>${formatNumber(spend[i])}</td>
+                    <td>${grp[i].toFixed(0)}</td>
+                    <td>${formatNumber(adstock[i])}</td>
+                    <td>${(saturation[i] * 100).toFixed(1)}%</td>
+                    <td>${formatNumber(tvEffect[i])}</td>
+                    <td>${formatNumber(response[i])}</td>
+                    <td>${(weeklyEfficiency[i] * 100).toFixed(1)}</td>
+                `;
+                tableBody.appendChild(row);
+            }
+        }
+
+        // Format number
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(2) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toFixed(0);
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+        }
+
+        // Toggle card collapse
+        function toggleCard(header) {
+            header.closest('.card').classList.toggle('collapsed');
+        }
+
+        // Apply scenario presets
+        function applyScenario(scenario) {
+            document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('active'));
+            event.target.closest('.scenario-card').classList.add('active');
+
+            const scenarios = {
+                conservative: { decay: 0.5, alpha: 2.0, gamma: 0.6 },
+                balanced: { decay: 0.7, alpha: 1.5, gamma: 0.8 },
+                aggressive: { decay: 0.85, alpha: 1.0, gamma: 1.2 }
+            };
+
+            const s = scenarios[scenario];
+            document.getElementById('decayRate').value = s.decay;
+            document.getElementById('decayValue').textContent = s.decay.toFixed(2);
+            document.getElementById('alphaParam').value = s.alpha;
+            document.getElementById('alphaValue').textContent = s.alpha.toFixed(2);
+            document.getElementById('gammaParam').value = s.gamma;
+            document.getElementById('gammaValue').textContent = s.gamma.toFixed(2);
+
+            runAnalysis();
+        }
+
+        // Export to CSV
+        function exportCSV() {
+            if (!analysisData.spend || analysisData.spend.length === 0) {
+                alert('Önce analizi çalıştırın!');
+                return;
+            }
+
+            const headers = ['Hafta', 'Harcama (TL)', 'GRP', 'Adstock', 'Saturation (%)', 'TV Etkisi (TL)', 'Toplam Satış (TL)', 'ROI (%)', 'TV Efficiency'];
+            const rows = analysisData.spend.map((s, i) => [
+                `Hafta ${i + 1}`,
+                s.toFixed(0),
+                analysisData.grp[i].toFixed(0),
+                analysisData.adstock[i].toFixed(0),
+                (analysisData.saturation[i] * 100).toFixed(2),
+                analysisData.tvEffect[i].toFixed(0),
+                analysisData.response[i].toFixed(0),
+                analysisData.weeklyROI[i].toFixed(2),
+                (analysisData.weeklyEfficiency[i] * 100).toFixed(2)
+            ]);
+
+            let csv = '\uFEFF'; // BOM for Excel UTF-8
+            csv += headers.join(';') + '\n';
+            csv += rows.map(r => r.join(';')).join('\n');
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'tv_analyzer_export.csv';
+            link.click();
+        }
+
+        // Update parameter displays
+        document.getElementById('decayRate').addEventListener('input', (e) => {
+            document.getElementById('decayValue').textContent = parseFloat(e.target.value).toFixed(2);
+        });
+
+        document.getElementById('alphaParam').addEventListener('input', (e) => {
+            document.getElementById('alphaValue').textContent = parseFloat(e.target.value).toFixed(2);
+        });
+
+        document.getElementById('gammaParam').addEventListener('input', (e) => {
+            document.getElementById('gammaValue').textContent = parseFloat(e.target.value).toFixed(2);
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            runAnalysis();
+        });
+    </script>
+</body>
+</html>
