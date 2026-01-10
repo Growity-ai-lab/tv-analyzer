@@ -2285,6 +2285,90 @@
             font-size: 11px;
         }
 
+        /* Week-by-week Analysis Styles */
+        .week-analysis {
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 12px 0;
+        }
+
+        .week-breakdown {
+            margin-top: 8px;
+        }
+
+        .week-item {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 11px;
+        }
+
+        .week-item:last-child {
+            border-bottom: none;
+        }
+
+        .week-item.more {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .week-label {
+            font-weight: 600;
+            color: var(--accent-blue);
+            min-width: 30px;
+        }
+
+        .week-detail {
+            color: var(--text-primary);
+        }
+
+        .week-carryover {
+            color: var(--accent-purple);
+            font-size: 10px;
+            margin-left: auto;
+        }
+
+        .adstock-summary {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 12px 0;
+        }
+
+        .adstock-summary ul {
+            margin: 8px 0 0 0;
+            padding-left: 16px;
+        }
+
+        .adstock-summary li {
+            margin-bottom: 4px;
+            font-size: 11px;
+        }
+
+        .decay-explanation {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(0, 212, 255, 0.05));
+            border-left: 3px solid var(--accent-purple);
+            border-radius: 0 8px 8px 0;
+            padding: 12px;
+            margin: 12px 0;
+        }
+
+        .decay-explanation p {
+            margin-bottom: 8px;
+        }
+
+        .decay-explanation ul {
+            margin: 0;
+            padding-left: 16px;
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
         .fit-params-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -3710,7 +3794,6 @@
             if (!alt1) return;
 
             // Calculate carryover in GRP units
-            // Carryover = Adstock - Current Week Spend, scaled to GRP
             const calcCarryoverGRP = (adstock, spend, grp) => {
                 const maxGRP = Math.max(...grp);
                 const maxAdstock = Math.max(...adstock);
@@ -3742,10 +3825,10 @@
 
             adstockChart.data.labels = data.labels;
             adstockChart.data.datasets = [
-                // Alt-1 Carryover Bar
+                // Alt-1 GRP Bar (Actual Investment)
                 {
-                    label: 'Alt-1 Carryover',
-                    data: carryover1GRP,
+                    label: 'Alt-1 GRP',
+                    data: alt1.grp,
                     type: 'bar',
                     backgroundColor: colors.alt1.bar,
                     borderColor: colors.alt1.border,
@@ -3775,8 +3858,8 @@
                 
                 adstockChart.data.datasets.push(
                     {
-                        label: 'Alt-2 Carryover',
-                        data: carryover2GRP,
+                        label: 'Alt-2 GRP',
+                        data: alt2.grp,
                         type: 'bar',
                         backgroundColor: colors.alt2.bar,
                         borderColor: colors.alt2.border,
@@ -3806,8 +3889,8 @@
                 
                 adstockChart.data.datasets.push(
                     {
-                        label: 'Alt-3 Carryover',
-                        data: carryover3GRP,
+                        label: 'Alt-3 GRP',
+                        data: alt3.grp,
                         type: 'bar',
                         backgroundColor: colors.alt3.bar,
                         borderColor: colors.alt3.border,
@@ -3832,17 +3915,133 @@
             
             // Update scales
             adstockChart.options.scales.x.stacked = false;
+            adstockChart.options.scales.x.title = { 
+                display: true, 
+                text: 'Hafta', 
+                color: '#8888a0' 
+            };
             adstockChart.options.scales.y.stacked = false;
             adstockChart.options.scales.y.title = { 
                 display: true, 
-                text: 'GRP Equivalent', 
+                text: 'GRP / Adstock', 
                 color: '#8888a0' 
             };
+            adstockChart.options.scales.y.beginAtZero = true;
             
             // Clear annotations
             adstockChart.options.plugins.annotation = { annotations: {} };
             
             adstockChart.update();
+            
+            // Generate dynamic rationale
+            generateAdstockRationale(alt1, alt2, alt3, adstock1GRP, carryover1GRP);
+        }
+        
+        // Generate dynamic Adstock rationale with specific numbers
+        function generateAdstockRationale(alt1, alt2, alt3, adstock1GRP, carryover1GRP) {
+            const decay = parseFloat(document.getElementById('decayRate').value);
+            const scenario = scenarioRationales[currentScenario];
+            
+            // Calculate week-by-week analysis for Alt-1
+            const weekAnalysis = [];
+            for (let i = 0; i < alt1.grp.length; i++) {
+                const grp = alt1.grp[i];
+                const adstock = adstock1GRP[i];
+                const carryover = carryover1GRP[i];
+                const prevAdstock = i > 0 ? adstock1GRP[i-1] : 0;
+                const carryoverFromPrev = prevAdstock * decay;
+                
+                weekAnalysis.push({
+                    week: i + 1,
+                    grp: grp,
+                    adstock: adstock,
+                    carryover: carryover,
+                    carryoverFromPrev: carryoverFromPrev,
+                    contribution: grp > 0 ? ((grp / adstock) * 100) : 0
+                });
+            }
+            
+            // Find key insights
+            const totalGRP = alt1.grp.reduce((a, b) => a + b, 0);
+            const avgAdstock = adstock1GRP.reduce((a, b) => a + b, 0) / adstock1GRP.length;
+            const peakAdstock = Math.max(...adstock1GRP);
+            const peakWeek = adstock1GRP.indexOf(peakAdstock) + 1;
+            
+            // Calculate total carryover benefit
+            const totalCarryover = carryover1GRP.reduce((a, b) => a + b, 0);
+            const carryoverBonus = ((totalCarryover / totalGRP) * 100).toFixed(0);
+            
+            // Build week-by-week explanation
+            let weekByWeekHTML = '<div class="week-analysis">';
+            weekByWeekHTML += '<p><strong>📅 Hafta Hafta Alt-1 Analizi:</strong></p>';
+            weekByWeekHTML += '<div class="week-breakdown">';
+            
+            // Show first 3-4 weeks in detail
+            const showWeeks = Math.min(4, weekAnalysis.length);
+            for (let i = 0; i < showWeeks; i++) {
+                const w = weekAnalysis[i];
+                const nextW = weekAnalysis[i + 1];
+                
+                weekByWeekHTML += `<div class="week-item">`;
+                weekByWeekHTML += `<span class="week-label">H${w.week}:</span>`;
+                
+                if (i === 0) {
+                    // First week
+                    weekByWeekHTML += `<span class="week-detail">${w.grp} GRP yatırım → Adstock: <strong>${w.adstock.toFixed(0)}</strong></span>`;
+                    if (nextW) {
+                        const expectedCarryover = (w.adstock * decay).toFixed(0);
+                        weekByWeekHTML += `<span class="week-carryover">→ H${w.week + 1}'e ${expectedCarryover} GRP eq. taşınacak</span>`;
+                    }
+                } else {
+                    // Subsequent weeks
+                    const prevCarryover = (weekAnalysis[i-1].adstock * decay).toFixed(0);
+                    weekByWeekHTML += `<span class="week-detail">${w.grp} GRP + ${prevCarryover} carryover → Adstock: <strong>${w.adstock.toFixed(0)}</strong></span>`;
+                }
+                weekByWeekHTML += `</div>`;
+            }
+            
+            if (weekAnalysis.length > showWeeks) {
+                weekByWeekHTML += `<div class="week-item more">... ve ${weekAnalysis.length - showWeeks} hafta daha</div>`;
+            }
+            
+            weekByWeekHTML += '</div></div>';
+            
+            // Summary insights
+            let summaryHTML = `
+                <div class="adstock-summary">
+                    <p><strong>📊 Alt-1 Özet:</strong></p>
+                    <ul>
+                        <li>Toplam GRP: <strong>${totalGRP}</strong></li>
+                        <li>Ortalama Adstock: <strong>${avgAdstock.toFixed(0)}</strong> GRP eq.</li>
+                        <li>Peak Adstock: H${peakWeek}'de <strong>${peakAdstock.toFixed(0)}</strong> GRP eq.</li>
+                        <li>Carryover Bonusu: <strong>+%${carryoverBonus}</strong> ekstra etki</li>
+                    </ul>
+                </div>
+            `;
+            
+            // Decay explanation
+            let decayHTML = `
+                <div class="decay-explanation">
+                    <p><strong>⏱️ Decay = ${decay.toFixed(2)} Ne Anlama Geliyor?</strong></p>
+                    <p>Her hafta, önceki haftanın adstock'unun <strong>%${(decay * 100).toFixed(0)}</strong>'i bir sonraki haftaya taşınır.</p>
+                    <ul>
+                        <li>100 GRP → H2'de ${(100 * decay).toFixed(0)} → H3'te ${(100 * decay * decay).toFixed(0)} → H4'te ${(100 * decay * decay * decay).toFixed(0)}</li>
+                    </ul>
+                </div>
+            `;
+            
+            // Combine all into rationale
+            const rationaleEl = document.getElementById('adstockRationale');
+            rationaleEl.innerHTML = `
+                ${scenario.adstock.main}
+                ${weekByWeekHTML}
+                ${summaryHTML}
+                ${decayHTML}
+                <div class="rationale-scenario">
+                    <div class="rationale-scenario-title">${scenario.icon} ${scenario.name} Senaryo Etkisi</div>
+                    ${scenario.adstock.scenario}
+                </div>
+            `;
         }
 
         // Format number
