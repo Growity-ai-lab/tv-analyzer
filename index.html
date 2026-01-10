@@ -1312,12 +1312,12 @@
             gap: 12px;
         }
 
-        .reach-filters {
+        .reach-filters, .adstock-filters {
             display: flex;
             gap: 6px;
         }
 
-        .reach-btn {
+        .reach-btn, .adstock-btn {
             padding: 8px 14px;
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
@@ -1330,12 +1330,12 @@
             transition: all 0.2s;
         }
 
-        .reach-btn:hover {
+        .reach-btn:hover, .adstock-btn:hover {
             border-color: var(--accent-blue);
             color: var(--text-primary);
         }
 
-        .reach-btn.active {
+        .reach-btn.active, .adstock-btn.active {
             background: var(--accent-blue);
             border-color: var(--accent-blue);
             color: white;
@@ -2077,8 +2077,17 @@
                 <!-- Chart Containers -->
                 <div id="adstock-tab" class="tab-content active">
                     <div class="chart-container">
-                        <div class="chart-title">Haftalık GRP ve Adstock Birikimi</div>
-                        <canvas id="adstockChart"></canvas>
+                        <div class="chart-header-row">
+                            <div class="chart-title">Haftalık GRP + Carryover Birikimi</div>
+                            <div class="adstock-filters">
+                                <button class="adstock-btn active" onclick="setAdstockAlt(1)">Alt-1</button>
+                                <button class="adstock-btn" onclick="setAdstockAlt(2)">Alt-2</button>
+                                <button class="adstock-btn" onclick="setAdstockAlt(3)">Alt-3</button>
+                            </div>
+                        </div>
+                        <div style="height: 350px;">
+                            <canvas id="adstockChart"></canvas>
+                        </div>
                     </div>
                     <div class="tab-rationale">
                         <div class="rationale-header">
@@ -2093,8 +2102,17 @@
 
                 <div id="carryover-tab" class="tab-content">
                     <div class="chart-container">
-                        <div class="chart-title">Carryover Etkisi - Geçmişten Taşınan Reklam Değeri</div>
-                        <canvas id="carryoverChart"></canvas>
+                        <div class="chart-header-row">
+                            <div class="chart-title">Carryover Etkisi - Geçmişten Taşınan Reklam Değeri</div>
+                            <div class="adstock-filters">
+                                <button class="adstock-btn active" onclick="setCarryoverAlt(1)">Alt-1</button>
+                                <button class="adstock-btn" onclick="setCarryoverAlt(2)">Alt-2</button>
+                                <button class="adstock-btn" onclick="setCarryoverAlt(3)">Alt-3</button>
+                            </div>
+                        </div>
+                        <div style="height: 350px;">
+                            <canvas id="carryoverChart"></canvas>
+                        </div>
                     </div>
                     <div class="tab-rationale">
                         <div class="rationale-header">
@@ -2174,6 +2192,8 @@
         let analysisData = {};
         let inputMode = 'spend'; // 'spend' or 'grp'
         let currentReachFrequency = 1; // 1+, 2+, or 3+
+        let currentAdstockAlt = 1; // 1, 2, or 3
+        let currentCarryoverAlt = 1; // 1, 2, or 3
         let currentScenario = 'optimum'; // 'minimum', 'optimum', or 'maksimum'
 
         // Reach curve parameters for different frequencies
@@ -2655,30 +2675,50 @@
                 }
             };
 
-            // Adstock Chart - Dual axis for GRP and Adstock
+            // Adstock Chart - Stacked bar (Actual + Carried-Over) + Line (Total Adstock)
             adstockChart = new Chart(document.getElementById('adstockChart'), {
-                type: 'line',
+                type: 'bar',
                 data: {
                     labels: [],
                     datasets: []
                 },
                 options: {
                     ...chartOptions,
+                    plugins: {
+                        ...chartOptions.plugins,
+                        annotation: {
+                            annotations: {}
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.dataset.label;
+                                    const value = context.raw;
+                                    if (label === 'Total Adstock') {
+                                        return `${label}: ${value.toFixed(0)} GRP eq.`;
+                                    }
+                                    return `${label}: ${value.toFixed(0)} GRP`;
+                                }
+                            }
+                        },
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                color: '#8888a0',
+                                font: { size: 10 },
+                                usePointStyle: true,
+                                padding: 15
+                            }
+                        }
+                    },
                     scales: {
                         x: chartOptions.scales.x,
-                        yGRP: {
-                            type: 'linear',
-                            position: 'left',
-                            title: { display: true, text: 'GRP', color: '#8888a0' },
-                            grid: { color: 'rgba(136, 136, 160, 0.1)' },
-                            ticks: { color: '#8888a0' }
-                        },
-                        yAdstock: {
-                            type: 'linear',
-                            position: 'right',
-                            title: { display: true, text: 'Adstock (M TL)', color: '#8888a0' },
-                            grid: { drawOnChartArea: false },
-                            ticks: { color: '#8888a0' }
+                        y: {
+                            ...chartOptions.scales.y,
+                            stacked: true,
+                            title: { display: false },
+                            beginAtZero: true
                         }
                     }
                 }
@@ -3095,74 +3135,19 @@
             const maxWeeks = Math.max(grpAlt1.length, grpAlt2.length || 0, grpAlt3.length || 0);
             const labels = Array.from({length: maxWeeks}, (_, i) => `H${i + 1}`);
 
-            // Adstock Chart - GRP bars (gray) + TV Adstock dotted lines (colored)
-            adstockChart.data.labels = labels;
-            adstockChart.data.datasets = [
-                // GRP Bars - Combined (gray like in the image)
-                {
-                    label: 'GRP',
-                    data: grpAlt1,
-                    type: 'bar',
-                    backgroundColor: 'rgba(136, 136, 160, 0.5)',
-                    borderColor: 'rgba(136, 136, 160, 0.7)',
-                    borderWidth: 1,
-                    yAxisID: 'yGRP',
-                    order: 2
-                },
-                // TV Adstock Line - Alt-1 (dotted like in image)
-                {
-                    label: 'Alt-1 TV Adstock',
-                    data: alt1.adstock.map(a => a / 1000000),
-                    borderColor: '#00d4ff',
-                    backgroundColor: 'transparent',
-                    fill: false,
-                    tension: 0.3,
-                    borderWidth: 2.5,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#00d4ff',
-                    pointBorderColor: '#00d4ff',
-                    yAxisID: 'yAdstock',
-                    order: 1
-                }
-            ];
+            // Store data for adstock/carryover chart updates
+            window.adstockData = {
+                labels,
+                alt1: { grp: grpAlt1, adstock: alt1.adstock, spend: spendAlt1 },
+                alt2: alt2 ? { grp: grpAlt2, adstock: alt2.adstock, spend: spendAlt2 } : null,
+                alt3: alt3 ? { grp: grpAlt3, adstock: alt3.adstock, spend: spendAlt3 } : null
+            };
 
-            // Alt-2 adstock line
-            if (alt2) {
-                // Update GRP bar to show Alt-2 if different
-                adstockChart.data.datasets.push({
-                    label: 'Alt-2 TV Adstock',
-                    data: alt2.adstock.map(a => a / 1000000),
-                    borderColor: '#ff6b35',
-                    backgroundColor: 'transparent',
-                    fill: false,
-                    tension: 0.3,
-                    borderWidth: 2.5,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#ff6b35',
-                    pointBorderColor: '#ff6b35',
-                    yAxisID: 'yAdstock',
-                    order: 1
-                });
-            }
+            // Update Adstock Chart with current selection
+            updateAdstockChart();
 
-            // Alt-3 adstock line
-            if (alt3) {
-                adstockChart.data.datasets.push({
-                    label: 'Alt-3 TV Adstock',
-                    data: alt3.adstock.map(a => a / 1000000),
-                    borderColor: '#10b981',
-                    backgroundColor: 'transparent',
-                    fill: false,
-                    tension: 0.3,
-                    borderWidth: 2.5,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#10b981',
-                    pointBorderColor: '#10b981',
-                    yAxisID: 'yAdstock',
-                    order: 1
-                });
-            }
-            adstockChart.update();
+            // Update Carryover Chart with current selection
+            updateCarryoverChart();
 
             // Saturation Chart with curve and data points for all alternatives
             const allAdstock = [...alt1.adstock, ...(alt2?.adstock || []), ...(alt3?.adstock || [])];
@@ -3241,50 +3226,175 @@
             };
             saturationChart.update();
 
-            // Carryover Chart - Haftalık carryover (geçmişten taşınan etki)
-            // Carryover = Adstock - Bu haftanın harcaması
-            const calcCarryover = (adstock, spend) => {
-                return adstock.map((a, i) => Math.max(0, a - spend[i]));
+            // Update Reach Chart
+            updateReachChart();
+        }
+
+        // Update Adstock Chart based on selected alternative
+        function updateAdstockChart() {
+            if (!window.adstockData) return;
+            
+            const data = window.adstockData;
+            const altNum = currentAdstockAlt;
+            const altData = altNum === 1 ? data.alt1 : altNum === 2 ? data.alt2 : data.alt3;
+            
+            if (!altData) {
+                currentAdstockAlt = 1;
+                updateAdstockChart();
+                return;
+            }
+
+            // Calculate carryover (adstock - current spend)
+            const carryover = altData.adstock.map((a, i) => Math.max(0, a - altData.spend[i]));
+            
+            // Scale carryover to GRP units for visualization
+            // Find the ratio between max adstock and max GRP
+            const maxGRP = Math.max(...altData.grp);
+            const maxAdstock = Math.max(...altData.adstock);
+            const scaleFactor = maxGRP > 0 && maxAdstock > 0 ? maxGRP / maxAdstock : 1;
+            
+            // Scale values to GRP units
+            const carryoverScaled = carryover.map(c => c * scaleFactor);
+            const adstockScaled = altData.adstock.map(a => a * scaleFactor);
+
+            adstockChart.data.labels = data.labels;
+            adstockChart.data.datasets = [
+                // Actual Investment (GRP) - Kırmızı bar
+                {
+                    label: 'Actual Investment',
+                    data: altData.grp,
+                    backgroundColor: 'rgba(220, 53, 69, 0.85)',
+                    borderColor: 'rgba(220, 53, 69, 1)',
+                    borderWidth: 1,
+                    stack: 'stack1',
+                    order: 2
+                },
+                // Carried-Over Investment - Gri bar (üstte)
+                {
+                    label: 'Carried-Over Investment',
+                    data: carryoverScaled,
+                    backgroundColor: 'rgba(180, 180, 180, 0.7)',
+                    borderColor: 'rgba(160, 160, 160, 0.9)',
+                    borderWidth: 1,
+                    stack: 'stack1',
+                    order: 2
+                },
+                // Total Adstock - Çizgi
+                {
+                    label: 'Total Adstock',
+                    data: adstockScaled,
+                    type: 'line',
+                    borderColor: 'rgba(100, 100, 100, 0.8)',
+                    backgroundColor: 'transparent',
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    pointBackgroundColor: 'rgba(100, 100, 100, 0.8)',
+                    tension: 0.3,
+                    fill: false,
+                    order: 1
+                }
+            ];
+            
+            // Add reference lines at 200 and 500
+            const maxValue = Math.max(...adstockScaled, ...altData.grp.map((g, i) => g + carryoverScaled[i]));
+            adstockChart.options.plugins.annotation = {
+                annotations: {
+                    line200: {
+                        type: 'line',
+                        yMin: 200,
+                        yMax: 200,
+                        borderColor: 'rgba(150, 150, 150, 0.5)',
+                        borderWidth: 1,
+                        borderDash: [5, 5],
+                        label: {
+                            display: true,
+                            content: '200',
+                            position: 'end',
+                            backgroundColor: 'transparent',
+                            color: 'rgba(150, 150, 150, 0.8)',
+                            font: { size: 10 }
+                        }
+                    },
+                    line500: {
+                        type: 'line',
+                        yMin: 500,
+                        yMax: 500,
+                        borderColor: 'rgba(150, 150, 150, 0.5)',
+                        borderWidth: 1,
+                        borderDash: [5, 5],
+                        label: {
+                            display: true,
+                            content: '500',
+                            position: 'end',
+                            backgroundColor: 'transparent',
+                            color: 'rgba(150, 150, 150, 0.8)',
+                            font: { size: 10 }
+                        }
+                    }
+                }
             };
             
-            const carryover1 = calcCarryover(alt1.adstock, spendAlt1);
-            const carryover2 = alt2 ? calcCarryover(alt2.adstock, spendAlt2) : null;
-            const carryover3 = alt3 ? calcCarryover(alt3.adstock, spendAlt3) : null;
+            adstockChart.update();
+        }
 
-            carryoverChart.data.labels = labels;
+        // Set Adstock Alternative
+        function setAdstockAlt(alt) {
+            currentAdstockAlt = alt;
+            
+            // Update buttons
+            document.querySelectorAll('#adstock-tab .adstock-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i + 1 === alt);
+            });
+            
+            updateAdstockChart();
+        }
+
+        // Update Carryover Chart based on selected alternative
+        function updateCarryoverChart() {
+            if (!window.adstockData) return;
+            
+            const data = window.adstockData;
+            const altNum = currentCarryoverAlt;
+            const altData = altNum === 1 ? data.alt1 : altNum === 2 ? data.alt2 : data.alt3;
+            
+            if (!altData) {
+                currentCarryoverAlt = 1;
+                updateCarryoverChart();
+                return;
+            }
+
+            // Calculate carryover
+            const carryover = altData.adstock.map((a, i) => Math.max(0, a - altData.spend[i]));
+            
+            const colors = {
+                1: { bg: 'rgba(0, 212, 255, 0.7)', border: '#00d4ff' },
+                2: { bg: 'rgba(255, 107, 53, 0.7)', border: '#ff6b35' },
+                3: { bg: 'rgba(16, 185, 129, 0.7)', border: '#10b981' }
+            };
+
+            carryoverChart.data.labels = data.labels;
             carryoverChart.data.datasets = [
                 {
-                    label: 'Alt-1 Carryover',
-                    data: carryover1,
-                    backgroundColor: 'rgba(0, 212, 255, 0.7)',
-                    borderColor: '#00d4ff',
+                    label: `Alt-${altNum} Carryover`,
+                    data: carryover,
+                    backgroundColor: colors[altNum].bg,
+                    borderColor: colors[altNum].border,
                     borderWidth: 1
                 }
             ];
-
-            if (alt2) {
-                carryoverChart.data.datasets.push({
-                    label: 'Alt-2 Carryover',
-                    data: carryover2,
-                    backgroundColor: 'rgba(255, 107, 53, 0.7)',
-                    borderColor: '#ff6b35',
-                    borderWidth: 1
-                });
-            }
-
-            if (alt3) {
-                carryoverChart.data.datasets.push({
-                    label: 'Alt-3 Carryover',
-                    data: carryover3,
-                    backgroundColor: 'rgba(16, 185, 129, 0.7)',
-                    borderColor: '#10b981',
-                    borderWidth: 1
-                });
-            }
             carryoverChart.update();
+        }
 
-            // Update Reach Chart
-            updateReachChart();
+        // Set Carryover Alternative
+        function setCarryoverAlt(alt) {
+            currentCarryoverAlt = alt;
+            
+            // Update buttons
+            document.querySelectorAll('#carryover-tab .adstock-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i + 1 === alt);
+            });
+            
+            updateCarryoverChart();
         }
 
         // Format number
