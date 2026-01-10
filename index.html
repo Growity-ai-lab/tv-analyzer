@@ -75,23 +75,55 @@
         }
 
         .logo-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Space Mono', monospace;
-            font-weight: 700;
-            font-size: 20px;
-            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+            width: 52px;
+            height: 52px;
+            position: relative;
+        }
+
+        .logo-rings {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .logo-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 6px solid;
+        }
+
+        .logo-ring.pink {
+            width: 36px;
+            height: 36px;
+            border-color: #E91E8C;
+            left: 0;
+            top: 8px;
+        }
+
+        .logo-ring.purple {
+            width: 36px;
+            height: 36px;
+            border-color: #7B2D8E;
+            right: 0;
+            top: 8px;
+        }
+
+        /* Interlocking effect - purple ring goes behind pink on left, in front on right */
+        .logo-ring.purple::before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 20px;
+            background: var(--bg-primary);
+            left: -8px;
+            top: 4px;
+            border-radius: 0 10px 10px 0;
         }
 
         .logo-text h1 {
             font-size: 24px;
             font-weight: 600;
-            background: linear-gradient(90deg, var(--text-primary), var(--accent-blue));
+            background: linear-gradient(90deg, #E91E8C, #7B2D8E);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -101,8 +133,8 @@
             font-size: 12px;
             color: var(--text-secondary);
             font-family: 'Space Mono', monospace;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            text-transform: none;
+            letter-spacing: 1px;
         }
 
         .header-actions {
@@ -1881,6 +1913,452 @@
             border-top: 1px dashed var(--border-color);
             font-style: italic;
         }
+
+        /* Model Fit Card */
+        .model-fit-card {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .model-fit-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, var(--accent-purple), #9333ea);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-family: 'Sora', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .model-fit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+        }
+
+        .model-fit-status {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        .model-fit-status.success {
+            color: var(--accent-green);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .fit-instructions {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .fit-instructions p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .fit-instructions p:last-child {
+            margin-bottom: 0;
+        }
+
+        .fit-instructions strong {
+            color: var(--accent-purple);
+        }
+
+        .fit-data-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .fit-input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .fit-input-group textarea {
+            width: 100%;
+            height: 60px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--text-primary);
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            resize: vertical;
+        }
+
+        .fit-input-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-purple);
+        }
+
+        .fit-options {
+            margin-bottom: 20px;
+        }
+
+        .fit-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .fit-checkbox input {
+            accent-color: var(--accent-purple);
+        }
+
+        .fit-progress {
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-blue));
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        .fit-results {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .fit-results h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-green);
+            margin-bottom: 12px;
+        }
+
+        .fit-param .param-quality {
+            display: block;
+            font-size: 9px;
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        .fit-param .param-quality.excellent { color: var(--accent-green); }
+        .fit-param .param-quality.good { color: var(--accent-blue); }
+        .fit-param .param-quality.acceptable { color: var(--accent-yellow); }
+        .fit-param .param-quality.poor { color: var(--accent-orange); }
+
+        .fit-rationale {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .fit-rationale h5 {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .fit-rationale p {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .fit-rationale .r2-scale {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin: 12px 0;
+            font-size: 10px;
+        }
+
+        .fit-rationale .r2-bar {
+            flex: 1;
+            height: 8px;
+            background: linear-gradient(90deg, 
+                var(--accent-orange) 0%, 
+                var(--accent-yellow) 50%, 
+                var(--accent-blue) 75%, 
+                var(--accent-green) 100%);
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .fit-rationale .r2-marker {
+            position: absolute;
+            top: -4px;
+            width: 2px;
+            height: 16px;
+            background: white;
+            border-radius: 1px;
+            box-shadow: 0 0 4px rgba(0,0,0,0.5);
+        }
+
+        .fit-rationale .r2-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .fit-interpretation {
+            background: var(--bg-card);
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+
+        .fit-interpretation .interp-title {
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .fit-interpretation .interp-title.excellent { color: var(--accent-green); }
+        .fit-interpretation .interp-title.good { color: var(--accent-blue); }
+        .fit-interpretation .interp-title.acceptable { color: var(--accent-yellow); }
+        .fit-interpretation .interp-title.poor { color: var(--accent-orange); }
+
+        .fit-interpretation ul {
+            margin: 0;
+            padding-left: 16px;
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        .fit-interpretation li {
+            margin-bottom: 4px;
+        }
+
+        /* GRP Distribution Analysis Styles */
+        .distribution-analysis {
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 12px 0;
+        }
+
+        .dist-alt {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 11px;
+        }
+
+        .dist-alt:last-child {
+            border-bottom: none;
+        }
+
+        .dist-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .dist-detail {
+            margin-left: auto;
+            color: var(--text-secondary);
+            font-size: 10px;
+        }
+
+        .dist-strategy {
+            margin-top: 12px;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-purple);
+        }
+
+        .dist-strategy p {
+            margin-bottom: 8px !important;
+        }
+
+        .dist-strategy ul {
+            margin: 0;
+            padding-left: 16px;
+        }
+
+        .dist-strategy li {
+            margin-bottom: 4px;
+            font-size: 11px;
+        }
+
+        .dist-recommendation {
+            margin-top: 12px;
+            padding: 10px 12px;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(0, 212, 255, 0.1));
+            border-radius: 8px;
+            font-size: 11px;
+        }
+
+        .fit-params-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .fit-param {
+            background: var(--bg-card);
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .fit-param .param-name {
+            display: block;
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .fit-param .param-value {
+            display: block;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-purple);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .fit-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .fit-run-btn, .fit-apply-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Sora', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .fit-run-btn {
+            background: linear-gradient(135deg, var(--accent-purple), #9333ea);
+            color: white;
+        }
+
+        .fit-run-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+        }
+
+        .fit-run-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .fit-apply-btn {
+            background: linear-gradient(135deg, var(--accent-green), #059669);
+            color: white;
+        }
+
+        .fit-apply-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -1889,7 +2367,16 @@
     <div class="container">
         <header class="header">
             <div class="logo">
-                <div class="logo-icon">TV</div>
+                <div class="logo-icon">
+                    <svg width="52" height="44" viewBox="0 0 52 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Pink ring (left) - back part behind purple -->
+                        <circle cx="17" cy="22" r="13" stroke="#E91E8C" stroke-width="5" fill="none" stroke-linecap="round"/>
+                        <!-- Purple ring (right) - full circle -->
+                        <circle cx="35" cy="22" r="13" stroke="#7B2D8E" stroke-width="5" fill="none" stroke-linecap="round"/>
+                        <!-- Pink ring front overlap - covers the intersection area -->
+                        <path d="M 17 9 A 13 13 0 0 0 17 35" stroke="#E91E8C" stroke-width="5" fill="none" stroke-linecap="round"/>
+                    </svg>
+                </div>
                 <div class="logo-text">
                     <h1>TV Analyzer</h1>
                     <span>by Time & Growity</span>
@@ -1964,6 +2451,21 @@
                             <span class="scenario-icon">📈</span>
                             <span class="scenario-name">Maksimum</span>
                         </button>
+                    </div>
+                </div>
+
+                <!-- Model Fit Button -->
+                <div class="control-card model-fit-card">
+                    <div class="control-card-header">
+                        <span class="control-card-icon">🧪</span>
+                        <span class="control-card-title">Model Fit</span>
+                    </div>
+                    <button class="model-fit-btn" onclick="openModelFitModal()">
+                        <span class="fit-icon">📊</span>
+                        <span class="fit-text">Veriden Parametreleri Öğren</span>
+                    </button>
+                    <div class="model-fit-status" id="modelFitStatus">
+                        <span class="status-text">Hazır</span>
                     </div>
                 </div>
 
@@ -2077,14 +2579,7 @@
                 <!-- Chart Containers -->
                 <div id="adstock-tab" class="tab-content active">
                     <div class="chart-container">
-                        <div class="chart-header-row">
-                            <div class="chart-title">Haftalık GRP + Carryover Birikimi</div>
-                            <div class="adstock-filters">
-                                <button class="adstock-btn active" onclick="setAdstockAlt(1)">Alt-1</button>
-                                <button class="adstock-btn" onclick="setAdstockAlt(2)">Alt-2</button>
-                                <button class="adstock-btn" onclick="setAdstockAlt(3)">Alt-3</button>
-                            </div>
-                        </div>
+                        <div class="chart-title">GRP & Adstock Etkisi</div>
                         <div style="height: 350px;">
                             <canvas id="adstockChart"></canvas>
                         </div>
@@ -2102,14 +2597,7 @@
 
                 <div id="carryover-tab" class="tab-content">
                     <div class="chart-container">
-                        <div class="chart-header-row">
-                            <div class="chart-title">Carryover Etkisi - Geçmişten Taşınan Reklam Değeri</div>
-                            <div class="adstock-filters">
-                                <button class="adstock-btn active" onclick="setCarryoverAlt(1)">Alt-1</button>
-                                <button class="adstock-btn" onclick="setCarryoverAlt(2)">Alt-2</button>
-                                <button class="adstock-btn" onclick="setCarryoverAlt(3)">Alt-3</button>
-                            </div>
-                        </div>
+                        <div class="chart-title">Carryover Etkisi - Alternatif Karşılaştırması</div>
                         <div style="height: 350px;">
                             <canvas id="carryoverChart"></canvas>
                         </div>
@@ -2186,6 +2674,83 @@
         </div>
     </div>
 
+    <!-- Model Fit Modal -->
+    <div id="modelFitModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🧪 Model Fit - Parametreleri Veriden Öğren</h3>
+                <button class="modal-close" onclick="closeModelFitModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="fit-instructions">
+                    <p><strong>Nasıl Çalışır?</strong></p>
+                    <p>Haftalık satış ve TV harcama/GRP verilerinizi girin. Python modeli tarayıcınızda çalışarak en uygun Decay, Alpha ve Gamma parametrelerini bulacak.</p>
+                </div>
+                
+                <div class="fit-data-inputs">
+                    <div class="fit-input-group">
+                        <label>📈 Haftalık Satış (TL)</label>
+                        <textarea id="fitSalesData" placeholder="1200000, 1350000, 1500000, 1400000, 1300000, 1250000, 1400000, 1450000">1200000, 1350000, 1500000, 1400000, 1300000, 1250000, 1400000, 1450000</textarea>
+                    </div>
+                    <div class="fit-input-group">
+                        <label>📺 Haftalık TV Harcama (TL) veya GRP</label>
+                        <textarea id="fitTVData" placeholder="500000, 600000, 700000, 500000, 400000, 300000, 500000, 600000">500000, 600000, 700000, 500000, 400000, 300000, 500000, 600000</textarea>
+                    </div>
+                </div>
+
+                <div class="fit-options">
+                    <label class="fit-checkbox">
+                        <input type="checkbox" id="fitAutoApply" checked>
+                        <span>Bulunan parametreleri otomatik uygula</span>
+                    </label>
+                </div>
+
+                <div class="fit-progress" id="fitProgress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">Pyodide yükleniyor...</div>
+                </div>
+
+                <div class="fit-results" id="fitResults" style="display: none;">
+                    <h4>📊 Bulunan Parametreler</h4>
+                    <div class="fit-params-grid">
+                        <div class="fit-param">
+                            <span class="param-name">Decay (λ)</span>
+                            <span class="param-value" id="fitDecay">-</span>
+                        </div>
+                        <div class="fit-param">
+                            <span class="param-name">Alpha (α)</span>
+                            <span class="param-value" id="fitAlpha">-</span>
+                        </div>
+                        <div class="fit-param">
+                            <span class="param-name">Gamma (γ)</span>
+                            <span class="param-value" id="fitGamma">-</span>
+                        </div>
+                        <div class="fit-param">
+                            <span class="param-name">R² Score</span>
+                            <span class="param-value" id="fitR2">-</span>
+                            <span class="param-quality" id="fitR2Quality">-</span>
+                        </div>
+                    </div>
+                    
+                    <div class="fit-rationale" id="fitRationale">
+                        <!-- Dinamik rasyonel buraya gelecek -->
+                    </div>
+                </div>
+
+                <div class="fit-actions">
+                    <button class="fit-run-btn" onclick="runModelFit()">
+                        <span>🚀</span> Modeli Çalıştır
+                    </button>
+                    <button class="fit-apply-btn" id="fitApplyBtn" onclick="applyFitParams()" style="display: none;">
+                        <span>✓</span> Parametreleri Uygula
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Global variables
         let adstockChart, saturationChart, carryoverChart, reachChart;
@@ -2195,6 +2760,11 @@
         let currentAdstockAlt = 1; // 1, 2, or 3
         let currentCarryoverAlt = 1; // 1, 2, or 3
         let currentScenario = 'optimum'; // 'minimum', 'optimum', or 'maksimum'
+        
+        // Pyodide for Python model fitting
+        let pyodide = null;
+        let pyodideReady = false;
+        let fittedParams = null;
 
         // Reach curve parameters for different frequencies
         const reachParams = {
@@ -3235,166 +3805,225 @@
             if (!window.adstockData) return;
             
             const data = window.adstockData;
-            const altNum = currentAdstockAlt;
-            const altData = altNum === 1 ? data.alt1 : altNum === 2 ? data.alt2 : data.alt3;
+            const alt1 = data.alt1;
+            const alt2 = data.alt2;
+            const alt3 = data.alt3;
             
-            if (!altData) {
-                currentAdstockAlt = 1;
-                updateAdstockChart();
-                return;
-            }
+            if (!alt1) return;
 
-            // Calculate carryover (adstock - current spend)
-            const carryover = altData.adstock.map((a, i) => Math.max(0, a - altData.spend[i]));
-            
-            // Scale carryover to GRP units for visualization
-            // Find the ratio between max adstock and max GRP
-            const maxGRP = Math.max(...altData.grp);
-            const maxAdstock = Math.max(...altData.adstock);
-            const scaleFactor = maxGRP > 0 && maxAdstock > 0 ? maxGRP / maxAdstock : 1;
-            
-            // Scale values to GRP units
-            const carryoverScaled = carryover.map(c => c * scaleFactor);
-            const adstockScaled = altData.adstock.map(a => a * scaleFactor);
+            // Calculate carryover (adstock - current week's spend)
+            const calcCarryover = (adstock, spend) => {
+                return adstock.map((a, i) => Math.max(0, a - spend[i]));
+            };
+
+            // Scale to common units (use GRP scale)
+            const scaleToGRP = (values, grp) => {
+                const maxGRP = Math.max(...grp);
+                const maxVal = Math.max(...values);
+                if (maxVal === 0) return values;
+                const scaleFactor = maxGRP / maxVal;
+                return values.map(v => v * scaleFactor);
+            };
+
+            // Colors
+            const colors = {
+                alt1: { line: '#00d4ff', area: 'rgba(0, 212, 255, 0.2)', dash: [] },
+                alt2: { line: '#ff6b35', area: 'rgba(255, 107, 53, 0.2)', dash: [] },
+                alt3: { line: '#10b981', area: 'rgba(16, 185, 129, 0.2)', dash: [] }
+            };
+
+            const carryover1 = calcCarryover(alt1.adstock, alt1.spend);
+            const adstock1Scaled = scaleToGRP(alt1.adstock, alt1.grp);
+            const carryover1Scaled = scaleToGRP(carryover1, alt1.grp);
 
             adstockChart.data.labels = data.labels;
             adstockChart.data.datasets = [
-                // Actual Investment (GRP) - Kırmızı bar
+                // GRP Bars (Exposures)
                 {
-                    label: 'Actual Investment',
-                    data: altData.grp,
-                    backgroundColor: 'rgba(220, 53, 69, 0.85)',
-                    borderColor: 'rgba(220, 53, 69, 1)',
+                    label: 'GRP',
+                    data: alt1.grp,
+                    type: 'bar',
+                    backgroundColor: 'rgba(173, 216, 230, 0.7)',
+                    borderColor: 'rgba(135, 206, 235, 1)',
                     borderWidth: 1,
-                    stack: 'stack1',
-                    order: 2
+                    order: 3
                 },
-                // Carried-Over Investment - Gri bar (üstte)
+                // Alt-1 Carryover (kesikli çizgi + alan)
                 {
-                    label: 'Carried-Over Investment',
-                    data: carryoverScaled,
-                    backgroundColor: 'rgba(180, 180, 180, 0.7)',
-                    borderColor: 'rgba(160, 160, 160, 0.9)',
-                    borderWidth: 1,
-                    stack: 'stack1',
-                    order: 2
-                },
-                // Total Adstock - Çizgi
-                {
-                    label: 'Total Adstock',
-                    data: adstockScaled,
+                    label: 'Alt-1 Carryover',
+                    data: carryover1Scaled,
                     type: 'line',
-                    borderColor: 'rgba(100, 100, 100, 0.8)',
-                    backgroundColor: 'transparent',
+                    borderColor: colors.alt1.line,
+                    backgroundColor: colors.alt1.area,
                     borderWidth: 2,
+                    borderDash: [5, 5],
+                    pointRadius: 0,
+                    tension: 0.3,
+                    fill: true,
+                    order: 2
+                },
+                // Alt-1 Adstock (düz çizgi)
+                {
+                    label: 'Alt-1 Adstock',
+                    data: adstock1Scaled,
+                    type: 'line',
+                    borderColor: colors.alt1.line,
+                    backgroundColor: 'transparent',
+                    borderWidth: 2.5,
                     pointRadius: 3,
-                    pointBackgroundColor: 'rgba(100, 100, 100, 0.8)',
+                    pointBackgroundColor: colors.alt1.line,
                     tension: 0.3,
                     fill: false,
                     order: 1
                 }
             ];
             
-            // Add reference lines at 200 and 500
-            const maxValue = Math.max(...adstockScaled, ...altData.grp.map((g, i) => g + carryoverScaled[i]));
-            adstockChart.options.plugins.annotation = {
-                annotations: {
-                    line200: {
+            // Add Alt-2 if exists
+            if (alt2) {
+                const carryover2 = calcCarryover(alt2.adstock, alt2.spend);
+                const adstock2Scaled = scaleToGRP(alt2.adstock, alt2.grp);
+                const carryover2Scaled = scaleToGRP(carryover2, alt2.grp);
+                
+                adstockChart.data.datasets.push(
+                    {
+                        label: 'Alt-2 Carryover',
+                        data: carryover2Scaled,
                         type: 'line',
-                        yMin: 200,
-                        yMax: 200,
-                        borderColor: 'rgba(150, 150, 150, 0.5)',
-                        borderWidth: 1,
+                        borderColor: colors.alt2.line,
+                        backgroundColor: colors.alt2.area,
+                        borderWidth: 2,
                         borderDash: [5, 5],
-                        label: {
-                            display: true,
-                            content: '200',
-                            position: 'end',
-                            backgroundColor: 'transparent',
-                            color: 'rgba(150, 150, 150, 0.8)',
-                            font: { size: 10 }
-                        }
+                        pointRadius: 0,
+                        tension: 0.3,
+                        fill: true,
+                        order: 2
                     },
-                    line500: {
+                    {
+                        label: 'Alt-2 Adstock',
+                        data: adstock2Scaled,
                         type: 'line',
-                        yMin: 500,
-                        yMax: 500,
-                        borderColor: 'rgba(150, 150, 150, 0.5)',
-                        borderWidth: 1,
-                        borderDash: [5, 5],
-                        label: {
-                            display: true,
-                            content: '500',
-                            position: 'end',
-                            backgroundColor: 'transparent',
-                            color: 'rgba(150, 150, 150, 0.8)',
-                            font: { size: 10 }
-                        }
+                        borderColor: colors.alt2.line,
+                        backgroundColor: 'transparent',
+                        borderWidth: 2.5,
+                        pointRadius: 3,
+                        pointBackgroundColor: colors.alt2.line,
+                        tension: 0.3,
+                        fill: false,
+                        order: 1
                     }
-                }
+                );
+            }
+            
+            // Add Alt-3 if exists
+            if (alt3) {
+                const carryover3 = calcCarryover(alt3.adstock, alt3.spend);
+                const adstock3Scaled = scaleToGRP(alt3.adstock, alt3.grp);
+                const carryover3Scaled = scaleToGRP(carryover3, alt3.grp);
+                
+                adstockChart.data.datasets.push(
+                    {
+                        label: 'Alt-3 Carryover',
+                        data: carryover3Scaled,
+                        type: 'line',
+                        borderColor: colors.alt3.line,
+                        backgroundColor: colors.alt3.area,
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        tension: 0.3,
+                        fill: true,
+                        order: 2
+                    },
+                    {
+                        label: 'Alt-3 Adstock',
+                        data: adstock3Scaled,
+                        type: 'line',
+                        borderColor: colors.alt3.line,
+                        backgroundColor: 'transparent',
+                        borderWidth: 2.5,
+                        pointRadius: 3,
+                        pointBackgroundColor: colors.alt3.line,
+                        tension: 0.3,
+                        fill: false,
+                        order: 1
+                    }
+                );
+            }
+            
+            // Update scales
+            adstockChart.options.scales.x.stacked = false;
+            adstockChart.options.scales.y.stacked = false;
+            adstockChart.options.scales.y.title = { 
+                display: true, 
+                text: 'GRP / Adstock', 
+                color: '#8888a0' 
             };
+            
+            // Clear annotations
+            adstockChart.options.plugins.annotation = { annotations: {} };
             
             adstockChart.update();
         }
 
-        // Set Adstock Alternative
-        function setAdstockAlt(alt) {
-            currentAdstockAlt = alt;
-            
-            // Update buttons
-            document.querySelectorAll('#adstock-tab .adstock-btn').forEach((btn, i) => {
-                btn.classList.toggle('active', i + 1 === alt);
-            });
-            
-            updateAdstockChart();
-        }
-
-        // Update Carryover Chart based on selected alternative
+        // Update Carryover Chart - All alternatives side by side
         function updateCarryoverChart() {
             if (!window.adstockData) return;
             
             const data = window.adstockData;
-            const altNum = currentCarryoverAlt;
-            const altData = altNum === 1 ? data.alt1 : altNum === 2 ? data.alt2 : data.alt3;
+            const alt1 = data.alt1;
+            const alt2 = data.alt2;
+            const alt3 = data.alt3;
             
-            if (!altData) {
-                currentCarryoverAlt = 1;
-                updateCarryoverChart();
-                return;
-            }
+            if (!alt1) return;
 
-            // Calculate carryover
-            const carryover = altData.adstock.map((a, i) => Math.max(0, a - altData.spend[i]));
+            // Calculate carryover for each alternative
+            const calcCarryover = (altData) => {
+                return altData.adstock.map((a, i) => Math.max(0, a - altData.spend[i]));
+            };
             
+            const carryover1 = calcCarryover(alt1);
+            const carryover2 = alt2 ? calcCarryover(alt2) : null;
+            const carryover3 = alt3 ? calcCarryover(alt3) : null;
+
+            // Colors for alternatives
             const colors = {
-                1: { bg: 'rgba(0, 212, 255, 0.7)', border: '#00d4ff' },
-                2: { bg: 'rgba(255, 107, 53, 0.7)', border: '#ff6b35' },
-                3: { bg: 'rgba(16, 185, 129, 0.7)', border: '#10b981' }
+                alt1: { bg: 'rgba(0, 212, 255, 0.7)', border: '#00d4ff' },
+                alt2: { bg: 'rgba(255, 107, 53, 0.7)', border: '#ff6b35' },
+                alt3: { bg: 'rgba(16, 185, 129, 0.7)', border: '#10b981' }
             };
 
             carryoverChart.data.labels = data.labels;
             carryoverChart.data.datasets = [
                 {
-                    label: `Alt-${altNum} Carryover`,
-                    data: carryover,
-                    backgroundColor: colors[altNum].bg,
-                    borderColor: colors[altNum].border,
+                    label: 'Alt-1 Carryover',
+                    data: carryover1,
+                    backgroundColor: colors.alt1.bg,
+                    borderColor: colors.alt1.border,
                     borderWidth: 1
                 }
             ];
+            
+            if (carryover2) {
+                carryoverChart.data.datasets.push({
+                    label: 'Alt-2 Carryover',
+                    data: carryover2,
+                    backgroundColor: colors.alt2.bg,
+                    borderColor: colors.alt2.border,
+                    borderWidth: 1
+                });
+            }
+            
+            if (carryover3) {
+                carryoverChart.data.datasets.push({
+                    label: 'Alt-3 Carryover',
+                    data: carryover3,
+                    backgroundColor: colors.alt3.bg,
+                    borderColor: colors.alt3.border,
+                    borderWidth: 1
+                });
+            }
+            
             carryoverChart.update();
-        }
-
-        // Set Carryover Alternative
-        function setCarryoverAlt(alt) {
-            currentCarryoverAlt = alt;
-            
-            // Update buttons
-            document.querySelectorAll('#carryover-tab .adstock-btn').forEach((btn, i) => {
-                btn.classList.toggle('active', i + 1 === alt);
-            });
-            
-            updateCarryoverChart();
         }
 
         // Format number
@@ -3496,6 +4125,380 @@
         document.getElementById('gammaParam').addEventListener('input', (e) => {
             document.getElementById('gammaValue').textContent = parseFloat(e.target.value).toFixed(2);
         });
+
+        // =====================================================
+        // MODEL FIT - Pyodide Python Integration
+        // =====================================================
+        
+        // Open/Close Modal
+        function openModelFitModal() {
+            document.getElementById('modelFitModal').style.display = 'flex';
+        }
+        
+        function closeModelFitModal() {
+            document.getElementById('modelFitModal').style.display = 'none';
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('modelFitModal')?.addEventListener('click', (e) => {
+            if (e.target.id === 'modelFitModal') {
+                closeModelFitModal();
+            }
+        });
+        
+        // Load Pyodide
+        async function initPyodide() {
+            if (pyodideReady) return pyodide;
+            
+            updateProgress(10, 'Pyodide yükleniyor...');
+            
+            // Load Pyodide script dynamically
+            if (!window.loadPyodide) {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js';
+                document.head.appendChild(script);
+                
+                await new Promise((resolve, reject) => {
+                    script.onload = resolve;
+                    script.onerror = reject;
+                });
+            }
+            
+            updateProgress(30, 'Python runtime başlatılıyor...');
+            pyodide = await window.loadPyodide();
+            
+            updateProgress(50, 'NumPy & SciPy yükleniyor...');
+            await pyodide.loadPackage(['numpy', 'scipy']);
+            
+            updateProgress(70, 'Model kodu yükleniyor...');
+            
+            // Load the fitting code
+            await pyodide.runPythonAsync(`
+import numpy as np
+from scipy.optimize import minimize, differential_evolution
+
+def adstock_transform(x, decay):
+    """Apply adstock transformation with given decay rate"""
+    adstocked = np.zeros_like(x, dtype=float)
+    adstocked[0] = x[0]
+    for i in range(1, len(x)):
+        adstocked[i] = x[i] + decay * adstocked[i-1]
+    return adstocked
+
+def saturation_hill(x, alpha, gamma):
+    """Hill saturation function"""
+    x = np.maximum(x, 1e-10)  # Avoid division by zero
+    return np.power(x, gamma) / (np.power(alpha, gamma) + np.power(x, gamma))
+
+def predict_sales(tv_spend, decay, alpha, gamma, baseline, tv_coef):
+    """Predict sales given parameters"""
+    adstocked = adstock_transform(tv_spend, decay)
+    saturated = saturation_hill(adstocked, alpha, gamma)
+    return baseline + tv_coef * saturated
+
+def objective(params, tv_spend, sales):
+    """Objective function to minimize (MSE)"""
+    decay, alpha, gamma, baseline, tv_coef = params
+    
+    # Bounds check
+    if decay < 0 or decay > 0.99:
+        return 1e10
+    if alpha < 0.1 or alpha > 10:
+        return 1e10
+    if gamma < 0.1 or gamma > 3:
+        return 1e10
+    if baseline < 0:
+        return 1e10
+    if tv_coef < 0:
+        return 1e10
+    
+    predicted = predict_sales(tv_spend, decay, alpha, gamma, baseline, tv_coef)
+    mse = np.mean((sales - predicted) ** 2)
+    return mse
+
+def fit_model(tv_spend, sales):
+    """Fit the model to data using differential evolution"""
+    tv_spend = np.array(tv_spend, dtype=float)
+    sales = np.array(sales, dtype=float)
+    
+    # Normalize for better optimization
+    tv_scale = np.max(tv_spend) if np.max(tv_spend) > 0 else 1
+    sales_scale = np.max(sales) if np.max(sales) > 0 else 1
+    
+    tv_norm = tv_spend / tv_scale
+    sales_norm = sales / sales_scale
+    
+    # Bounds: decay, alpha, gamma, baseline, tv_coef
+    bounds = [
+        (0.1, 0.95),   # decay
+        (0.1, 5.0),    # alpha (normalized)
+        (0.3, 2.0),    # gamma
+        (0.0, 1.0),    # baseline (normalized)
+        (0.0, 2.0)     # tv_coef (normalized)
+    ]
+    
+    # Use differential evolution for global optimization
+    result = differential_evolution(
+        objective, 
+        bounds, 
+        args=(tv_norm, sales_norm),
+        maxiter=200,
+        seed=42,
+        polish=True
+    )
+    
+    decay, alpha_norm, gamma, baseline_norm, tv_coef_norm = result.x
+    
+    # Denormalize alpha
+    alpha = alpha_norm * tv_scale
+    
+    # Calculate R-squared
+    predicted_norm = predict_sales(tv_norm, decay, alpha_norm, gamma, baseline_norm, tv_coef_norm)
+    ss_res = np.sum((sales_norm - predicted_norm) ** 2)
+    ss_tot = np.sum((sales_norm - np.mean(sales_norm)) ** 2)
+    r_squared = 1 - (ss_res / ss_tot) if ss_tot > 0 else 0
+    
+    return {
+        'decay': float(decay),
+        'alpha': float(alpha),
+        'gamma': float(gamma),
+        'r_squared': float(r_squared),
+        'success': result.success
+    }
+            `);
+            
+            updateProgress(100, 'Hazır!');
+            pyodideReady = true;
+            return pyodide;
+        }
+        
+        // Update progress bar
+        function updateProgress(percent, text) {
+            document.getElementById('fitProgress').style.display = 'block';
+            document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('progressText').textContent = text;
+        }
+        
+        // Run model fitting
+        async function runModelFit() {
+            const runBtn = document.querySelector('.fit-run-btn');
+            runBtn.disabled = true;
+            runBtn.innerHTML = '<span>⏳</span> Çalışıyor...';
+            
+            try {
+                // Get input data
+                const salesText = document.getElementById('fitSalesData').value;
+                const tvText = document.getElementById('fitTVData').value;
+                
+                const sales = salesText.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+                const tv = tvText.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+                
+                if (sales.length < 4 || tv.length < 4) {
+                    alert('En az 4 haftalık veri gerekli!');
+                    throw new Error('Yetersiz veri');
+                }
+                
+                if (sales.length !== tv.length) {
+                    alert('Satış ve TV verisi aynı uzunlukta olmalı!');
+                    throw new Error('Veri uyuşmazlığı');
+                }
+                
+                // Load Pyodide if not ready
+                await initPyodide();
+                
+                updateProgress(80, 'Model optimize ediliyor...');
+                
+                // Run the model
+                const result = await pyodide.runPythonAsync(`
+import json
+sales_data = ${JSON.stringify(sales)}
+tv_data = ${JSON.stringify(tv)}
+result = fit_model(tv_data, sales_data)
+json.dumps(result)
+                `);
+                
+                fittedParams = JSON.parse(result);
+                
+                updateProgress(100, 'Tamamlandı!');
+                
+                // Display results
+                document.getElementById('fitResults').style.display = 'block';
+                document.getElementById('fitDecay').textContent = fittedParams.decay.toFixed(2);
+                document.getElementById('fitAlpha').textContent = fittedParams.alpha.toFixed(2);
+                document.getElementById('fitGamma').textContent = fittedParams.gamma.toFixed(2);
+                document.getElementById('fitR2').textContent = (fittedParams.r_squared * 100).toFixed(1) + '%';
+                
+                // Generate R² quality and rationale
+                generateFitRationale(fittedParams);
+                
+                // Show apply button
+                document.getElementById('fitApplyBtn').style.display = 'flex';
+                
+                // Auto apply if checked
+                if (document.getElementById('fitAutoApply').checked) {
+                    applyFitParams();
+                }
+                
+                // Update status
+                document.getElementById('modelFitStatus').innerHTML = '<span class="status-text" style="color: var(--accent-green);">✓ R² = ' + (fittedParams.r_squared * 100).toFixed(1) + '%</span>';
+                document.getElementById('modelFitStatus').classList.add('success');
+                
+            } catch (error) {
+                console.error('Model fit error:', error);
+                updateProgress(0, 'Hata: ' + error.message);
+            } finally {
+                runBtn.disabled = false;
+                runBtn.innerHTML = '<span>🚀</span> Modeli Çalıştır';
+            }
+        }
+        
+        // Generate R² quality and rationale
+        function generateFitRationale(params) {
+            const r2 = params.r_squared;
+            const r2Pct = r2 * 100;
+            
+            // Determine quality level
+            let quality, qualityClass, qualityText;
+            if (r2 >= 0.85) {
+                quality = 'excellent';
+                qualityClass = 'excellent';
+                qualityText = 'Mükemmel';
+            } else if (r2 >= 0.70) {
+                quality = 'good';
+                qualityClass = 'good';
+                qualityText = 'İyi';
+            } else if (r2 >= 0.50) {
+                quality = 'acceptable';
+                qualityClass = 'acceptable';
+                qualityText = 'Kabul Edilebilir';
+            } else {
+                quality = 'poor';
+                qualityClass = 'poor';
+                qualityText = 'Düşük';
+            }
+            
+            // Update quality indicator
+            const qualityEl = document.getElementById('fitR2Quality');
+            qualityEl.textContent = qualityText;
+            qualityEl.className = 'param-quality ' + qualityClass;
+            
+            // Determine decay interpretation
+            let decayInterp;
+            if (params.decay < 0.5) {
+                decayInterp = 'Kısa süreli etki - FMCG/promosyon kategorisi';
+            } else if (params.decay < 0.75) {
+                decayInterp = 'Orta süreli etki - Perakende/telekom kategorisi';
+            } else {
+                decayInterp = 'Uzun süreli etki - Otomotiv/lüks kategorisi';
+            }
+            
+            // Generate rationale HTML
+            const rationaleHTML = `
+                <h5>📈 R² (R-Kare) Nedir?</h5>
+                <p>R² değeri, modelin verilerinizi ne kadar iyi açıkladığını gösterir. <strong>${r2Pct.toFixed(1)}%</strong> demek, TV harcamalarındaki değişim satışlardaki değişimin <strong>%${r2Pct.toFixed(0)}'ini</strong> açıklıyor demektir.</p>
+                
+                <div class="r2-scale">
+                    <span>0%</span>
+                    <div class="r2-bar">
+                        <div class="r2-marker" style="left: ${Math.min(r2Pct, 100)}%;"></div>
+                    </div>
+                    <span>100%</span>
+                </div>
+                <div class="r2-labels">
+                    <span>Düşük (&lt;50%)</span>
+                    <span>Kabul (50-70%)</span>
+                    <span>İyi (70-85%)</span>
+                    <span>Mükemmel (&gt;85%)</span>
+                </div>
+                
+                <div class="fit-interpretation">
+                    <div class="interp-title ${qualityClass}">
+                        ${quality === 'excellent' ? '✅ Mükemmel Model Uyumu' : 
+                          quality === 'good' ? '👍 İyi Model Uyumu' : 
+                          quality === 'acceptable' ? '⚠️ Kabul Edilebilir Uyum' : 
+                          '⚠️ Düşük Model Uyumu'}
+                    </div>
+                    <ul>
+                        ${quality === 'excellent' ? `
+                            <li>Model verilerinizi çok iyi açıklıyor</li>
+                            <li>Bulunan parametreler güvenilir</li>
+                            <li>TV'nin satışa etkisi net görülüyor</li>
+                        ` : quality === 'good' ? `
+                            <li>Model verilerinizi iyi açıklıyor</li>
+                            <li>Parametreler büyük ölçüde güvenilir</li>
+                            <li>Diğer faktörler de satışı etkiliyor olabilir</li>
+                        ` : quality === 'acceptable' ? `
+                            <li>Model kısmen açıklayıcı</li>
+                            <li>Daha fazla veri ile iyileştirilebilir</li>
+                            <li>Promosyon, sezonsellik gibi faktörler eklenebilir</li>
+                        ` : `
+                            <li>Model yetersiz açıklama sağlıyor</li>
+                            <li>Veri kalitesini kontrol edin</li>
+                            <li>TV dışı faktörler baskın olabilir</li>
+                        `}
+                        <li><strong>Decay:</strong> ${decayInterp}</li>
+                    </ul>
+                </div>
+            `;
+            
+            document.getElementById('fitRationale').innerHTML = rationaleHTML;
+        }
+        
+        // Apply fitted parameters to the analyzer
+        function applyFitParams() {
+            if (!fittedParams) return;
+            
+            // Update sliders
+            document.getElementById('decayRate').value = fittedParams.decay;
+            document.getElementById('decayValue').textContent = fittedParams.decay.toFixed(2);
+            
+            // Clamp alpha to slider range
+            const alphaVal = Math.min(Math.max(fittedParams.alpha, 0.5), 5);
+            document.getElementById('alphaParam').value = alphaVal;
+            document.getElementById('alphaValue').textContent = alphaVal.toFixed(2);
+            
+            // Clamp gamma to slider range
+            const gammaVal = Math.min(Math.max(fittedParams.gamma, 0.3), 2);
+            document.getElementById('gammaParam').value = gammaVal;
+            document.getElementById('gammaValue').textContent = gammaVal.toFixed(2);
+            
+            // Clear scenario selection (now using custom params)
+            document.querySelectorAll('.scenario-btn-v').forEach(btn => btn.classList.remove('active'));
+            
+            // Run analysis with new params
+            runAnalysis();
+            
+            // Close modal
+            closeModelFitModal();
+            
+            // Show notification
+            showNotification('Parametreler uygulandı! Decay: ' + fittedParams.decay.toFixed(2) + ', Alpha: ' + alphaVal.toFixed(2) + ', Gamma: ' + gammaVal.toFixed(2));
+        }
+        
+        // Simple notification
+        function showNotification(message) {
+            const notif = document.createElement('div');
+            notif.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, var(--accent-green), #059669);
+                color: white;
+                padding: 16px 24px;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 500;
+                z-index: 2000;
+                animation: slideIn 0.3s ease;
+            `;
+            notif.textContent = message;
+            document.body.appendChild(notif);
+            
+            setTimeout(() => {
+                notif.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notif.remove(), 300);
+            }, 3000);
+        }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
