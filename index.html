@@ -2570,8 +2570,7 @@
             <div class="charts-section">
                 <!-- Tabs -->
                 <div class="tabs">
-                    <button class="tab active" onclick="switchTab('adstock')">Adstock</button>
-                    <button class="tab" onclick="switchTab('carryover')">Carryover</button>
+                    <button class="tab active" onclick="switchTab('adstock')">Carryover & Adstock</button>
                     <button class="tab" onclick="switchTab('saturation')">Saturation</button>
                     <button class="tab" onclick="switchTab('reach')">GRP & Reach</button>
                 </div>
@@ -2579,7 +2578,7 @@
                 <!-- Chart Containers -->
                 <div id="adstock-tab" class="tab-content active">
                     <div class="chart-container">
-                        <div class="chart-title">GRP & Adstock Etkisi</div>
+                        <div class="chart-title">Carryover & Adstock - Alternatif Karşılaştırması</div>
                         <div style="height: 350px;">
                             <canvas id="adstockChart"></canvas>
                         </div>
@@ -2590,24 +2589,6 @@
                             <span>Grafik Rasyoneli</span>
                         </div>
                         <div class="rationale-content" id="adstockRationale">
-                            <!-- Dinamik içerik buraya gelecek -->
-                        </div>
-                    </div>
-                </div>
-
-                <div id="carryover-tab" class="tab-content">
-                    <div class="chart-container">
-                        <div class="chart-title">Carryover Etkisi - Alternatif Karşılaştırması</div>
-                        <div style="height: 350px;">
-                            <canvas id="carryoverChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="tab-rationale">
-                        <div class="rationale-header">
-                            <span class="rationale-icon">📊</span>
-                            <span>Grafik Rasyoneli</span>
-                        </div>
-                        <div class="rationale-content" id="carryoverRationale">
                             <!-- Dinamik içerik buraya gelecek -->
                         </div>
                     </div>
@@ -2753,7 +2734,7 @@
 
     <script>
         // Global variables
-        let adstockChart, saturationChart, carryoverChart, reachChart;
+        let adstockChart, saturationChart, reachChart;
         let analysisData = {};
         let inputMode = 'spend'; // 'spend' or 'grp'
         let currentReachFrequency = 1; // 1+, 2+, or 3+
@@ -2781,20 +2762,19 @@
                 adstock: {
                     main: `<p><strong>📊 Grafik Ne Gösteriyor?</strong></p>
                     <ul>
-                        <li><strong>Barlar (solda):</strong> Haftalık GRP değerleri - her hafta ne kadar TV yatırımı yapıldığını gösterir</li>
-                        <li><strong>Düz çizgi:</strong> Toplam Adstock - o haftadaki birikimli reklam etkisi (bu hafta + geçmişten taşınan)</li>
-                        <li><strong>Kesikli çizgi + alan:</strong> Carryover - sadece geçmiş haftalardan taşınan etki miktarı</li>
+                        <li><strong>Barlar:</strong> Haftalık Carryover (GRP eq.) - geçmiş haftalardan taşınan etki</li>
+                        <li><strong>Çizgiler:</strong> Toplam Adstock - birikimli reklam etkisi</li>
                     </ul>
                     <p><strong>Minimum Senaryo (λ = 0.45):</strong> Düşük decay ile reklam etkisi <span class="highlight">1-2 hafta içinde %80+ kaybolur</span>.</p>`,
                     scenario: `<p><strong>📉 Grafikte Ne Görmelisiniz?</strong></p>
                     <ul>
-                        <li>Kesikli alan (carryover) çok dar - geçmişten az etki taşınıyor</li>
-                        <li>Düz çizgi barlara yakın seyreder - etki çoğunlukla o haftanın yatırımından</li>
+                        <li>Carryover barları çok kısa - geçmişten az etki taşınıyor</li>
+                        <li>Adstock çizgileri barlara yakın seyreder</li>
                         <li>GRP olmayan haftalarda adstock hızla düşer</li>
                     </ul>
                     <div class="rationale-recommendation warning">
                         <strong>⚠️ Dikkat Edilmesi Gerekenler:</strong>
-                        <p>Carryover alanı çok darsa, her hafta yeniden "sıfırdan" başlıyorsunuz demektir. Bu durumda:</p>
+                        <p>Carryover barları çok kısaysa, her hafta yeniden "sıfırdan" başlıyorsunuz demektir. Bu durumda:</p>
                         <ul>
                             <li>Sürekli yayın yapmalısınız, 1 hafta bile boşluk etkiyi sıfırlar</li>
                             <li>Burst stratejisi bu senaryoda verimsizdir</li>
@@ -2810,19 +2790,6 @@
                     </div>
                     <div class="rationale-tip">
                         <strong>📊 Benchmark:</strong> FMCG sektöründe tipik decay 0.4-0.5 arasındadır.
-                    </div>`
-                },
-                carryover: {
-                    main: `<p><strong>📊 Grafik Ne Gösteriyor?</strong> Carryover = geçmiş haftalardan taşınan reklam etkisi. Her haftanın çubuğu, o haftaya önceki yayınlardan kalan "miras" etkiyi gösterir.</p>
-                    <p><strong>Minimum Senaryo:</strong> <span class="highlight">Carryover çok düşük</span> - geçmiş yatırımlar hızla değer kaybeder.</p>`,
-                    scenario: `<p><strong>📉 Grafikte Ne Görmelisiniz?</strong></p>
-                    <ul>
-                        <li>Barlar çok kısa - geçmişten az etki taşınıyor</li>
-                        <li>Yayın olmayan haftalarda carryover hızla sıfırlanır</li>
-                        <li>Her hafta neredeyse "sıfırdan" başlıyorsunuz</li>
-                    </ul>
-                    <div class="rationale-recommendation warning">
-                        <strong>⚠️ Uyarı:</strong> Carryover düşükse her hafta yeniden yatırım gerekir. Sürekli yayın şarttır!
                     </div>`
                 },
                 saturation: {
@@ -2852,22 +2819,21 @@
                 adstock: {
                     main: `<p><strong>📊 Grafik Ne Gösteriyor?</strong></p>
                     <ul>
-                        <li><strong>Barlar (solda):</strong> Haftalık GRP değerleri - her hafta ne kadar TV yatırımı yapıldığını gösterir</li>
-                        <li><strong>Düz çizgi:</strong> Toplam Adstock - o haftadaki birikimli reklam etkisi (bu hafta + geçmişten taşınan)</li>
-                        <li><strong>Kesikli çizgi + alan:</strong> Carryover - sadece geçmiş haftalardan taşınan etki miktarı</li>
+                        <li><strong>Barlar:</strong> Haftalık Carryover (GRP eq.) - geçmiş haftalardan taşınan etki</li>
+                        <li><strong>Çizgiler:</strong> Toplam Adstock - birikimli reklam etkisi</li>
                     </ul>
                     <p><strong>Optimum Senaryo (λ = 0.70):</strong> Dengeli decay ile reklam etkisi <span class="highlight-purple">2-3 hafta boyunca %50+ korunur</span>.</p>`,
                     scenario: `<p><strong>⚖️ Grafikte Ne Görmelisiniz?</strong></p>
                     <ul>
-                        <li>Kesikli alan (carryover) orta genişlikte - geçmişten makul etki taşınıyor</li>
-                        <li>Düz çizgi barların üzerinde seyreder - birikim etkisi var</li>
+                        <li>Carryover barları orta yükseklikte - geçmişten makul etki taşınıyor</li>
+                        <li>Adstock çizgileri barların üzerinde seyreder - birikim etkisi var</li>
                         <li>GRP olmayan haftalarda adstock kademeli düşer ama sıfırlanmaz</li>
                     </ul>
                     <div class="rationale-recommendation">
                         <strong>💡 Grafiği Nasıl Yorumlamalısınız?</strong>
                         <ul>
-                            <li><strong>Carryover alanı genişse:</strong> Geçmiş yatırımlarınız hâlâ çalışıyor, burst stratejisi kullanabilirsiniz</li>
-                            <li><strong>Düz çizgi barlardan çok yüksekse:</strong> Güçlü birikim var, yoğunlaştırma etkili</li>
+                            <li><strong>Carryover barları yüksekse:</strong> Geçmiş yatırımlarınız hâlâ çalışıyor, burst stratejisi kullanabilirsiniz</li>
+                            <li><strong>Adstock çizgisi barlardan yüksekse:</strong> Güçlü birikim var, yoğunlaştırma etkili</li>
                             <li><strong>Alternatifler arasında fark varsa:</strong> Daha yüksek carryover'lı alternatif uzun vadede verimli</li>
                         </ul>
                     </div>
@@ -2882,19 +2848,6 @@
                     </div>
                     <div class="rationale-tip">
                         <strong>📊 Benchmark:</strong> Petrol, telekom, market sektörlerinde tipik decay 0.65-0.75 arasındadır.
-                    </div>`
-                },
-                carryover: {
-                    main: `<p><strong>📊 Grafik Ne Gösteriyor?</strong> Carryover = geçmiş haftalardan taşınan reklam etkisi. Decay oranına göre her hafta azalarak devam eder.</p>
-                    <p><strong>Optimum Senaryo:</strong> <span class="highlight-purple">Makul carryover</span> - yatırımlar 2-3 hafta boyunca değer üretmeye devam eder.</p>`,
-                    scenario: `<p><strong>⚖️ Grafikte Ne Görmelisiniz?</strong></p>
-                    <ul>
-                        <li>Barlar orta yükseklikte - dengeli taşıma etkisi</li>
-                        <li>GRP olmayan haftalarda bile carryover sıfırlanmaz</li>
-                        <li>2-3 haftalık flight dönemleri kabul edilebilir</li>
-                    </ul>
-                    <div class="rationale-recommendation">
-                        <strong>💡 Aksiyon:</strong> Burst stratejisi uygulayabilirsiniz - yoğun yayın sonrası carryover çalışır.
                     </div>`
                 },
                 saturation: {
@@ -2924,32 +2877,19 @@
                 adstock: {
                     main: `<p><strong>📊 Grafik Ne Gösteriyor?</strong></p>
                     <ul>
-                        <li><strong>Barlar (solda):</strong> Haftalık GRP değerleri - her hafta ne kadar TV yatırımı yapıldığını gösterir</li>
-                        <li><strong>Düz çizgi:</strong> Toplam Adstock - o haftadaki birikimli reklam etkisi (bu hafta + geçmişten taşınan)</li>
-                        <li><strong>Kesikli çizgi + alan:</strong> Carryover - sadece geçmiş haftalardan taşınan etki miktarı</li>
+                        <li><strong>Barlar:</strong> Haftalık Carryover (GRP eq.) - geçmiş haftalardan taşınan etki</li>
+                        <li><strong>Çizgiler:</strong> Toplam Adstock - birikimli reklam etkisi</li>
                     </ul>
                     <p><strong>Maksimum Senaryo (λ = 0.85):</strong> Yüksek decay ile reklam etkisi <span class="highlight-green">4-5 hafta boyunca %60+ korunur</span>.</p>`,
                     scenario: `<p><strong>📈 Grafikte Ne Görmelisiniz?</strong></p>
                     <ul>
-                        <li>Adstock çizgisi GRP barlarının çok üzerinde</li>
+                        <li>Adstock çizgileri carryover barlarının çok üzerinde</li>
                         <li>GRP olmayan haftalarda bile adstock yüksek kalır</li>
                         <li>Peak noktaları birkaç hafta gecikmeyle oluşabilir</li>
+                        <li>Carryover barları yüksek ve uzun süre devam eder</li>
                     </ul>
                     <div class="rationale-recommendation">
-                        <strong>🎯 Aksiyon:</strong> İlk 2-3 haftada yoğun GRP (300+), sonra düşük seviyede sürdürün.
-                    </div>`
-                },
-                carryover: {
-                    main: `<p><strong>📊 Grafik Ne Gösteriyor?</strong> Carryover = geçmiş haftalardan taşınan reklam etkisi. Maksimum senaryoda bu etki çok güçlü ve uzun sürelidir.</p>
-                    <p><strong>Maksimum Senaryo:</strong> <span class="highlight-green">Çok yüksek carryover</span> - yatırımlar 4-5 hafta boyunca değer üretmeye devam eder.</p>`,
-                    scenario: `<p><strong>📈 Grafikte Ne Görmelisiniz?</strong></p>
-                    <ul>
-                        <li>Barlar çok yüksek - geçmişten güçlü etki taşınıyor</li>
-                        <li>Yayın bitiminden haftalarca sonra bile carryover sıfırlanmaz</li>
-                        <li>Flight stratejisi bu senaryoda çok etkili</li>
-                    </ul>
-                    <div class="rationale-recommendation">
-                        <strong>💡 Aksiyon:</strong> Burst + maintenance stratejisi uygulayın. Yoğun yayın sonrası 3-4 hafta ara verilebilir.
+                        <strong>🎯 Aksiyon:</strong> İlk 2-3 haftada yoğun GRP (300+), sonra düşük seviyede sürdürün. Carryover çalışır!
                     </div>
                     <div class="rationale-tip">
                         <strong>🏪 Premium Market:</strong> Lansmanda yoğun yatırım yapın, carryover etkiyle sürdürün.
@@ -3156,15 +3096,6 @@
                         ${scenario.reach.scenario}
                     </div>
                 `;
-
-                // Carryover Rationale
-                document.getElementById('carryoverRationale').innerHTML = `
-                    ${scenario.carryover.main}
-                    <div class="rationale-scenario">
-                        <div class="rationale-scenario-title">${scenario.icon} ${scenario.name} Senaryo Etkisi</div>
-                        ${scenario.carryover.scenario}
-                    </div>
-                `;
             } catch (error) {
                 console.error('Update rationales error:', error);
             }
@@ -3338,36 +3269,6 @@
                             ...chartOptions.scales.y,
                             title: { display: true, text: 'Saturation (%)', color: '#8888a0' },
                             max: 1
-                        }
-                    }
-                }
-            });
-
-            // Carryover Chart - Weekly carryover effect
-            carryoverChart = new Chart(document.getElementById('carryoverChart'), {
-                type: 'bar',
-                data: {
-                    labels: [],
-                    datasets: []
-                },
-                options: {
-                    ...chartOptions,
-                    plugins: {
-                        ...chartOptions.plugins,
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return `${context.dataset.label}: ${formatNumber(context.raw)} TL`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: chartOptions.scales.x,
-                        y: {
-                            ...chartOptions.scales.y,
-                            title: { display: true, text: 'Carryover (TL)', color: '#8888a0' },
-                            beginAtZero: true
                         }
                     }
                 }
@@ -3716,9 +3617,6 @@
             // Update Adstock Chart with current selection
             updateAdstockChart();
 
-            // Update Carryover Chart with current selection
-            updateCarryoverChart();
-
             // Saturation Chart with curve and data points for all alternatives
             const allAdstock = [...alt1.adstock, ...(alt2?.adstock || []), ...(alt3?.adstock || [])];
             const maxSpend = Math.max(...allAdstock) * 1.5;
@@ -3811,61 +3709,53 @@
             
             if (!alt1) return;
 
-            // Calculate carryover (adstock - current week's spend)
-            const calcCarryover = (adstock, spend) => {
-                return adstock.map((a, i) => Math.max(0, a - spend[i]));
-            };
-
-            // Scale to common units (use GRP scale)
-            const scaleToGRP = (values, grp) => {
+            // Calculate carryover in GRP units
+            // Carryover = Adstock - Current Week Spend, scaled to GRP
+            const calcCarryoverGRP = (adstock, spend, grp) => {
                 const maxGRP = Math.max(...grp);
-                const maxVal = Math.max(...values);
-                if (maxVal === 0) return values;
-                const scaleFactor = maxGRP / maxVal;
-                return values.map(v => v * scaleFactor);
+                const maxAdstock = Math.max(...adstock);
+                const scaleFactor = maxAdstock > 0 ? maxGRP / maxAdstock : 1;
+                
+                return adstock.map((a, i) => {
+                    const carryover = Math.max(0, a - spend[i]);
+                    return carryover * scaleFactor;
+                });
+            };
+            
+            // Scale adstock to GRP units
+            const scaleToGRP = (adstock, grp) => {
+                const maxGRP = Math.max(...grp);
+                const maxAdstock = Math.max(...adstock);
+                const scaleFactor = maxAdstock > 0 ? maxGRP / maxAdstock : 1;
+                return adstock.map(a => a * scaleFactor);
             };
 
-            // Colors
+            // Colors for alternatives
             const colors = {
-                alt1: { line: '#00d4ff', area: 'rgba(0, 212, 255, 0.2)', dash: [] },
-                alt2: { line: '#ff6b35', area: 'rgba(255, 107, 53, 0.2)', dash: [] },
-                alt3: { line: '#10b981', area: 'rgba(16, 185, 129, 0.2)', dash: [] }
+                alt1: { bar: 'rgba(0, 212, 255, 0.6)', border: '#00d4ff', line: '#00d4ff' },
+                alt2: { bar: 'rgba(255, 107, 53, 0.6)', border: '#ff6b35', line: '#ff6b35' },
+                alt3: { bar: 'rgba(16, 185, 129, 0.6)', border: '#10b981', line: '#10b981' }
             };
 
-            const carryover1 = calcCarryover(alt1.adstock, alt1.spend);
-            const adstock1Scaled = scaleToGRP(alt1.adstock, alt1.grp);
-            const carryover1Scaled = scaleToGRP(carryover1, alt1.grp);
+            const carryover1GRP = calcCarryoverGRP(alt1.adstock, alt1.spend, alt1.grp);
+            const adstock1GRP = scaleToGRP(alt1.adstock, alt1.grp);
 
             adstockChart.data.labels = data.labels;
             adstockChart.data.datasets = [
-                // GRP Bars (Exposures)
+                // Alt-1 Carryover Bar
                 {
-                    label: 'GRP',
-                    data: alt1.grp,
+                    label: 'Alt-1 Carryover',
+                    data: carryover1GRP,
                     type: 'bar',
-                    backgroundColor: 'rgba(173, 216, 230, 0.7)',
-                    borderColor: 'rgba(135, 206, 235, 1)',
+                    backgroundColor: colors.alt1.bar,
+                    borderColor: colors.alt1.border,
                     borderWidth: 1,
                     order: 3
                 },
-                // Alt-1 Carryover (kesikli çizgi + alan)
-                {
-                    label: 'Alt-1 Carryover',
-                    data: carryover1Scaled,
-                    type: 'line',
-                    borderColor: colors.alt1.line,
-                    backgroundColor: colors.alt1.area,
-                    borderWidth: 2,
-                    borderDash: [5, 5],
-                    pointRadius: 0,
-                    tension: 0.3,
-                    fill: true,
-                    order: 2
-                },
-                // Alt-1 Adstock (düz çizgi)
+                // Alt-1 Adstock Line
                 {
                     label: 'Alt-1 Adstock',
-                    data: adstock1Scaled,
+                    data: adstock1GRP,
                     type: 'line',
                     borderColor: colors.alt1.line,
                     backgroundColor: 'transparent',
@@ -3880,27 +3770,22 @@
             
             // Add Alt-2 if exists
             if (alt2) {
-                const carryover2 = calcCarryover(alt2.adstock, alt2.spend);
-                const adstock2Scaled = scaleToGRP(alt2.adstock, alt2.grp);
-                const carryover2Scaled = scaleToGRP(carryover2, alt2.grp);
+                const carryover2GRP = calcCarryoverGRP(alt2.adstock, alt2.spend, alt2.grp);
+                const adstock2GRP = scaleToGRP(alt2.adstock, alt2.grp);
                 
                 adstockChart.data.datasets.push(
                     {
                         label: 'Alt-2 Carryover',
-                        data: carryover2Scaled,
-                        type: 'line',
-                        borderColor: colors.alt2.line,
-                        backgroundColor: colors.alt2.area,
-                        borderWidth: 2,
-                        borderDash: [5, 5],
-                        pointRadius: 0,
-                        tension: 0.3,
-                        fill: true,
-                        order: 2
+                        data: carryover2GRP,
+                        type: 'bar',
+                        backgroundColor: colors.alt2.bar,
+                        borderColor: colors.alt2.border,
+                        borderWidth: 1,
+                        order: 3
                     },
                     {
                         label: 'Alt-2 Adstock',
-                        data: adstock2Scaled,
+                        data: adstock2GRP,
                         type: 'line',
                         borderColor: colors.alt2.line,
                         backgroundColor: 'transparent',
@@ -3916,27 +3801,22 @@
             
             // Add Alt-3 if exists
             if (alt3) {
-                const carryover3 = calcCarryover(alt3.adstock, alt3.spend);
-                const adstock3Scaled = scaleToGRP(alt3.adstock, alt3.grp);
-                const carryover3Scaled = scaleToGRP(carryover3, alt3.grp);
+                const carryover3GRP = calcCarryoverGRP(alt3.adstock, alt3.spend, alt3.grp);
+                const adstock3GRP = scaleToGRP(alt3.adstock, alt3.grp);
                 
                 adstockChart.data.datasets.push(
                     {
                         label: 'Alt-3 Carryover',
-                        data: carryover3Scaled,
-                        type: 'line',
-                        borderColor: colors.alt3.line,
-                        backgroundColor: colors.alt3.area,
-                        borderWidth: 2,
-                        borderDash: [5, 5],
-                        pointRadius: 0,
-                        tension: 0.3,
-                        fill: true,
-                        order: 2
+                        data: carryover3GRP,
+                        type: 'bar',
+                        backgroundColor: colors.alt3.bar,
+                        borderColor: colors.alt3.border,
+                        borderWidth: 1,
+                        order: 3
                     },
                     {
                         label: 'Alt-3 Adstock',
-                        data: adstock3Scaled,
+                        data: adstock3GRP,
                         type: 'line',
                         borderColor: colors.alt3.line,
                         backgroundColor: 'transparent',
@@ -3955,7 +3835,7 @@
             adstockChart.options.scales.y.stacked = false;
             adstockChart.options.scales.y.title = { 
                 display: true, 
-                text: 'GRP / Adstock', 
+                text: 'GRP Equivalent', 
                 color: '#8888a0' 
             };
             
@@ -3963,67 +3843,6 @@
             adstockChart.options.plugins.annotation = { annotations: {} };
             
             adstockChart.update();
-        }
-
-        // Update Carryover Chart - All alternatives side by side
-        function updateCarryoverChart() {
-            if (!window.adstockData) return;
-            
-            const data = window.adstockData;
-            const alt1 = data.alt1;
-            const alt2 = data.alt2;
-            const alt3 = data.alt3;
-            
-            if (!alt1) return;
-
-            // Calculate carryover for each alternative
-            const calcCarryover = (altData) => {
-                return altData.adstock.map((a, i) => Math.max(0, a - altData.spend[i]));
-            };
-            
-            const carryover1 = calcCarryover(alt1);
-            const carryover2 = alt2 ? calcCarryover(alt2) : null;
-            const carryover3 = alt3 ? calcCarryover(alt3) : null;
-
-            // Colors for alternatives
-            const colors = {
-                alt1: { bg: 'rgba(0, 212, 255, 0.7)', border: '#00d4ff' },
-                alt2: { bg: 'rgba(255, 107, 53, 0.7)', border: '#ff6b35' },
-                alt3: { bg: 'rgba(16, 185, 129, 0.7)', border: '#10b981' }
-            };
-
-            carryoverChart.data.labels = data.labels;
-            carryoverChart.data.datasets = [
-                {
-                    label: 'Alt-1 Carryover',
-                    data: carryover1,
-                    backgroundColor: colors.alt1.bg,
-                    borderColor: colors.alt1.border,
-                    borderWidth: 1
-                }
-            ];
-            
-            if (carryover2) {
-                carryoverChart.data.datasets.push({
-                    label: 'Alt-2 Carryover',
-                    data: carryover2,
-                    backgroundColor: colors.alt2.bg,
-                    borderColor: colors.alt2.border,
-                    borderWidth: 1
-                });
-            }
-            
-            if (carryover3) {
-                carryoverChart.data.datasets.push({
-                    label: 'Alt-3 Carryover',
-                    data: carryover3,
-                    backgroundColor: colors.alt3.bg,
-                    borderColor: colors.alt3.border,
-                    borderWidth: 1
-                });
-            }
-            
-            carryoverChart.update();
         }
 
         // Format number
