@@ -1349,6 +1349,36 @@
             gap: 6px;
         }
 
+        .saturation-toggle {
+            display: flex;
+            gap: 4px;
+            background: var(--bg-secondary);
+            padding: 3px;
+            border-radius: 6px;
+        }
+
+        .sat-toggle-btn {
+            padding: 6px 12px;
+            background: transparent;
+            border: none;
+            border-radius: 4px;
+            color: var(--text-secondary);
+            font-family: 'Sora', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .sat-toggle-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .sat-toggle-btn.active {
+            background: var(--accent-blue);
+            color: white;
+        }
+
         .reach-btn, .adstock-btn {
             padding: 8px 14px;
             background: var(--bg-secondary);
@@ -2724,7 +2754,13 @@
 
                 <div id="saturation-tab" class="tab-content">
                     <div class="chart-container">
-                        <div class="chart-title">Saturation Curve - Optimal Nokta İşaretli</div>
+                        <div class="chart-header-row">
+                            <div class="chart-title">Saturation Curve - Optimal Nokta İşaretli</div>
+                            <div class="saturation-toggle">
+                                <button class="sat-toggle-btn active" onclick="setSaturationXAxis('grp')" id="satToggleGRP">GRP</button>
+                                <button class="sat-toggle-btn" onclick="setSaturationXAxis('spend')" id="satToggleSpend">Harcama (TL)</button>
+                            </div>
+                        </div>
                         <canvas id="saturationChart"></canvas>
                     </div>
                     <div class="tab-rationale">
@@ -3083,7 +3119,9 @@
                 const avgSaturation = saturation.reduce((a, b) => a + b, 0) / saturation.length;
                 const maxSaturation = Math.max(...saturation);
                 const minSaturation = Math.min(...saturation);
-                return { avgAdstock, avgSaturation, maxSaturation, minSaturation, adstock, saturation };
+                const totalGRP = grpArr.reduce((a, b) => a + b, 0);
+                const totalSpend = spend.reduce((a, b) => a + b, 0);
+                return { avgAdstock, avgSaturation, maxSaturation, minSaturation, adstock, saturation, totalGRP, totalSpend, grp: grpArr };
             };
 
             const alt1 = calcAltMetrics(grpAlt1);
@@ -3095,8 +3133,56 @@
             const optimalBudget = findOptimalBudget(alpha, gamma, allAdstock);
             const optimalSaturation = calculateSaturation(optimalBudget, alpha, gamma);
 
-            // Build comparison analysis
-            let altComparison = '<div class="rationale-data-section"><strong>📈 Alternatif Karşılaştırması:</strong><table class="rationale-table"><thead><tr><th></th><th>Ort. Saturation</th><th>Max</th><th>Durum</th></tr></thead><tbody>';
+            // Calculate optimal GRP
+            const optimalGRPPerWeek = cpp > 0 ? optimalBudget / cpp : 0;
+
+            // Helper function for saturation interpretation
+            const interpretSaturation = (sat) => {
+                if (sat >= 0.90) return { zone: 'Aşırı Doygun', color: '#ef4444', icon: '🔴', efficiency: 'Çok Düşük', action: 'Bütçeyi azalt' };
+                if (sat >= 0.80) return { zone: 'Doygun', color: '#f59e0b', icon: '🟠', efficiency: 'Düşük', action: 'Dikkatli ol' };
+                if (sat >= 0.65) return { zone: 'Verimli', color: '#10b981', icon: '🟢', efficiency: 'Yüksek', action: 'Devam et' };
+                if (sat >= 0.50) return { zone: 'Optimal', color: '#00d4ff', icon: '🔵', efficiency: 'Maksimum', action: 'İdeal bölge' };
+                return { zone: 'Düşük', color: '#8b5cf6', icon: '🟣', efficiency: 'Orta', action: 'Artırılabilir' };
+            };
+
+            // Build detailed saturation explanation
+            let saturationExplanation = `
+                <div class="rationale-section">
+                    <h4 style="color: var(--accent-blue); margin: 0 0 12px 0; font-size: 13px;">📊 Saturation Nedir ve Nasıl Okunur?</h4>
+                    <p style="margin: 0 0 8px 0; font-size: 11px; line-height: 1.5;">
+                        <strong>Saturation (%)</strong>, reklam harcamanızın potansiyel etkisinin ne kadarını kullandığınızı gösterir. 
+                        Hill fonksiyonu ile hesaplanır ve <strong>azalan getiri</strong> prensibini yansıtır.
+                    </p>
+                    <div style="background: var(--bg-secondary); border-radius: 8px; padding: 12px; margin: 12px 0;">
+                        <p style="margin: 0 0 8px 0; font-size: 10px; color: var(--text-secondary);">Saturation Bantları:</p>
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                            <span style="background: rgba(139, 92, 246, 0.2); color: #8b5cf6; padding: 4px 8px; border-radius: 4px; font-size: 9px;">🟣 0-50% Düşük</span>
+                            <span style="background: rgba(0, 212, 255, 0.2); color: #00d4ff; padding: 4px 8px; border-radius: 4px; font-size: 9px;">🔵 50-65% Optimal</span>
+                            <span style="background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 9px;">🟢 65-80% Verimli</span>
+                            <span style="background: rgba(245, 158, 11, 0.2); color: #f59e0b; padding: 4px 8px; border-radius: 4px; font-size: 9px;">🟠 80-90% Doygun</span>
+                            <span style="background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 4px 8px; border-radius: 4px; font-size: 9px;">🔴 90%+ Aşırı</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Build comparison table with more details
+            let altComparison = `
+                <div class="rationale-section" style="margin-top: 16px;">
+                    <h4 style="color: var(--accent-blue); margin: 0 0 12px 0; font-size: 13px;">📈 Alternatif Analizi</h4>
+                    <table class="rationale-table">
+                        <thead>
+                            <tr>
+                                <th>Alt</th>
+                                <th>Toplam GRP</th>
+                                <th>Ort. Sat.</th>
+                                <th>Max Sat.</th>
+                                <th>Bölge</th>
+                                <th>Verimlilik</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
             
             const evalStatus = (avgSat) => {
                 if (avgSat >= 0.85) return { text: '⚠️ Doygunluk', class: 'status-warning' };
@@ -3105,16 +3191,37 @@
             };
 
             if (alt1) {
-                const status = evalStatus(alt1.avgSaturation);
-                altComparison += `<tr><td><span class="alt-badge alt1">1</span></td><td>%${(alt1.avgSaturation * 100).toFixed(1)}</td><td>%${(alt1.maxSaturation * 100).toFixed(1)}</td><td class="${status.class}">${status.text}</td></tr>`;
+                const interp = interpretSaturation(alt1.avgSaturation);
+                altComparison += `<tr>
+                    <td><span class="alt-badge alt1">1</span></td>
+                    <td>${alt1.totalGRP.toFixed(0)}</td>
+                    <td><strong>%${(alt1.avgSaturation * 100).toFixed(1)}</strong></td>
+                    <td>%${(alt1.maxSaturation * 100).toFixed(1)}</td>
+                    <td style="color: ${interp.color}">${interp.icon} ${interp.zone}</td>
+                    <td>${interp.efficiency}</td>
+                </tr>`;
             }
             if (alt2) {
-                const status = evalStatus(alt2.avgSaturation);
-                altComparison += `<tr><td><span class="alt-badge alt2">2</span></td><td>%${(alt2.avgSaturation * 100).toFixed(1)}</td><td>%${(alt2.maxSaturation * 100).toFixed(1)}</td><td class="${status.class}">${status.text}</td></tr>`;
+                const interp = interpretSaturation(alt2.avgSaturation);
+                altComparison += `<tr>
+                    <td><span class="alt-badge alt2">2</span></td>
+                    <td>${alt2.totalGRP.toFixed(0)}</td>
+                    <td><strong>%${(alt2.avgSaturation * 100).toFixed(1)}</strong></td>
+                    <td>%${(alt2.maxSaturation * 100).toFixed(1)}</td>
+                    <td style="color: ${interp.color}">${interp.icon} ${interp.zone}</td>
+                    <td>${interp.efficiency}</td>
+                </tr>`;
             }
             if (alt3) {
-                const status = evalStatus(alt3.avgSaturation);
-                altComparison += `<tr><td><span class="alt-badge alt3">3</span></td><td>%${(alt3.avgSaturation * 100).toFixed(1)}</td><td>%${(alt3.maxSaturation * 100).toFixed(1)}</td><td class="${status.class}">${status.text}</td></tr>`;
+                const interp = interpretSaturation(alt3.avgSaturation);
+                altComparison += `<tr>
+                    <td><span class="alt-badge alt3">3</span></td>
+                    <td>${alt3.totalGRP.toFixed(0)}</td>
+                    <td><strong>%${(alt3.avgSaturation * 100).toFixed(1)}</strong></td>
+                    <td>%${(alt3.maxSaturation * 100).toFixed(1)}</td>
+                    <td style="color: ${interp.color}">${interp.icon} ${interp.zone}</td>
+                    <td>${interp.efficiency}</td>
+                </tr>`;
             }
             altComparison += '</tbody></table></div>';
 
@@ -3126,60 +3233,110 @@
             ].filter(a => a.data);
 
             let bestAlt = alts[0];
-            let recommendation = '';
-
+            
             // Determine best based on efficiency (not too high saturation, not too low)
             alts.forEach(a => {
-                // Ideal is around 60-80% saturation
-                const distanceFromIdeal = Math.abs(a.data.avgSaturation - 0.7);
-                const bestDistance = Math.abs(bestAlt.data.avgSaturation - 0.7);
+                // Ideal is around 60-75% saturation
+                const distanceFromIdeal = Math.abs(a.data.avgSaturation - 0.68);
+                const bestDistance = Math.abs(bestAlt.data.avgSaturation - 0.68);
                 if (distanceFromIdeal < bestDistance) {
                     bestAlt = a;
                 }
             });
 
-            // Generate recommendation based on situation
+            // Generate detailed interpretation for the primary alternative
+            const primaryAlt = alt1;
+            const primaryInterp = interpretSaturation(primaryAlt.avgSaturation);
+            const satPercent = (primaryAlt.avgSaturation * 100).toFixed(0);
+            const remainingPotential = ((1 - primaryAlt.avgSaturation) * 100).toFixed(0);
+
+            let detailedInterpretation = `
+                <div class="rationale-section" style="margin-top: 16px;">
+                    <h4 style="color: var(--accent-blue); margin: 0 0 12px 0; font-size: 13px;">🎯 %${satPercent} Saturation Ne Anlama Geliyor?</h4>
+                    <div style="background: var(--bg-secondary); border-radius: 8px; padding: 14px; border-left: 3px solid ${primaryInterp.color};">
+                        <p style="margin: 0 0 10px 0; font-size: 12px;">
+                            <strong style="color: ${primaryInterp.color}">${primaryInterp.icon} ${primaryInterp.zone} Bölgesi</strong>
+                        </p>
+                        <ul style="margin: 0; padding-left: 16px; font-size: 11px; line-height: 1.6;">
+                            <li>TV reklam potansiyelinin <strong>%${satPercent}</strong>'ini kullanıyorsunuz</li>
+                            <li>Kalan <strong>%${remainingPotential}</strong> potansiyel henüz aktive edilmemiş</li>
+                            <li>Her ek 100 GRP için marjinal etki: <strong>${primaryAlt.avgSaturation > 0.8 ? 'Düşük (azalan getiri)' : primaryAlt.avgSaturation > 0.6 ? 'Orta' : 'Yüksek'}</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            // Generate action-oriented recommendation
+            let recommendation = '';
             const avgSatAll = alts.reduce((sum, a) => sum + a.data.avgSaturation, 0) / alts.length;
             
             if (avgSatAll > 0.85) {
                 recommendation = `
-                    <div class="rationale-recommendation warning">
-                        <strong>⚠️ Dikkat: Yüksek Doygunluk Bölgesi</strong>
-                        <p>Tüm alternatifler %85+ saturation seviyesinde. Bu demek ki:</p>
-                        <ul>
-                            <li>Her ek TL harcama için <span class="highlight">azalan getiri</span> alıyorsunuz</li>
-                            <li>Optimal nokta (${(optimalBudget/1000000).toFixed(1)}M TL) aşılmış durumda</li>
-                            <li>Bütçeyi artırmak yerine <strong>frekans veya timing optimizasyonu</strong> düşünün</li>
-                        </ul>
-                        <p><strong>Öneri:</strong> Haftalık harcamayı ${(optimalBudget/1000000).toFixed(1)}M TL civarına çekerek verimliliği artırabilirsiniz.</p>
+                    <div class="rationale-section" style="margin-top: 16px;">
+                        <h4 style="color: #ef4444; margin: 0 0 12px 0; font-size: 13px;">⚠️ Aksiyon: Doygunluk Riski</h4>
+                        <div style="background: rgba(239, 68, 68, 0.1); border-radius: 8px; padding: 14px; border: 1px solid rgba(239, 68, 68, 0.3);">
+                            <p style="margin: 0 0 10px 0; font-size: 11px;"><strong>Problem:</strong> %85+ saturation = Azalan getiri bölgesi</p>
+                            <p style="margin: 0 0 10px 0; font-size: 11px;"><strong>Anlam:</strong> Her ek 1 TL harcama için giderek daha az etki alıyorsunuz.</p>
+                            
+                            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(239, 68, 68, 0.2);">
+                                <p style="margin: 0 0 8px 0; font-size: 11px; font-weight: 600; color: #ef4444;">📋 Önerilen Aksiyonlar:</p>
+                                <ol style="margin: 0; padding-left: 18px; font-size: 10px; line-height: 1.6;">
+                                    <li>Haftalık GRP'yi <strong>${optimalGRPPerWeek.toFixed(0)} GRP</strong>'ye düşürmeyi değerlendirin</li>
+                                    <li>Tasarruf edilen bütçeyi <strong>dijital kanallara</strong> yönlendirin</li>
+                                    <li>Veya yayın süresini uzatarak <strong>frekansı düşürün</strong></li>
+                                    <li>Flight strategy: Sürekli yerine <strong>pulsing</strong> deneyin</li>
+                                </ol>
+                            </div>
+                        </div>
                     </div>`;
             } else if (avgSatAll > 0.6) {
                 recommendation = `
-                    <div class="rationale-recommendation">
-                        <strong>✅ Verimli Bölge</strong>
-                        <p>Alternatifleriniz %60-85 saturation bandında - bu iyi bir verimlilik seviyesi.</p>
-                        <p><strong>${bestAlt.name}</strong> en dengeli performansı gösteriyor (Ort: %${(bestAlt.data.avgSaturation * 100).toFixed(1)}).</p>
-                        <p><strong>Öneri:</strong> Mevcut stratejiyle devam edebilir veya ${bestAlt.name} dağılımını baz alabilirsiniz.</p>
+                    <div class="rationale-section" style="margin-top: 16px;">
+                        <h4 style="color: #10b981; margin: 0 0 12px 0; font-size: 13px;">✅ Aksiyon: Verimli Bölge</h4>
+                        <div style="background: rgba(16, 185, 129, 0.1); border-radius: 8px; padding: 14px; border: 1px solid rgba(16, 185, 129, 0.3);">
+                            <p style="margin: 0 0 10px 0; font-size: 11px;"><strong>Durum:</strong> %60-85 saturation = Verimli çalışma bölgesi</p>
+                            <p style="margin: 0 0 10px 0; font-size: 11px;"><strong>Anlam:</strong> Harcama-etki dengesi iyi, getiri hala pozitif.</p>
+                            
+                            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(16, 185, 129, 0.2);">
+                                <p style="margin: 0 0 8px 0; font-size: 11px; font-weight: 600; color: #10b981;">📋 Önerilen Aksiyonlar:</p>
+                                <ol style="margin: 0; padding-left: 18px; font-size: 10px; line-height: 1.6;">
+                                    <li><strong>${bestAlt.name}</strong> dağılımını referans alın (Ort: %${(bestAlt.data.avgSaturation * 100).toFixed(1)})</li>
+                                    <li>Mevcut GRP seviyesini koruyun</li>
+                                    <li>Küçük artışlar (%10-15) hala verimli olabilir</li>
+                                    <li>Creative rotation ile <strong>wear-out</strong>'u önleyin</li>
+                                </ol>
+                            </div>
+                        </div>
                     </div>`;
             } else {
                 recommendation = `
-                    <div class="rationale-recommendation info">
-                        <strong>📈 Büyüme Potansiyeli Var</strong>
-                        <p>Saturation seviyeleri %60'ın altında - bütçe artışından verim alabilirsiniz.</p>
-                        <p>Optimal noktaya (${(optimalBudget/1000000).toFixed(1)}M TL) kadar harcama artışı düşünülebilir.</p>
-                        <p><strong>Öneri:</strong> Haftalık GRP'yi artırarak daha yüksek saturation ve etki elde edebilirsiniz.</p>
+                    <div class="rationale-section" style="margin-top: 16px;">
+                        <h4 style="color: #00d4ff; margin: 0 0 12px 0; font-size: 13px;">📈 Aksiyon: Büyüme Fırsatı</h4>
+                        <div style="background: rgba(0, 212, 255, 0.1); border-radius: 8px; padding: 14px; border: 1px solid rgba(0, 212, 255, 0.3);">
+                            <p style="margin: 0 0 10px 0; font-size: 11px;"><strong>Durum:</strong> %60 altı saturation = Kapasite kullanılmıyor</p>
+                            <p style="margin: 0 0 10px 0; font-size: 11px;"><strong>Anlam:</strong> Bütçe artışı yüksek marjinal getiri sağlayacak.</p>
+                            
+                            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(0, 212, 255, 0.2);">
+                                <p style="margin: 0 0 8px 0; font-size: 11px; font-weight: 600; color: #00d4ff;">📋 Önerilen Aksiyonlar:</p>
+                                <ol style="margin: 0; padding-left: 18px; font-size: 10px; line-height: 1.6;">
+                                    <li>Haftalık GRP'yi <strong>${optimalGRPPerWeek.toFixed(0)} GRP</strong>'ye kadar artırın</li>
+                                    <li>Optimal bütçe: <strong>${(optimalBudget/1000000).toFixed(1)}M TL/hafta</strong></li>
+                                    <li>%65-75 saturation hedefleyin (maksimum verimlilik)</li>
+                                    <li>Artış %${remainingPotential} potansiyeli aktive edecek</li>
+                                </ol>
+                            </div>
+                        </div>
                     </div>`;
             }
 
             // Build final HTML
             return `
-                <p><strong>Saturation Grafiği Ne Gösteriyor?</strong> Her alternatifin haftalık adstock değerlerinin saturation eğrisi üzerindeki konumunu gösterir. Kırmızı çizgi optimal harcama noktasını (${(optimalBudget/1000000).toFixed(1)}M TL, %${(optimalSaturation * 100).toFixed(0)} saturation) işaretler.</p>
-                
+                ${saturationExplanation}
                 ${altComparison}
-                
+                ${detailedInterpretation}
                 ${recommendation}
                 
-                <div class="rationale-scenario">
+                <div class="rationale-scenario" style="margin-top: 16px;">
                     <div class="rationale-scenario-title">${scenario.icon} ${scenario.name} Senaryo Etkisi</div>
                     ${scenario.saturation.scenario}
                 </div>
@@ -3742,17 +3899,125 @@
                 alt3: alt3 ? { grp: grpAlt3, adstock: alt3.adstock, spend: spendAlt3 } : null
             };
 
+            // Store data for saturation chart (GRP-based)
+            // Calculate adstock in GRP terms
+            const calcAdstockGRP = (grpArray, decayRate) => {
+                const adstockGRP = [];
+                let currentAdstock = 0;
+                for (let i = 0; i < grpArray.length; i++) {
+                    currentAdstock = grpArray[i] + (currentAdstock * decayRate);
+                    adstockGRP.push(currentAdstock);
+                }
+                return adstockGRP;
+            };
+
+            const adstockGRP1 = calcAdstockGRP(grpAlt1, decayRate);
+            const adstockGRP2 = alt2 ? calcAdstockGRP(grpAlt2, decayRate) : null;
+            const adstockGRP3 = alt3 ? calcAdstockGRP(grpAlt3, decayRate) : null;
+
+            // Calculate optimal in GRP terms
+            const allGRPAdstock = [...adstockGRP1, ...(adstockGRP2 || []), ...(adstockGRP3 || [])];
+            const maxGRPAdstock = Math.max(...allGRPAdstock);
+            
+            // Find optimal GRP (where marginal efficiency starts declining significantly)
+            // Alpha is in millions TL, we need to convert to GRP scale
+            // Use the ratio of max adstock values to scale
+            const maxAdstockTL = Math.max(...adstockGRP1.map((_, i) => alt1.adstock[i]));
+            const maxAdstockGRP = Math.max(...adstockGRP1);
+            
+            // Scale alpha from TL to GRP
+            // alpha is in units where 1.0 = 1M TL, so alpha * 1M = TL value
+            const alphaTL = alpha * 1000000; // Convert to TL
+            const tlToGrpRatio = maxAdstockGRP / maxAdstockTL;
+            const alphaGRP = alphaTL * tlToGrpRatio;
+            
+            // Optimal is around alpha point (half-saturation)
+            const optimalGRP = alphaGRP;
+
+            window.saturationData = {
+                alt1: { 
+                    grp: grpAlt1, 
+                    adstockGRP: adstockGRP1, 
+                    adstockTL: alt1.adstock, 
+                    saturation: alt1.saturation,
+                    spend: spendAlt1
+                },
+                alt2: alt2 ? { 
+                    grp: grpAlt2, 
+                    adstockGRP: adstockGRP2, 
+                    adstockTL: alt2.adstock, 
+                    saturation: alt2.saturation,
+                    spend: spendAlt2
+                } : null,
+                alt3: alt3 ? { 
+                    grp: grpAlt3, 
+                    adstockGRP: adstockGRP3, 
+                    adstockTL: alt3.adstock, 
+                    saturation: alt3.saturation,
+                    spend: spendAlt3
+                } : null,
+                alpha: alpha,
+                alphaGRP: alphaGRP,
+                gamma: gamma,
+                optimalBudget: optimalBudget,
+                optimalGRP: optimalGRP,
+                tlToGrpRatio: tlToGrpRatio
+            };
+
             // Update Adstock Chart with current selection
             updateAdstockChart();
 
-            // Saturation Chart with curve and data points for all alternatives
-            const allAdstock = [...alt1.adstock, ...(alt2?.adstock || []), ...(alt3?.adstock || [])];
-            const maxSpend = Math.max(...allAdstock) * 1.5;
+            // Update Saturation Chart
+            updateSaturationChart();
+
+            // Update Reach Chart
+            updateReachChart();
+        }
+
+        // Saturation X-axis mode: 'grp' or 'spend'
+        let saturationXAxisMode = 'grp';
+
+        function setSaturationXAxis(mode) {
+            saturationXAxisMode = mode;
+            document.getElementById('satToggleGRP').classList.toggle('active', mode === 'grp');
+            document.getElementById('satToggleSpend').classList.toggle('active', mode === 'spend');
+            updateSaturationChart();
+        }
+
+        function updateSaturationChart() {
+            if (!window.saturationData) return;
+            
+            const data = window.saturationData;
+            const alpha = data.alpha;
+            const alphaGRP = data.alphaGRP;
+            const gamma = data.gamma;
+            const isGRP = saturationXAxisMode === 'grp';
+
+            // Get adstock values based on mode
+            const getAdstock = (altData) => isGRP ? altData.adstockGRP : altData.adstockTL;
+            const getOptimal = () => isGRP ? data.optimalGRP : data.optimalBudget;
+            // For GRP mode use alphaGRP, for TL mode use alpha*1000000 (convert from millions)
+            const getAlpha = () => isGRP ? alphaGRP : (alpha * 1000000);
+
+            // Build curve data
+            const allAdstock = [
+                ...getAdstock(data.alt1), 
+                ...(data.alt2 ? getAdstock(data.alt2) : []), 
+                ...(data.alt3 ? getAdstock(data.alt3) : [])
+            ];
+            const maxVal = Math.max(...allAdstock) * 1.5;
+            const currentAlpha = getAlpha();
+
             const curveData = [];
             for (let i = 0; i <= 50; i++) {
-                const x = (maxSpend / 50) * i;
-                curveData.push({ x: x / 1000000, y: calculateSaturation(x, alpha, gamma) });
+                const x = (maxVal / 50) * i;
+                // Use Hill function: x^gamma / (alpha^gamma + x^gamma)
+                const sat = Math.pow(x, gamma) / (Math.pow(currentAlpha, gamma) + Math.pow(x, gamma));
+                curveData.push({ x: isGRP ? x : x / 1000000, y: sat });
             }
+
+            // Build datasets
+            const divisor = isGRP ? 1 : 1000000;
             
             saturationChart.data.datasets = [
                 {
@@ -3767,7 +4032,7 @@
                 },
                 {
                     label: 'Alt-1',
-                    data: alt1.adstock.map((a, i) => ({ x: a / 1000000, y: alt1.saturation[i] })),
+                    data: getAdstock(data.alt1).map((a, i) => ({ x: a / divisor, y: data.alt1.saturation[i] })),
                     borderColor: '#00d4ff',
                     backgroundColor: '#00d4ff',
                     pointRadius: 6,
@@ -3775,10 +4040,11 @@
                     showLine: false
                 }
             ];
-            if (alt2) {
+
+            if (data.alt2) {
                 saturationChart.data.datasets.push({
                     label: 'Alt-2',
-                    data: alt2.adstock.map((a, i) => ({ x: a / 1000000, y: alt2.saturation[i] })),
+                    data: getAdstock(data.alt2).map((a, i) => ({ x: a / divisor, y: data.alt2.saturation[i] })),
                     borderColor: '#ff6b35',
                     backgroundColor: '#ff6b35',
                     pointRadius: 6,
@@ -3786,10 +4052,11 @@
                     showLine: false
                 });
             }
-            if (alt3) {
+
+            if (data.alt3) {
                 saturationChart.data.datasets.push({
                     label: 'Alt-3',
-                    data: alt3.adstock.map((a, i) => ({ x: a / 1000000, y: alt3.saturation[i] })),
+                    data: getAdstock(data.alt3).map((a, i) => ({ x: a / divisor, y: data.alt3.saturation[i] })),
                     borderColor: '#10b981',
                     backgroundColor: '#10b981',
                     pointRadius: 6,
@@ -3797,11 +4064,12 @@
                     showLine: false
                 });
             }
-            
-            // Add optimal point annotation
-            const optimalX = optimalBudget / 1000000;
-            const optimalY = calculateSaturation(optimalBudget, alpha, gamma);
-            
+
+            // Optimal line annotation
+            const optimalVal = getOptimal();
+            const optimalX = isGRP ? optimalVal : optimalVal / 1000000;
+            const optimalLabel = isGRP ? `Optimal: ${optimalVal.toFixed(0)} GRP` : `Optimal: ${(optimalVal / 1000000).toFixed(1)}M TL`;
+
             saturationChart.options.plugins.annotation.annotations = {
                 optimalLine: {
                     type: 'line',
@@ -3812,7 +4080,7 @@
                     borderDash: [5, 5],
                     label: {
                         display: true,
-                        content: `Optimal: ${optimalX.toFixed(1)}M`,
+                        content: optimalLabel,
                         position: 'start',
                         backgroundColor: '#ef4444',
                         color: 'white',
@@ -3820,10 +4088,15 @@
                     }
                 }
             };
-            saturationChart.update();
 
-            // Update Reach Chart
-            updateReachChart();
+            // Update X-axis title
+            saturationChart.options.scales.x.title = {
+                display: true,
+                text: isGRP ? 'Adstock (GRP)' : 'Adstock (Milyon TL)',
+                color: '#8888a0'
+            };
+
+            saturationChart.update();
         }
 
         // Update Adstock Chart based on selected alternative
