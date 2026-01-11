@@ -2369,6 +2369,50 @@
             color: var(--text-secondary);
         }
 
+        .decay-visual {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: var(--accent-purple);
+            margin: 8px 0;
+            flex-wrap: wrap;
+        }
+
+        .decay-visual span {
+            background: var(--bg-card);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .decay-note {
+            font-size: 11px;
+            color: var(--accent-green);
+            font-weight: 500;
+            margin-top: 8px !important;
+        }
+
+        .week-item.tail-week {
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 4px;
+            padding: 6px 8px;
+            margin: 2px 0;
+        }
+
+        .week-item .tail-text {
+            color: var(--accent-green);
+        }
+
+        .week-badge {
+            font-size: 9px;
+            background: var(--accent-green);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: auto;
+        }
+
         .fit-params-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -3792,25 +3836,52 @@
             const alt3 = data.alt3;
             
             if (!alt1) return;
-
-            // Calculate carryover in GRP units
-            const calcCarryoverGRP = (adstock, spend, grp) => {
+            
+            const decay = parseFloat(document.getElementById('decayRate').value);
+            
+            // Calculate how many extra weeks to show carryover tail
+            // Continue until carryover drops below 5% of peak
+            const calcExtendedData = (grp, adstock, spend) => {
                 const maxGRP = Math.max(...grp);
                 const maxAdstock = Math.max(...adstock);
                 const scaleFactor = maxAdstock > 0 ? maxGRP / maxAdstock : 1;
                 
-                return adstock.map((a, i) => {
+                // Scale original adstock to GRP
+                const adstockGRP = adstock.map(a => a * scaleFactor);
+                
+                // Calculate original carryover
+                const carryoverGRP = adstock.map((a, i) => {
                     const carryover = Math.max(0, a - spend[i]);
                     return carryover * scaleFactor;
                 });
-            };
-            
-            // Scale adstock to GRP units
-            const scaleToGRP = (adstock, grp) => {
-                const maxGRP = Math.max(...grp);
-                const maxAdstock = Math.max(...adstock);
-                const scaleFactor = maxAdstock > 0 ? maxGRP / maxAdstock : 1;
-                return adstock.map(a => a * scaleFactor);
+                
+                // Extend with carryover tail (no new GRP, just decay)
+                const extendedGRP = [...grp];
+                const extendedAdstock = [...adstockGRP];
+                const extendedCarryover = [...carryoverGRP];
+                
+                // Get last adstock value
+                let lastAdstock = adstockGRP[adstockGRP.length - 1];
+                const peakAdstock = Math.max(...adstockGRP);
+                const threshold = peakAdstock * 0.05; // Stop when below 5% of peak
+                
+                // Add tail weeks
+                let week = grp.length;
+                while (lastAdstock * decay > threshold && week < grp.length + 8) {
+                    const tailCarryover = lastAdstock * decay;
+                    extendedGRP.push(0); // No new GRP
+                    extendedAdstock.push(tailCarryover);
+                    extendedCarryover.push(tailCarryover);
+                    lastAdstock = tailCarryover;
+                    week++;
+                }
+                
+                return {
+                    grp: extendedGRP,
+                    adstock: extendedAdstock,
+                    carryover: extendedCarryover,
+                    originalLength: grp.length
+                };
             };
 
             // Colors for alternatives
@@ -3820,25 +3891,30 @@
                 alt3: { bar: 'rgba(16, 185, 129, 0.6)', border: '#10b981', line: '#10b981' }
             };
 
-            const carryover1GRP = calcCarryoverGRP(alt1.adstock, alt1.spend, alt1.grp);
-            const adstock1GRP = scaleToGRP(alt1.adstock, alt1.grp);
+            const ext1 = calcExtendedData(alt1.grp, alt1.adstock, alt1.spend);
+            
+            // Generate extended labels
+            const extendedLabels = [];
+            for (let i = 0; i < ext1.grp.length; i++) {
+                extendedLabels.push('H' + (i + 1));
+            }
 
-            adstockChart.data.labels = data.labels;
+            adstockChart.data.labels = extendedLabels;
             adstockChart.data.datasets = [
                 // Alt-1 GRP Bar (Actual Investment)
                 {
                     label: 'Alt-1 GRP',
-                    data: alt1.grp,
+                    data: ext1.grp,
                     type: 'bar',
-                    backgroundColor: colors.alt1.bar,
-                    borderColor: colors.alt1.border,
+                    backgroundColor: ext1.grp.map((g, i) => g > 0 ? colors.alt1.bar : 'transparent'),
+                    borderColor: ext1.grp.map((g, i) => g > 0 ? colors.alt1.border : 'transparent'),
                     borderWidth: 1,
                     order: 3
                 },
                 // Alt-1 Adstock Line
                 {
                     label: 'Alt-1 Adstock',
-                    data: adstock1GRP,
+                    data: ext1.adstock,
                     type: 'line',
                     borderColor: colors.alt1.line,
                     backgroundColor: 'transparent',
@@ -3853,22 +3929,28 @@
             
             // Add Alt-2 if exists
             if (alt2) {
-                const carryover2GRP = calcCarryoverGRP(alt2.adstock, alt2.spend, alt2.grp);
-                const adstock2GRP = scaleToGRP(alt2.adstock, alt2.grp);
+                const ext2 = calcExtendedData(alt2.grp, alt2.adstock, alt2.spend);
+                
+                // Pad to match length
+                while (ext2.grp.length < ext1.grp.length) {
+                    const lastAdstock = ext2.adstock[ext2.adstock.length - 1];
+                    ext2.grp.push(0);
+                    ext2.adstock.push(lastAdstock * decay);
+                }
                 
                 adstockChart.data.datasets.push(
                     {
                         label: 'Alt-2 GRP',
-                        data: alt2.grp,
+                        data: ext2.grp,
                         type: 'bar',
-                        backgroundColor: colors.alt2.bar,
-                        borderColor: colors.alt2.border,
+                        backgroundColor: ext2.grp.map((g, i) => g > 0 ? colors.alt2.bar : 'transparent'),
+                        borderColor: ext2.grp.map((g, i) => g > 0 ? colors.alt2.border : 'transparent'),
                         borderWidth: 1,
                         order: 3
                     },
                     {
                         label: 'Alt-2 Adstock',
-                        data: adstock2GRP,
+                        data: ext2.adstock,
                         type: 'line',
                         borderColor: colors.alt2.line,
                         backgroundColor: 'transparent',
@@ -3884,22 +3966,28 @@
             
             // Add Alt-3 if exists
             if (alt3) {
-                const carryover3GRP = calcCarryoverGRP(alt3.adstock, alt3.spend, alt3.grp);
-                const adstock3GRP = scaleToGRP(alt3.adstock, alt3.grp);
+                const ext3 = calcExtendedData(alt3.grp, alt3.adstock, alt3.spend);
+                
+                // Pad to match length
+                while (ext3.grp.length < ext1.grp.length) {
+                    const lastAdstock = ext3.adstock[ext3.adstock.length - 1];
+                    ext3.grp.push(0);
+                    ext3.adstock.push(lastAdstock * decay);
+                }
                 
                 adstockChart.data.datasets.push(
                     {
                         label: 'Alt-3 GRP',
-                        data: alt3.grp,
+                        data: ext3.grp,
                         type: 'bar',
-                        backgroundColor: colors.alt3.bar,
-                        borderColor: colors.alt3.border,
+                        backgroundColor: ext3.grp.map((g, i) => g > 0 ? colors.alt3.bar : 'transparent'),
+                        borderColor: ext3.grp.map((g, i) => g > 0 ? colors.alt3.border : 'transparent'),
                         borderWidth: 1,
                         order: 3
                     },
                     {
                         label: 'Alt-3 Adstock',
-                        data: adstock3GRP,
+                        data: ext3.adstock,
                         type: 'line',
                         borderColor: colors.alt3.line,
                         backgroundColor: 'transparent',
@@ -3928,61 +4016,78 @@
             };
             adstockChart.options.scales.y.beginAtZero = true;
             
-            // Clear annotations
-            adstockChart.options.plugins.annotation = { annotations: {} };
+            // Add vertical line annotation to show where GRP ends
+            adstockChart.options.plugins.annotation = {
+                annotations: {
+                    grpEndLine: {
+                        type: 'line',
+                        xMin: ext1.originalLength - 0.5,
+                        xMax: ext1.originalLength - 0.5,
+                        borderColor: 'rgba(150, 150, 150, 0.5)',
+                        borderWidth: 1,
+                        borderDash: [5, 5],
+                        label: {
+                            display: true,
+                            content: 'GRP Sonu',
+                            position: 'start',
+                            backgroundColor: 'rgba(150, 150, 150, 0.8)',
+                            color: '#fff',
+                            font: { size: 9 }
+                        }
+                    }
+                }
+            };
             
             adstockChart.update();
             
-            // Generate dynamic rationale
-            generateAdstockRationale(alt1, alt2, alt3, adstock1GRP, carryover1GRP);
+            // Generate dynamic rationale with extended data
+            generateAdstockRationale(alt1, alt2, alt3, ext1, decay);
         }
         
         // Generate dynamic Adstock rationale with specific numbers
-        function generateAdstockRationale(alt1, alt2, alt3, adstock1GRP, carryover1GRP) {
-            const decay = parseFloat(document.getElementById('decayRate').value);
+        function generateAdstockRationale(alt1, alt2, alt3, ext1, decay) {
             const scenario = scenarioRationales[currentScenario];
             
-            // Calculate week-by-week analysis for Alt-1
+            // Calculate week-by-week analysis for Alt-1 (including tail)
             const weekAnalysis = [];
-            for (let i = 0; i < alt1.grp.length; i++) {
-                const grp = alt1.grp[i];
-                const adstock = adstock1GRP[i];
-                const carryover = carryover1GRP[i];
-                const prevAdstock = i > 0 ? adstock1GRP[i-1] : 0;
+            for (let i = 0; i < ext1.adstock.length; i++) {
+                const grp = ext1.grp[i];
+                const adstock = ext1.adstock[i];
+                const prevAdstock = i > 0 ? ext1.adstock[i-1] : 0;
                 const carryoverFromPrev = prevAdstock * decay;
                 
                 weekAnalysis.push({
                     week: i + 1,
                     grp: grp,
                     adstock: adstock,
-                    carryover: carryover,
                     carryoverFromPrev: carryoverFromPrev,
-                    contribution: grp > 0 ? ((grp / adstock) * 100) : 0
+                    isOriginal: i < ext1.originalLength,
+                    isTail: i >= ext1.originalLength
                 });
             }
             
             // Find key insights
             const totalGRP = alt1.grp.reduce((a, b) => a + b, 0);
-            const avgAdstock = adstock1GRP.reduce((a, b) => a + b, 0) / adstock1GRP.length;
-            const peakAdstock = Math.max(...adstock1GRP);
-            const peakWeek = adstock1GRP.indexOf(peakAdstock) + 1;
+            const avgAdstock = ext1.adstock.reduce((a, b) => a + b, 0) / ext1.adstock.length;
+            const peakAdstock = Math.max(...ext1.adstock);
+            const peakWeek = ext1.adstock.indexOf(peakAdstock) + 1;
             
-            // Calculate total carryover benefit
-            const totalCarryover = carryover1GRP.reduce((a, b) => a + b, 0);
-            const carryoverBonus = ((totalCarryover / totalGRP) * 100).toFixed(0);
+            // Calculate total carryover benefit (adstock beyond original weeks)
+            const tailWeeks = ext1.adstock.length - ext1.originalLength;
+            const tailAdstockSum = ext1.adstock.slice(ext1.originalLength).reduce((a, b) => a + b, 0);
             
             // Build week-by-week explanation
             let weekByWeekHTML = '<div class="week-analysis">';
             weekByWeekHTML += '<p><strong>📅 Hafta Hafta Alt-1 Analizi:</strong></p>';
             weekByWeekHTML += '<div class="week-breakdown">';
             
-            // Show first 3-4 weeks in detail
-            const showWeeks = Math.min(4, weekAnalysis.length);
-            for (let i = 0; i < showWeeks; i++) {
+            // Show all weeks including tail
+            for (let i = 0; i < weekAnalysis.length; i++) {
                 const w = weekAnalysis[i];
                 const nextW = weekAnalysis[i + 1];
                 
-                weekByWeekHTML += `<div class="week-item">`;
+                const tailClass = w.isTail ? ' tail-week' : '';
+                weekByWeekHTML += `<div class="week-item${tailClass}">`;
                 weekByWeekHTML += `<span class="week-label">H${w.week}:</span>`;
                 
                 if (i === 0) {
@@ -3990,18 +4095,18 @@
                     weekByWeekHTML += `<span class="week-detail">${w.grp} GRP yatırım → Adstock: <strong>${w.adstock.toFixed(0)}</strong></span>`;
                     if (nextW) {
                         const expectedCarryover = (w.adstock * decay).toFixed(0);
-                        weekByWeekHTML += `<span class="week-carryover">→ H${w.week + 1}'e ${expectedCarryover} GRP eq. taşınacak</span>`;
+                        weekByWeekHTML += `<span class="week-carryover">→ H${w.week + 1}'e ${expectedCarryover} taşınacak</span>`;
                     }
+                } else if (w.isTail) {
+                    // Tail weeks (no GRP, just carryover)
+                    weekByWeekHTML += `<span class="week-detail tail-text">0 GRP + ${w.carryoverFromPrev.toFixed(0)} carryover → Adstock: <strong>${w.adstock.toFixed(0)}</strong></span>`;
+                    weekByWeekHTML += `<span class="week-badge">Carryover Tail</span>`;
                 } else {
-                    // Subsequent weeks
-                    const prevCarryover = (weekAnalysis[i-1].adstock * decay).toFixed(0);
+                    // Middle weeks
+                    const prevCarryover = w.carryoverFromPrev.toFixed(0);
                     weekByWeekHTML += `<span class="week-detail">${w.grp} GRP + ${prevCarryover} carryover → Adstock: <strong>${w.adstock.toFixed(0)}</strong></span>`;
                 }
                 weekByWeekHTML += `</div>`;
-            }
-            
-            if (weekAnalysis.length > showWeeks) {
-                weekByWeekHTML += `<div class="week-item more">... ve ${weekAnalysis.length - showWeeks} hafta daha</div>`;
             }
             
             weekByWeekHTML += '</div></div>';
@@ -4011,22 +4116,28 @@
                 <div class="adstock-summary">
                     <p><strong>📊 Alt-1 Özet:</strong></p>
                     <ul>
-                        <li>Toplam GRP: <strong>${totalGRP}</strong></li>
-                        <li>Ortalama Adstock: <strong>${avgAdstock.toFixed(0)}</strong> GRP eq.</li>
-                        <li>Peak Adstock: H${peakWeek}'de <strong>${peakAdstock.toFixed(0)}</strong> GRP eq.</li>
-                        <li>Carryover Bonusu: <strong>+%${carryoverBonus}</strong> ekstra etki</li>
+                        <li>Toplam GRP Yatırımı: <strong>${totalGRP}</strong> (${ext1.originalLength} hafta)</li>
+                        <li>Peak Adstock: H${peakWeek}'de <strong>${peakAdstock.toFixed(0)}</strong></li>
+                        <li>Carryover Tail: <strong>${tailWeeks} hafta</strong> daha etki devam ediyor</li>
+                        <li>Tail Toplam Değer: <strong>${tailAdstockSum.toFixed(0)}</strong> GRP eq. ekstra etki</li>
                     </ul>
                 </div>
             `;
             
-            // Decay explanation
+            // Decay explanation with visual
+            const decaySteps = [100];
+            for (let i = 0; i < 5; i++) {
+                decaySteps.push(decaySteps[decaySteps.length - 1] * decay);
+            }
+            
             let decayHTML = `
                 <div class="decay-explanation">
                     <p><strong>⏱️ Decay = ${decay.toFixed(2)} Ne Anlama Geliyor?</strong></p>
                     <p>Her hafta, önceki haftanın adstock'unun <strong>%${(decay * 100).toFixed(0)}</strong>'i bir sonraki haftaya taşınır.</p>
-                    <ul>
-                        <li>100 GRP → H2'de ${(100 * decay).toFixed(0)} → H3'te ${(100 * decay * decay).toFixed(0)} → H4'te ${(100 * decay * decay * decay).toFixed(0)}</li>
-                    </ul>
+                    <div class="decay-visual">
+                        <span>100</span> → <span>${decaySteps[1].toFixed(0)}</span> → <span>${decaySteps[2].toFixed(0)}</span> → <span>${decaySteps[3].toFixed(0)}</span> → <span>${decaySteps[4].toFixed(0)}</span> → <span>${decaySteps[5].toFixed(0)}</span>
+                    </div>
+                    <p class="decay-note">GRP bittiğinde bile etki ${tailWeeks} hafta daha sürer!</p>
                 </div>
             `;
             
