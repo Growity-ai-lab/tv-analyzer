@@ -2627,7 +2627,7 @@
                 </div>
                 <div class="logo-text">
                     <h1>TV Analyzer</h1>
-                    <span>by Time & Growity</span>
+                    <span>by Growity AI Studio</span>
                 </div>
             </div>
             <div class="header-actions">
@@ -3033,10 +3033,55 @@
         let fittedParams = null;
 
         // Reach curve parameters for different frequencies
+        // Reach Lookup Table - Nisan/Mayıs/Haziran 2026 ortalaması (Coverguide verisi)
+        const reachLookup = {
+            50: { r1: 29.2, r2: 10.6, r3: 3.8 },
+            100: { r1: 42.1, r2: 22.9, r3: 12.3 },
+            150: { r1: 49.5, r2: 31.7, r3: 20.4 },
+            200: { r1: 54.3, r2: 38.1, r3: 27.0 },
+            250: { r1: 57.7, r2: 42.9, r3: 32.3 },
+            300: { r1: 60.2, r2: 46.6, r3: 36.6 },
+            350: { r1: 62.2, r2: 49.6, r3: 40.2 },
+            400: { r1: 63.8, r2: 52.1, r3: 43.1 },
+            450: { r1: 65.1, r2: 54.1, r3: 45.6 },
+            500: { r1: 66.3, r2: 55.9, r3: 47.7 },
+            550: { r1: 67.2, r2: 57.4, r3: 49.6 },
+            600: { r1: 68.0, r2: 58.7, r3: 51.2 },
+            650: { r1: 68.7, r2: 59.9, r3: 52.7 },
+            700: { r1: 69.4, r2: 60.9, r3: 54.0 },
+            750: { r1: 69.9, r2: 61.8, r3: 55.2 },
+            800: { r1: 70.4, r2: 62.7, r3: 56.2 },
+            850: { r1: 70.9, r2: 63.4, r3: 57.2 },
+            900: { r1: 71.4, r2: 64.1, r3: 58.1 },
+            950: { r1: 71.7, r2: 64.8, r3: 58.9 },
+            1000: { r1: 72.1, r2: 65.3, r3: 59.7 },
+            1050: { r1: 72.4, r2: 65.9, r3: 60.4 },
+            1100: { r1: 72.7, r2: 66.4, r3: 61.0 },
+            1150: { r1: 73.0, r2: 66.9, r3: 61.6 },
+            1200: { r1: 73.2, r2: 67.3, r3: 62.2 },
+            1250: { r1: 73.4, r2: 67.7, r3: 62.7 },
+            1300: { r1: 73.7, r2: 68.1, r3: 63.3 },
+            1350: { r1: 73.9, r2: 68.4, r3: 63.7 },
+            1400: { r1: 74.1, r2: 68.8, r3: 64.2 },
+            1450: { r1: 74.2, r2: 69.1, r3: 64.6 },
+            1500: { r1: 74.4, r2: 69.4, r3: 65.0 },
+            1550: { r1: 74.6, r2: 69.7, r3: 65.4 },
+            1600: { r1: 74.7, r2: 70.0, r3: 65.8 },
+            1650: { r1: 74.8, r2: 70.2, r3: 66.1 },
+            1700: { r1: 75.0, r2: 70.4, r3: 66.4 },
+            1750: { r1: 75.1, r2: 70.7, r3: 66.8 },
+            1800: { r1: 75.3, r2: 70.9, r3: 67.1 },
+            1850: { r1: 75.4, r2: 71.1, r3: 67.3 },
+            1900: { r1: 75.5, r2: 71.2, r3: 67.6 },
+            1950: { r1: 75.6, r2: 71.4, r3: 67.9 },
+            2000: { r1: 75.7, r2: 71.6, r3: 68.1 }
+        };
+
+        // Reach params for labels (still needed for UI)
         const reachParams = {
-            1: { maxReach: 72, k: 0.012, label: '1+ Reach' },  // 1+ frequency
-            2: { maxReach: 58, k: 0.010, label: '2+ Reach' },  // 2+ frequency
-            3: { maxReach: 45, k: 0.008, label: '3+ Reach' }   // 3+ frequency
+            1: { label: '1+ Reach' },
+            2: { label: '2+ Reach' },
+            3: { label: '3+ Reach' }
         };
 
         // Scenario-specific rationale content
@@ -3541,19 +3586,66 @@
         function calculateReach(grp, freq) {
             // Handle 'all' case by defaulting to freq 1
             const actualFreq = freq === 'all' ? 1 : freq;
-            const params = reachParams[actualFreq];
-            // Logarithmic reach curve: Reach = maxReach * (1 - e^(-k * GRP))
-            return params.maxReach * (1 - Math.exp(-params.k * grp));
+            
+            // Get key for lookup (r1, r2, r3)
+            const key = 'r' + actualFreq;
+            
+            // Find surrounding GRP values for interpolation
+            const grpKeys = Object.keys(reachLookup).map(Number).sort((a, b) => a - b);
+            
+            // Clamp GRP to lookup range
+            if (grp <= grpKeys[0]) {
+                // Linear extrapolation below 50 GRP
+                const ratio = grp / grpKeys[0];
+                return reachLookup[grpKeys[0]][key] * ratio;
+            }
+            if (grp >= grpKeys[grpKeys.length - 1]) {
+                // Return max value for GRP above 2000
+                return reachLookup[grpKeys[grpKeys.length - 1]][key];
+            }
+            
+            // Find lower and upper bounds
+            let lowerGRP = grpKeys[0];
+            let upperGRP = grpKeys[grpKeys.length - 1];
+            
+            for (let i = 0; i < grpKeys.length - 1; i++) {
+                if (grp >= grpKeys[i] && grp <= grpKeys[i + 1]) {
+                    lowerGRP = grpKeys[i];
+                    upperGRP = grpKeys[i + 1];
+                    break;
+                }
+            }
+            
+            // Linear interpolation
+            const lowerReach = reachLookup[lowerGRP][key];
+            const upperReach = reachLookup[upperGRP][key];
+            const ratio = (grp - lowerGRP) / (upperGRP - lowerGRP);
+            
+            return lowerReach + (upperReach - lowerReach) * ratio;
         }
 
         // Find optimal GRP (where marginal reach gain drops below threshold)
         function findOptimalGRP(freq) {
             // Handle 'all' case by defaulting to freq 1
             const actualFreq = freq === 'all' ? 1 : freq;
-            const params = reachParams[actualFreq];
-            // Optimal is around where the curve starts to flatten significantly
-            // This is approximately where we've reached ~60-70% of max reach
-            return Math.log(0.35) / (-params.k); // ~60% of max reach
+            const key = 'r' + actualFreq;
+            
+            // Find where marginal gain drops below 0.02% per GRP
+            const grpKeys = Object.keys(reachLookup).map(Number).sort((a, b) => a - b);
+            
+            for (let i = 1; i < grpKeys.length; i++) {
+                const prevGRP = grpKeys[i - 1];
+                const currGRP = grpKeys[i];
+                const prevReach = reachLookup[prevGRP][key];
+                const currReach = reachLookup[currGRP][key];
+                const marginalGain = (currReach - prevReach) / (currGRP - prevGRP);
+                
+                if (marginalGain < 0.02) {
+                    return prevGRP;
+                }
+            }
+            
+            return 500; // Default fallback
         }
 
         // Set input mode
