@@ -719,44 +719,6 @@
             border-color: var(--accent-blue);
         }
 
-        /* Gap Week Styles */
-        .gap-week-row {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 6px;
-            padding: 6px 8px;
-            background: var(--bg-tertiary);
-            border-radius: 6px;
-        }
-
-        .gap-label {
-            font-size: 10px;
-            color: var(--text-secondary);
-        }
-
-        .gap-input {
-            width: 45px;
-            padding: 4px 6px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            color: var(--text-primary);
-            font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            text-align: center;
-        }
-
-        .gap-input:focus {
-            border-color: var(--accent-blue);
-            outline: none;
-        }
-
-        .gap-unit {
-            font-size: 10px;
-            color: var(--text-muted);
-        }
-
         /* Effective Level Styles */
         .effective-level-row {
             display: flex;
@@ -2660,11 +2622,6 @@
                                 <span class="alt-total" id="summaryAlt1">1700 GRP</span>
                             </div>
                             <textarea class="data-input" id="grpAlt1" placeholder="Hafta 1, Hafta 2, ...">300, 300, 200, 200, 200, 100, 200, 200</textarea>
-                            <div class="gap-week-row">
-                                <label class="gap-label">Boşluk:</label>
-                                <input type="number" id="gapAlt1" value="0" min="0" max="8" class="gap-input" title="GRP'lerden önce eklenecek boş hafta sayısı">
-                                <span class="gap-unit">hafta</span>
-                            </div>
                         </div>
                         <div class="grp-alt-input">
                             <div class="grp-alt-header">
@@ -2672,12 +2629,7 @@
                                 <span class="alt-label">Alt-2</span>
                                 <span class="alt-total" id="summaryAlt2">1700 GRP</span>
                             </div>
-                            <textarea class="data-input" id="grpAlt2" placeholder="Hafta 1, Hafta 2, ...">300, 250, 250, 200, 200, 200, 150, 150</textarea>
-                            <div class="gap-week-row">
-                                <label class="gap-label">Boşluk:</label>
-                                <input type="number" id="gapAlt2" value="0" min="0" max="8" class="gap-input" title="GRP'lerden önce eklenecek boş hafta sayısı">
-                                <span class="gap-unit">hafta</span>
-                            </div>
+                            <textarea class="data-input" id="grpAlt2" placeholder="Hafta 1, Hafta 2, ..."></textarea>
                         </div>
                         <div class="grp-alt-input">
                             <div class="grp-alt-header">
@@ -2685,12 +2637,7 @@
                                 <span class="alt-label">Alt-3</span>
                                 <span class="alt-total" id="summaryAlt3">1700 GRP</span>
                             </div>
-                            <textarea class="data-input" id="grpAlt3" placeholder="Hafta 1, Hafta 2, ...">400, 200, 200, 200, 200, 200, 150, 150</textarea>
-                            <div class="gap-week-row">
-                                <label class="gap-label">Boşluk:</label>
-                                <input type="number" id="gapAlt3" value="0" min="0" max="8" class="gap-input" title="GRP'lerden önce eklenecek boş hafta sayısı">
-                                <span class="gap-unit">hafta</span>
-                            </div>
+                            <textarea class="data-input" id="grpAlt3" placeholder="Hafta 1, Hafta 2, ..."></textarea>
                         </div>
                     </div>
                     <!-- Effective Level Settings -->
@@ -3797,12 +3744,21 @@
                             annotations: {}
                         },
                         tooltip: {
+                            mode: 'nearest',
+                            intersect: true,
+                            filter: function(tooltipItem, index) {
+                                // Sadece "Kampanya Verileri" dataset'ini göster ve sadece ilk item
+                                if (!tooltipItem.dataset.label) return false;
+                                if (!tooltipItem.dataset.label.includes('Kampanya') && 
+                                    !tooltipItem.dataset.label.includes('Alt-1')) return false;
+                                return index === 0; // Sadece ilk item'ı göster
+                            },
                             callbacks: {
                                 label: function(context) {
                                     return `Reach: %${context.parsed.y.toFixed(1)}`;
                                 },
                                 title: function(context) {
-                                    return `GRP: ${context[0].label}`;
+                                    return `GRP: ${Math.round(context[0].parsed.x)}`;
                                 }
                             }
                         }
@@ -3862,6 +3818,7 @@
                             fill: false,
                             tension: 0.4,
                             pointRadius: 0,
+                            pointHitRadius: 0,
                             borderWidth: 2
                         });
                     });
@@ -3915,10 +3872,12 @@
                         fill: true,
                         tension: 0.4,
                         pointRadius: 0,
+                        pointHitRadius: 0,
                         borderWidth: 2
                     });
                     
                     const optimalGRP = findOptimalGRP(freq);
+                    const optimalReach = calculateReach(optimalGRP, freq);
                     
                     reachChart.options.plugins.annotation.annotations = {
                         optimalLine: {
@@ -3929,7 +3888,7 @@
                             borderWidth: 2,
                             label: {
                                 display: true,
-                                content: `Optimal: ${Math.round(optimalGRP)} GRP`,
+                                content: [`Optimal: ${Math.round(optimalGRP)} GRP`, `Reach: %${optimalReach.toFixed(1)}`],
                                 position: 'start',
                                 backgroundColor: '#ef4444',
                                 color: 'white',
@@ -3966,6 +3925,12 @@
                     document.getElementById('reachMaxPercent').textContent = `%${reachAt250.toFixed(1)}`;
                     document.getElementById('reachOptimalGRP').textContent = Math.round(optimalGRP);
                 }
+                
+                // Set tooltip to show only nearest point, not all datasets
+                reachChart.options.interaction = {
+                    mode: 'nearest',
+                    intersect: true
+                };
                 
                 reachChart.data.datasets = datasets;
                 reachChart.options.scales.x.max = maxGRPRange;
@@ -4032,52 +3997,36 @@
             const maxLift = parseFloat(document.getElementById('maxLift').value) / 100;
             const cpp = parseFloat(document.getElementById('cppValue').value) || 25000;
 
-            // Get gap weeks
-            const gapAlt1 = parseInt(document.getElementById('gapAlt1').value) || 0;
-            const gapAlt2 = parseInt(document.getElementById('gapAlt2').value) || 0;
-            const gapAlt3 = parseInt(document.getElementById('gapAlt3').value) || 0;
-
             // Get effective levels
             const effectiveLow = parseFloat(document.getElementById('effectiveLow').value) || 195;
             const effectiveHigh = parseFloat(document.getElementById('effectiveHigh').value) || 300;
 
-            // Get 3 alternatives (raw input)
-            const grpAlt1Raw = document.getElementById('grpAlt1').value.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
-            const grpAlt2Raw = document.getElementById('grpAlt2').value.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
-            const grpAlt3Raw = document.getElementById('grpAlt3').value.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+            // Get 3 alternatives
+            const grpAlt1 = document.getElementById('grpAlt1').value.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+            const grpAlt2 = document.getElementById('grpAlt2').value.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+            const grpAlt3 = document.getElementById('grpAlt3').value.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
 
-            // Apply gap weeks (prepend zeros)
-            const applyGap = (arr, gap) => {
-                if (gap <= 0 || arr.length === 0) return arr;
-                return [...Array(gap).fill(0), ...arr];
-            };
-
-            const grpAlt1 = applyGap(grpAlt1Raw, gapAlt1);
-            const grpAlt2 = applyGap(grpAlt2Raw, gapAlt2);
-            const grpAlt3 = applyGap(grpAlt3Raw, gapAlt3);
-
-            if (grpAlt1Raw.length === 0) {
+            if (grpAlt1.length === 0) {
                 alert('Lütfen en az Alt-1 için GRP verisi girin!');
                 return;
             }
 
             // Store effective levels globally for charts
             window.effectiveLevels = { low: effectiveLow, high: effectiveHigh };
-            window.gapWeeks = { alt1: gapAlt1, alt2: gapAlt2, alt3: gapAlt3 };
 
             // Calculate spend from GRP
             const spendAlt1 = grpAlt1.map(g => g * cpp);
             const spendAlt2 = grpAlt2.map(g => g * cpp);
             const spendAlt3 = grpAlt3.map(g => g * cpp);
 
-            // Update summary (show total GRP without gap weeks)
-            const totalGRP1 = grpAlt1Raw.reduce((a, b) => a + b, 0);
-            const totalGRP2 = grpAlt2Raw.length > 0 ? grpAlt2Raw.reduce((a, b) => a + b, 0) : 0;
-            const totalGRP3 = grpAlt3Raw.length > 0 ? grpAlt3Raw.reduce((a, b) => a + b, 0) : 0;
+            // Update summary
+            const totalGRP1 = grpAlt1.reduce((a, b) => a + b, 0);
+            const totalGRP2 = grpAlt2.length > 0 ? grpAlt2.reduce((a, b) => a + b, 0) : 0;
+            const totalGRP3 = grpAlt3.length > 0 ? grpAlt3.reduce((a, b) => a + b, 0) : 0;
             
             document.getElementById('summaryAlt1').textContent = `${totalGRP1} GRP`;
-            document.getElementById('summaryAlt2').textContent = grpAlt2Raw.length > 0 ? `${totalGRP2} GRP` : '- GRP';
-            document.getElementById('summaryAlt3').textContent = grpAlt3Raw.length > 0 ? `${totalGRP3} GRP` : '- GRP';
+            document.getElementById('summaryAlt2').textContent = grpAlt2.length > 0 ? `${totalGRP2} GRP` : '- GRP';
+            document.getElementById('summaryAlt3').textContent = grpAlt3.length > 0 ? `${totalGRP3} GRP` : '- GRP';
 
             // Calculate for each alternative
             const calcAlternative = (spend, grp) => {
