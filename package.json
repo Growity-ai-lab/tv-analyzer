@@ -1,0 +1,17 @@
+{
+  "name": "tv-analyzer-pwa",
+  "version": "2.1.0",
+  "description": "TV reklamlarının adstock, saturation ve reach analizini yapan profesyonel medya planlama aracı",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["pwa", "tv-analyzer", "media-planning"],
+  "author": "Growity AI Studio",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": "20.x"
+  }
+}
